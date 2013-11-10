@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="snowdays-enrollment">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <property name="context-root" value="snowdays-enrollment"/>
+        <property name="java-output-path" value="/snowdays-enrollment/build/classes"/>
+    </wb-module>
+</project-modules>
