@@ -1,0 +1,95 @@
+p, h1, form, button{border:0; margin:0; padding:0;}
+.spacer{clear:both; height:1px;}
+/* ----------- My Form ----------- */
+.myform{
+margin:0 auto;
+width:auto;
+height:auto;
+padding:14px;
+}
+
+/* ----------- stylized ----------- */
+#stylized{
+border:solid 2px #b7ddf2;
+background:#ebf4fb;
+}
+#stylized h1 {
+font-size:14px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+#stylized h3 {
+	font-size: 30px;
+	color: #008B8B;
+	line-height: 1.3em;
+	margin-top: -5px;
+	letter-spacing: -2px
+}
+
+#stylized p{
+font-size:11px;
+color:#666666;
+margin-bottom:20px;
+border-bottom:solid 1px #b7ddf2;
+padding-bottom:10px;
+}
+#stylized label{
+display:block;
+font-weight:bold;
+font-size:18px;
+text-align:left;
+width:180px;
+float:left;
+}
+#stylized .small{
+color:#666666;
+display:block;
+font-size:11px;
+font-weight:normal;
+text-align:left;
+width:140px;
+}
+
+#stylized input{
+float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:180px;
+margin:2px 0 20px 10px;
+}
+
+#stylized select{
+float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:185px;
+margin:2px 0 20px 10px;
+}
+
+#stylized h3 {
+	font-size: 25px;
+	line-height: 1.3em;
+	margin-top: -5px;
+	letter-spacing: -2px
+}
+
+#stylized .input {
+	display: inline-block;
+	border: none;
+	font-size: 19px;
+	line-height: 1.21em;
+	letter-spacing: -1px;
+	color: #fefefe;
+	padding: 9px 20px 11px;
+	background: url(../images/button-tail.gif) 0 0 repeat-x #3c3c3c;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px
+}
+
+#stylized .input:hover {
+	background: #3c3c3c
+}
