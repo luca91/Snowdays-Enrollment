@@ -9,17 +9,17 @@ System.out.println("index.html");
 <head>
 <title>EMS - Enrollment Management System - Private Portal</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="css/tables_style.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="css/style_portal.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="css/layout.css" type="text/css" media="screen">
-<script type="text/javascript" src="js/jquery-1.6.min.js"></script>
-<script type="text/javascript" src="js/cufon-yui.js"></script>
-<script type="text/javascript" src="js/cufon-replace.js"></script>
-<script type="text/javascript" src="js/Open_Sans_400.font.js"></script>
-<script type="text/javascript" src="js/Open_Sans_Light_300.font.js"></script> 
-<script type="text/javascript" src="js/Open_Sans_Semibold_600.font.js"></script> 
-<script type="text/javascript" src="js/FF-cash.js"></script>  
+<link rel="stylesheet" href="private/css/reset.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="private/css/tables_style.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="private/css/style_portal.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="private/css/layout.css" type="text/css" media="screen">
+<script type="text/javascript" src="private/js/jquery-1.6.min.js"></script>
+<script type="text/javascript" src="private/js/cufon-yui.js"></script>
+<script type="text/javascript" src="private/js/cufon-replace.js"></script>
+<script type="text/javascript" src="private/js/Open_Sans_400.font.js"></script>
+<script type="text/javascript" src="private/js/Open_Sans_Light_300.font.js"></script> 
+<script type="text/javascript" src="private/js/Open_Sans_Semibold_600.font.js"></script> 
+<script type="text/javascript" src="private/js/FF-cash.js"></script>  
 <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <!--[if lt IE 7]>
