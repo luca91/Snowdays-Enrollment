@@ -8,26 +8,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
-/**
- * Servlet implementation class Index
- */
-@WebServlet("/public/index.html")
+//Maps servlet public/jsp/index.jsp
+@WebServlet("/index.html")
 public class Index extends HttpServlet {
 	
-	// commons logging references
-//	static Logger log = Logger.getLogger(Index.class.getName());
-	
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Index() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3593068122563498506L;
 
 	/**
 	 * doGet method - maps the normal pages
@@ -39,7 +27,8 @@ public class Index extends HttpServlet {
 //		log.debug("START");
 		try {
 			//request.setAttribute ("servletName", "MyServlet");
-			getServletConfig().getServletContext().getRequestDispatcher("/WEB-INF/jsp/public/index.jsp").forward(request, response);
+			getServletConfig().getServletContext().getRequestDispatcher("/public/jsp/index.jsp").forward(request, response);
+			//response.sendRedirect("/snowdays-enrollment/public/jsp/index.jsp");
 			} 
 		catch (Exception ex) {
 				ex.printStackTrace();

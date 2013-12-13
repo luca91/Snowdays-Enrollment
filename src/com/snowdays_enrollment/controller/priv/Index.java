@@ -2,7 +2,6 @@ package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +17,8 @@ import com.snowdays_enrollment.model.User;
 /**
  * Servlet implementation class Index
  */
-//@WebServlet("/private/index.html")
+
+@WebServlet("/private/index.html")
 public class Index extends HttpServlet {
 	
 	// commons logging references
@@ -42,6 +42,7 @@ public class Index extends HttpServlet {
 	 * @param HttpServletRequest request, HttpServletResponse response
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/*
 		log.trace("START");
 		
 		User u = new User();
@@ -49,10 +50,10 @@ public class Index extends HttpServlet {
 		u = ud.getUserByEmail(request.getUserPrincipal().getName());
 		
 		HttpSession session = request.getSession(true);
-		session.setAttribute("systemUser", u);
-		
+		session.setAttribute("systemUser", u)*/;
+		 
 		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/WEB-INF/jsp/private/index.jsp").forward(request, response);
+			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);
 			} 
 		catch (Exception ex) {
 				ex.printStackTrace();
