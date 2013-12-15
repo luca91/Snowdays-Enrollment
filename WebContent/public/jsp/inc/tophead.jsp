@@ -6,13 +6,13 @@
 	<!-- TOP + LOGO -->
 	<div class="row-1">
 		<h1>
-			<a class="logo" href="index.html">Bolzano Snowdays - Enrollment</a>
+			<a class="logo" href="/private/index.html"><img alt="" src="../images/logo_snowdays.png"></a>
 			<strong class="slog">Enrollment Management System</strong>						
 		</h1>
 		<form id="session-id">
-			Welcome - ${systemUser.email} <a href="<c:url value='/private/logout.html'/>">Logout</a> <br>
+			Welcome - ${systemUser.email}<br>
 			Role:
-			<c:choose>  
+			<c:choose>
 				<c:when test="${systemUser.role == 'admin'}">
 					Administrator
 				</c:when>

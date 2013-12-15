@@ -8,8 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 @WebServlet("/private/login.html")
 public class LoginController extends HttpServlet {
+	
+	static Logger log = Logger.getLogger(Index.class.getName());
 
 	/**
 	 * 
@@ -17,7 +21,7 @@ public class LoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		log.debug("START");
+		log.debug("START");
 		try {
 			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/login.jsp").forward(request, response);
 			} 
@@ -33,6 +37,13 @@ public class LoginController extends HttpServlet {
 	 * @param (HttpServletRequest request, HttpServletResponse response
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		log.debug("START");
+		try {
+			request.setAttribute("username", request.getAttribute("username"));
+			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);
+			} 
+		catch (Exception ex) {
+				ex.printStackTrace();
+			}
 	}
 }

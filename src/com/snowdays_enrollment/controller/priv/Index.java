@@ -42,22 +42,22 @@ public class Index extends HttpServlet {
 	 * @param HttpServletRequest request, HttpServletResponse response
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/*
+		
 		log.trace("START");
 		
 		User u = new User();
 		UserDao ud = new UserDao();
-		u = ud.getUserByEmail(request.getUserPrincipal().getName());
+		u = ud.getUserByEmail(request.getParameter("username"));
 		
 		HttpSession session = request.getSession(true);
-		session.setAttribute("systemUser", u)*/;
+		session.setAttribute("systemUser", u);
 		 
 		try {
 			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);
 			} 
 		catch (Exception ex) {
 				ex.printStackTrace();
-			}	
+			}
 	}
 
 	/**
@@ -67,7 +67,21 @@ public class Index extends HttpServlet {
 	 * @param (HttpServletRequest request, HttpServletResponse response
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	log.trace("START");
+		
+		User u = new User();
+		UserDao ud = new UserDao();
+		u = ud.getUserByEmail(request.getParameter("username"));
+		
+		HttpSession session = request.getSession(true);
+		session.setAttribute("systemUser", u);
+		 
+		try {
+			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);
+			} 
+		catch (Exception ex) {
+				ex.printStackTrace();
+			}
 	}
 
 }

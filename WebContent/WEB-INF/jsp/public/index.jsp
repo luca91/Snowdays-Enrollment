@@ -3,10 +3,10 @@
 <head>
 <title>Bolzano Snowdays - Enrollment</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="public/css/reset.css" type="text/css" media="screen">
-<link rel="stylesheet" href="public/css/style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="public/css/layout.css" type="text/css" media="screen">
- <script src="public/js//firebug-lite.js" type="text/javascript"></script>
+<link rel="stylesheet" href="snowdays-enrollment/public/css/reset.css" type="text/css" media="screen">
+<link rel="stylesheet" href="snowdays-enrollment/public/css/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="snowdays-enrollment/public/css/layout.css" type="text/css" media="screen">
+<script src="public/js//firebug-lite.js" type="text/javascript"></script>
 <script src="public/js/jquery-1.6.min.js" type="text/javascript"></script>
 <script src="public/js/cufon-yui.js" type="text/javascript"></script>
 <script src="public/js/cufon-replace.js" type="text/javascript"></script>
@@ -57,7 +57,7 @@
                                                                 <strong class="banner">
                                                                         <strong class="b1">Save the date:</strong>
                                                                         <strong class="b2">Snowdays 2014</strong>
-                                                                        <strong class="b3">Three days of sports, snow & fun!<br>Next March, 2014!</strong>
+                                                                        <strong class="b3">Three days of sports, snow and fun!<br></br>Next March, 2014!</strong>
                                                                 </strong>
                                                         </li>
                                                         <li><img src="public/images/slider-img2.jpg" alt="">
@@ -95,7 +95,7 @@
                                                                                         </div>
                                                                                 </div>
                                                                                 <div class="wrapper">
-                                                                                        <a class="button img-indent-r" href="#">>></a>
+                                                                                        <a class="button img-indent-r" href="#">Forward</a>
                                                                                         <div class="extra-wrap">
                                                                                                 Select the event of interest from the <a class="link" href="#">events section</a>
                                                                                         </div>
@@ -131,7 +131,7 @@
                                                                                         </div>
                                                                                 </div>
                                                                                 <div class="wrapper">
-                                                                                        <a class="button img-indent-r" href="#">>></a>
+                                                                                        <a class="button img-indent-r" href="#">Forward</a>
                                                                                         <div class="extra-wrap">
                                                                                                 Confirm your participation to the <a class="link" href="#">event</a> and get ready for it!
                                                                                         </div>
@@ -169,7 +169,7 @@
                                                                         <time class="tdate-1 fleft" datetime="2013-06-18"><strong>18</strong>June</time>
                                                                         <div class="extra-wrap">
                                                                                 <h5>Exam date</h5> 
-                                                                                Internet & Mobile<br>Services: Exam Date
+                                                                                Internet and Mobile<br>Services: Exam Date
                                                                         </div>
                                                                 </div>
                                                         </div>
@@ -230,15 +230,15 @@
                                 bannerShow:function(banner){
                                         banner
                                                 .hide()
-                                                .fadeIn(500)
+                                                .fadeIn(500);
                                 },
                                 bannerHide:function(banner){
                                         banner
                                                 .show()
-                                                .fadeOut(500)
+                                                .fadeOut(500);
                                 }
                         });
-                })
+                });
         </script>
 </body>
 </html>

@@ -7,7 +7,7 @@ System.out.println("index.html");
 %>
 <html lang="en">
 <head>
-<title>EMS - Enrollment Management System - Private Portal</title>
+<title>Bolzano Snowdays - Enrollment</title>
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="css/tables_style.css" type="text/css" media="screen"/>
@@ -38,7 +38,7 @@ System.out.println("index.html");
 		<!-- HEADER -->
 			<c:import url="inc/tophead.jsp"/>
 				<h3 class="welcome">Hi, ${systemUser.email} - Welcome to the private portal</h3><br><hr><br>
-				<h3 class="welcomelinks"><a href="<%=request.getContextPath()%>/index.html" target="_blank"># Homepage (public)</a></h3><br>
-				<h3 class="welcomelinks"><a href="<%=request.getContextPath()%>/public/changePassword.html" target="_blank"># Change Password</a></h3><br>									
+				<h3 class="welcomelinks"><a href="../public/index.html">Home</a></h3><br>
+				<h3 class="welcomelinks"><a href="../public/changePassword.html" target="_blank">Change Password</a></h3><br>									
 			<c:import url="inc/bottom.jsp"></c:import>
 </html>
