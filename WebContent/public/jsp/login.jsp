@@ -7,9 +7,9 @@
 <head>
 <title>Bolzano Snowdays - Enrollment Login</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="css/layout.css" type="text/css" media="screen">
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="public/css/reset.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="public/css/layout.css" type="text/css" media="screen">
+<link rel="stylesheet" href="public/css/style.css" type="text/css" media="screen">
 </head>
 <body id="page5">
 <div class="bg">
@@ -30,7 +30,7 @@
 			
 			<!-- BUTTONS -->			
 		    <input type="submit" value="Login" class="input" />
-		    <input type="button" value="Cancel" onClick="window.location='../public/index.html'" class="input" /><br><br><br>
+		    <input type="button" value="Cancel" onClick="window.location='../index.html'" class="input" /><br><br><br>
 	
 		</form>
 	</div>						

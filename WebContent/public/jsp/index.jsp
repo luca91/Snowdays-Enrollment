@@ -45,7 +45,7 @@
                                                   <li><a href="#">Events</a></li>
                                                   <li><a href="#">Media</a></li>
                                                   <li><a href="#">Contact Us</a></li>
-                                                  <li class="last-item"><a href="/snowdays-enrollment/private/index.html">Login</a></li>                                                  
+                                                  <li class="last-item"><a href="/snowdays-enrollment/login.html">Login</a></li>                                                  
                                                 </ul>
                                         </nav>
                                 </div>

@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 //Maps servlet public/jsp/index.jsp
 @WebServlet(urlPatterns={
-		"/",
+		"/index.html",
 		"/public/index.html"			
 })
 public class Index extends HttpServlet {

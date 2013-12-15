@@ -18,6 +18,7 @@
     <web-resource-collection>
       <web-resource-name>Private pages</web-resource-name>
       <url-pattern>/private/*</url-pattern>
+      <url-pattern>/login.html</url-pattern>
     </web-resource-collection>
     
     <auth-constraint>

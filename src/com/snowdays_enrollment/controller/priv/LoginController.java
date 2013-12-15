@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-@WebServlet("/private/login.html")
+@WebServlet("/login.html")
 public class LoginController extends HttpServlet {
 	
 	static Logger log = Logger.getLogger(Index.class.getName());
@@ -23,7 +23,7 @@ public class LoginController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.debug("START");
 		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/login.jsp").forward(request, response);
+			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);
 			} 
 		catch (Exception ex) {
 				ex.printStackTrace();
@@ -40,7 +40,7 @@ public class LoginController extends HttpServlet {
 		log.debug("START");
 		try {
 			request.setAttribute("username", request.getAttribute("username"));
-			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);
+			getServletConfig().getServletContext().getRequestDispatcher("/private/index.html").forward(request, response);
 			} 
 		catch (Exception ex) {
 				ex.printStackTrace();

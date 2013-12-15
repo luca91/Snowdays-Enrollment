@@ -10,7 +10,7 @@
 			<strong class="slog">Enrollment Management System</strong>						
 		</h1>
 		<form id="session-id">
-			Welcome - ${systemUser.email} <a href="<c:url value='/private/logout.html'/>">Logout</a> <br>
+			Welcome - ${systemUser.email} <a href="<c:url value='/logout.html'/>">Logout</a> <br>
 			Role:
 			<c:choose>  
 				<c:when test="${systemUser.role == 'admin'}">

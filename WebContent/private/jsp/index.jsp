@@ -9,10 +9,10 @@ System.out.println("index.html");
 <head>
 <title>Bolzano Snowdays - Enrollment</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="css/tables_style.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="css/style_portal.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="css/layout.css" type="text/css" media="screen">
+<link rel="stylesheet" href="private/css/reset.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="private/css/tables_style.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="private/css/style_portal.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="private/css/layout.css" type="text/css" media="screen">
 <script type="text/javascript" src="private/js/jquery-1.6.min.js"></script>
 <script type="text/javascript" src="private/js/cufon-yui.js"></script>
 <script type="text/javascript" src="private/js/cufon-replace.js"></script>
@@ -38,7 +38,7 @@ System.out.println("index.html");
 		<!-- HEADER -->
 			<c:import url="inc/tophead.jsp"/>
 				<h3 class="welcome">Hi, ${systemUser.email} - Welcome to the private portal</h3><br><hr><br>
-				<h3 class="welcomelinks"><a href="../public/index.html">Home</a></h3><br>
-				<h3 class="welcomelinks"><a href="../public/changePassword.html" target="_blank">Change Password</a></h3><br>									
+				<h3 class="welcomelinks"><a href="/snowdays-enrollment/index.html">Home</a></h3><br>
+				<h3 class="welcomelinks"><a href="/snowdays-enrollment/public/changePassword.html">Change Password</a></h3><br>									
 			<c:import url="inc/bottom.jsp"></c:import>
 </html>
