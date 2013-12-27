@@ -1,6 +1,7 @@
 package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -35,7 +36,7 @@ public class GroupController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private static String INSERT_OR_EDIT = "/group.jsp";
     private static String LIST_USER = "/groupList.jsp";
-    private static String UNAUTHORIZED_PAGE = "/WEB-INF/jsp/private/errors/unauthorized.jsp";
+    private static String UNAUTHORIZED_PAGE = "/private/jsp/errors/unauthorized.jsp";
 
     /**
 	 * @uml.property  name="dao"
@@ -64,20 +65,12 @@ public class GroupController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	log.trace("START");
     	
-    	log.debug("id_event: " + request.getParameter("id_event"));
-    	
 		UserDao ud = new UserDao();
-		User  systemUser = ud.getUserByEmail(request.getUserPrincipal().getName());
+		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
-		
-    	int id_event = 0;
-    	if (request.getParameter("id_event") != null){
-    		id_event = Integer.parseInt(request.getParameter("id_event").toString());
-    	}
-    	request.setAttribute("param.id_event", id_event);
     	
     	String forward="";
         String action = request.getParameter("action");
@@ -91,8 +84,7 @@ public class GroupController extends HttpServlet {
             log.debug("action: DELETE - " + action);
             int id = Integer.parseInt(request.getParameter("id"));
             dao.deleteRecord(id);
-            forward = LIST_USER;
-            request.setAttribute("records", dao.getAllRecordsById_event(id_event));  
+            forward = LIST_USER; 
         }
 // #########################################################################################        
         else if (action.equalsIgnoreCase("edit")){
@@ -101,7 +93,7 @@ public class GroupController extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             Group record = dao.getRecordById(id);
             request.setAttribute("record", record);
-            List<User> listOfGroup_mng = ud.getAllRecordWithRole("group_mng");
+            List<User> listOfGroup_mng = ud.getAllRecordWithRole("group_manager");
             session.setAttribute("listOfGroup_mng", listOfGroup_mng);
         }
 // #########################################################################################        
@@ -109,9 +101,8 @@ public class GroupController extends HttpServlet {
             log.debug("action: INSERT - " + action);
             request.removeAttribute("record");
             forward = INSERT_OR_EDIT;
-            List<User> listOfGroup_mng = ud.getAllRecordWithRole("group_mng");
+            List<User> listOfGroup_mng = ud.getAllRecordWithRole("group_manager");
             session.setAttribute("listOfGroup_mng", listOfGroup_mng);
-            session.setAttribute("id_event", id_event);
         }
 // #########################################################################################        
         else if (action.equalsIgnoreCase("listRecord")){
@@ -119,16 +110,9 @@ public class GroupController extends HttpServlet {
             if (systemUser.getRole().equals("admin")){
                 log.debug("admin");
                 forward = LIST_USER;
-                request.setAttribute("records", dao.getAllRecordsById_event(id_event));
             }
-            else if (systemUser.getRole().equals("event_mng")){
-                log.debug("event_mng");
+            else if (systemUser.getRole().equals("group_manager")){
                 forward = LIST_USER;
-                request.setAttribute("records", dao.getAllRecordsById_manager(systemUser.getId(), id_event));
-            }
-            else if (systemUser.getRole().equals("group_mng")){
-                forward = LIST_USER;
-                request.setAttribute("records", dao.getAllRecordsById_group_referent(systemUser.getId()));
             }
         } else {
             log.debug("action: ELSE - " + action);
@@ -137,14 +121,8 @@ public class GroupController extends HttpServlet {
                 forward = LIST_USER;
                 request.setAttribute("records", dao.getAllRecords());
             }
-            else if (systemUser.getRole().equals("event_mng")){
-                log.debug("event_mng");
+            else if (systemUser.getRole().equals("group_manager")){
                 forward = LIST_USER;
-                request.setAttribute("records", dao.getAllRecordsById_manager(systemUser.getId(), id_event));
-            }
-            else if (systemUser.getRole().equals("group_mng")){
-                forward = LIST_USER;
-                request.setAttribute("records", dao.getAllRecordsById_group_referent(systemUser.getId()));
             }
         }
     	
@@ -155,10 +133,9 @@ public class GroupController extends HttpServlet {
         log.debug("systemUser.getRole(): " + systemUser.getRole().toString());
         
 		if (systemUser.getRole().equals("admin") 
-				|| systemUser.getRole().equals("event_mng")
-				|| systemUser.getRole().equals("group_mng")){
+				|| systemUser.getRole().equals("group_manager")){
 	        log.debug("systemUser is an admin");
-		    forward = "/WEB-INF/jsp/private" + forward;
+		    forward = "/private/jsp" + forward;
 		}
 		else {
 			forward = UNAUTHORIZED_PAGE;
@@ -183,40 +160,40 @@ public class GroupController extends HttpServlet {
     	Group record = new Group();
     	
 		UserDao ud = new UserDao();
-		User  systemUser = ud.getUserByEmail(request.getUserPrincipal().getName());
+		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
-    	
-    	int id_event = 0;    	    	
-    	log.debug("id_event: " + request.getParameter("id_event"));
-    	
-    	if (request.getParameter("id_event") != null){
-    		id_event = Integer.parseInt(request.getParameter("id_event").toString());
-    	}
+		String forward;
 
-		record.setId_event(id_event);
-    	record.setId_group_referent(Integer.parseInt(request.getParameter("id_group_referent")));
+		
+		System.out.println(request.getParameter("max_group_number"));
+    	record.setGroupReferentID(Integer.parseInt(request.getParameter("id_group_referent")));
     	record.setName(request.getParameter("name"));
-    	record.setMax_group_number(Integer.parseInt(request.getParameter("max_group_number")));
+    	record.setFirstParticipantRegisteredID(-1);
+    	record.setCountry(request.getParameter("country"));
+    	record.setBadgeType(request.getParameter("badge"));
+    	record.setIsApproved(Boolean.parseBoolean(request.getParameter("approved")));
+    	record.setGroupMaxNmber(Integer.parseInt(request.getParameter("max_group_number")));
     	record.setBlocked(Boolean.parseBoolean(request.getParameter("blocked")));
-        
+    	record.setActualParticipantNumber(0);
+    	record.setSnowvolley(Boolean.parseBoolean(request.getParameter("snowvolley")));
+    	record.setBlocked(Boolean.parseBoolean(request.getParameter("blocked")));
+    	record.setFirstParticipantRegisteredID(-1);
     	String id = request.getParameter("id");
         
     	log.debug("id: " + id);
     	
         if(id == null || id.isEmpty()) {
         	log.debug("INSERT");
-            dao.addRecord(id_event, record);
-            request.setAttribute("id_event", id_event);
+            dao.addRecord( record);
         }
         else
         {
         	log.debug("UPDATE");
         	record.setId(Integer.parseInt(id));
             dao.updateRecord(record);
-            request.setAttribute("id_event", id_event);
         }
         
 		//Load event list available for user
@@ -224,33 +201,31 @@ public class GroupController extends HttpServlet {
             log.debug("admin");
             request.setAttribute("records", dao.getAllRecords());
         }
-        else if (systemUser.getRole().equals("event_mng")){
-            log.debug("event_mng");
-            request.setAttribute("records", dao.getAllRecordsById_manager(systemUser.getId(), id_event));
-        }
-        else if (systemUser.getRole().equals("group_mng")){
-            request.setAttribute("records", dao.getAllRecordsById_group_referent(systemUser.getId()));
+        else if (systemUser.getRole().equals("group_manager")){
+            request.setAttribute("records", dao.getRecordsByGroupReferentID(systemUser.getId()));
         }
         
-        
-        
-        
-        String forward =  "groupList.html?action=listRecord&id_event=" + id_event;
+        forward =  "groupList.html";
         log.debug("forward: " + forward);
 
-        response.sendRedirect(forward);
-        
-        /*
-        String forward = "/WEB-INF/jsp/private" + LIST_USER;
-        log.debug("forward: " + forward);
-        
-		try {
-			getServletConfig().getServletContext().getRequestDispatcher(forward).forward(request, response);
-			} 
-		catch (Exception ex) {
-				ex.printStackTrace();
-			}
-         */
     	log.trace("END");
+		response.sendRedirect("/snowdays-enrollment/private/"+forward);
+	}
+	
+	public boolean checkForNames(String name){
+		ArrayList<String> namesList = getGroupsNamesList();
+		if(namesList.contains(name.toLowerCase()))
+			return true;
+		return false;		
+	}
+	
+	public ArrayList<String> getGroupsNamesList(){
+		List<Group> l = dao.getAllRecords();
+		ArrayList<String> names = new ArrayList<String>(l.size());
+		for(int i = 0; i < l.size(); i++){
+			Group g = l.get(i);
+			names.add(g.getName().toLowerCase());
+		}
+		return names;
 	}
 }

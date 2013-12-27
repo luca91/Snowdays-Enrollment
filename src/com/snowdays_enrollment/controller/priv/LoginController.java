@@ -23,7 +23,8 @@ public class LoginController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.debug("START");
 		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);
+//			getServletConfig().getServletContext().getRequestDispatcher("/private/index.html").forward(request, response);
+			response.sendRedirect("/snowdays-enrollment/private/index.html");
 			} 
 		catch (Exception ex) {
 				ex.printStackTrace();
@@ -37,13 +38,5 @@ public class LoginController extends HttpServlet {
 	 * @param (HttpServletRequest request, HttpServletResponse response
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.debug("START");
-		try {
-			request.setAttribute("username", request.getAttribute("username"));
-			getServletConfig().getServletContext().getRequestDispatcher("/private/index.html").forward(request, response);
-			} 
-		catch (Exception ex) {
-				ex.printStackTrace();
-			}
 	}
 }

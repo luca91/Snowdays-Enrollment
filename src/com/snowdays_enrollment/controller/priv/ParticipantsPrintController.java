@@ -59,26 +59,13 @@ public class ParticipantsPrintController extends HttpServlet {
     	log.trace("START");
 
 		UserDao ud = new UserDao();
-		User  systemUser = ud.getUserByEmail(request.getUserPrincipal().getName());
-		
-		int id_event = Integer.parseInt(request.getParameter("id_event"));
+		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
 		
-		ParticipantDao pd = new ParticipantDao();
-		
-		List <Participant> l = pd.getAllRecordsById_event(id_event);
-		
-		log.debug("l: " + l.size());
-		request.setAttribute("listOfParticipant", l);
-		
-//		EventDao ed = new EventDao();
-//		Event e = ed.getRecordById(id_event);
-		
-//		request.setAttribute("eventName", e.getName());
-		
+		ParticipantDao pd = new ParticipantDao();		
     	        
 		String forward = "/WEB-INF/jsp/private/participantsPrint.jsp";
 

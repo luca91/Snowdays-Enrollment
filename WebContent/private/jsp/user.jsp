@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>EMS - Users Management</title>
+<title>Bolzano Snowdays-User Form</title>
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/tables_style.css" type="text/css" media="screen">
@@ -40,44 +40,41 @@
 	</c:set>	
 	<div id="stylized" class="myform">	
 	    <form method="POST" action="${act}" name="frmAddUser">
+	    	<input type="hidden" name="id" value="${user.id}"/>
 	    
-			<h3>User form</h3>
-			<p>Edit the data for the user</p>
-			<input type="hidden" readonly="readonly" name="id" value="${user.id}" /><br> 
+			<h3>Users</h3> <br><br><br>
 	        <label>First Name:</label>
-	        <input type="text" name="fname" value="${user.fname}" /> <br><br><br>
+	        <input type="text" name="fname" value="${user.fname}" required placeholder="Name"/> <br><br><br>
 	         
 	        <label>Last Name:</label>
-	        <input type="text" name="lname" value="${user.lname}" /> <br><br><br> 
-	        <label>Date of Birth:
+	        <input type="text" name="lname" value="${user.lname}" required placeholder="Surname"/> <br><br><br> 
+	         <label>Username:</label>
+	        <input type="text" name="username" value="${user.username}" required/> <br><br><br> 
+	        <label>Birthday:
 	         <span class="small">(YYYY/MM/DD)</span>
 	         </label>
-	        <input type="text" name="date_of_birth" value="${user.date_of_birth}" /> <br><br><br> 	            
-	       	<input type="hidden" name="password"
-	            value="${user.password}" />
+	        <input type="text" name="date_of_birth" value="${user.date_of_birth}" required/> <br><br><br> 	  
+	        <label>Password:</label>          
+	       	<input type="password" name="password" value="${user.password}" required/> <br><br><br>
 	            
 	        <label>Email:</label>
-	        <input type="text" name="email" value="${user.email}" /> <br><br><br> 
-	        <label>Role:<span class="small">Role for the new user</span></label>
-	        	<select name="role">
+	        <input type="text" name="email" value="${user.email}" required placeholder="Enter a valid email"/> <br><br><br> 
+	        <label>Role:</label>
+	        	<select name="role" required>
+	        			<option value=""></option>
 	        			<option value="admin" 
 	        				<c:if test="${user.role == 'admin'}">selected</c:if>
 	        				>
-	        				admin
+	        				Administrator
 	        			</option>
-	        			<option value="event_mng" 
-	        				<c:if test="${user.role == 'event_mng'}">selected</c:if>
+	        			<option value="group_manager" 
+	        				<c:if test="${user.role == 'group_manager'}">selected</c:if>
 	        				>
-	        				event_mng
-	        			</option>
-	        			<option value="group_mng" 
-	        				<c:if test="${user.role == 'group_mng'}">selected</c:if>
-	        				>
-	        				group_mng
+	        				Group Manager
 	        			</option>
 	        		</select>
 	        <br><br><br>   
-	        <input type="submit" value="Submit" class="input" />         
+	        <input type="submit" value="Submit" class="input"/>         
 	        <input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />
         	<c:if test="${param.id eq null }">
         		<input type="reset" value="Reset" class="input" /><br><br><br>

@@ -46,7 +46,7 @@ public class BadgeDao {
 		       Context envContext;
 			try {
 				envContext = (Context)initialContext.lookup("java:/comp/env");
-		        DataSource ds = (DataSource)envContext.lookup("jdbc/ems");
+		        DataSource ds = (DataSource)envContext.lookup("jdbc/snowdays_enrollment");
 		        connection = ds.getConnection();
 			} catch (NamingException e) {
 				// TODO Auto-generated catch block

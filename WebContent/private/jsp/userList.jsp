@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>EMS - Users Management</title>
+<title>Bolzano Snowdays-Users</title>
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/tables_style.css" type="text/css" media="screen">
@@ -35,7 +35,7 @@
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<h3 class="htabs">Users management</h3>
+		<h3 class="htabs">Users</h3>
 		<br><br>
 		<!-- <div class="table-buttons">
 			<a class="button-2" href="user.jsp?action=insert" id="addevent">Add User</a>
@@ -43,11 +43,12 @@
 		<table id="box-table-a">
 			<thead>
 				<tr>			
-					<th scope="col">User Id</th>
-					<th scope="col">User Role</th>
-					<th scope="col">First Name</th>
-					<th scope="col">Last Name</th>
+					<th scope="col">Name</th>
+					<th scope="col">Surname</th>
+					<th scope="col">Role</th>
+					<th scope="col">Username</th>
 					<th scope="col">Email</th>
+					<th scope="col">Group</th>
 					<th scope="col" colspan=3 style="text-align: center">Action</th>
 				</tr>
 			</thead>
@@ -56,11 +57,12 @@
 					test="${systemUser.role == 'admin'}">
 					<c:forEach items="${users}" var="user">
 						<tr>
-							<td><c:out value="${user.id}"></c:out></td>
-							<td><c:out value="${user.role}"></c:out></td>
-							<td><c:out value="${user.fname}"></c:out></td>
-							<td><c:out value="${user.lname}"></c:out></td>
-							<td><c:out value="${user.email}"></c:out></td>
+							<td>${user.fname}</td>
+							<td>${user.lname}</td>
+							<td>${user.role}</td>
+							<td>${user.username}</td>
+							<td>${user.email}</td>
+							<td>${user.group}</td>
 							<td>
 								<a href="<c:url value='/private/user.jsp?action=edit&id=${user.id}'/>">Update</a>
 							</td>

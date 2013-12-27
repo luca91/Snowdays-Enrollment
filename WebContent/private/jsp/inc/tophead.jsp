@@ -7,20 +7,20 @@
 	<div class="row-1">
 		<h1>
 			<a class="logo" href="index.html">Bolzano Snowdays - Enrollment</a>
-			<strong class="slog">Enrollment Management System</strong>						
+			<strong class="slog">Bolzano Snowdays-Enrollment/strong>						
 		</h1>
 		<form id="session-id">
-			Welcome - ${systemUser.email} <a href="<c:url value='/logout.html'/>">Logout</a> <br>
+			Welcome, ${systemUser.username}  <a href="<c:url value='/logout.html'/>">(Logout)</a> <br>
 			Role:
 			<c:choose>  
 				<c:when test="${systemUser.role == 'admin'}">
 					Administrator
 				</c:when>
-				<c:when test="${systemUser.role == 'group_mng'}">
+				<c:when test="${systemUser.role == 'group_manager'}">
 					Group Manager
 				</c:when>
 			</c:choose>	
-			${systemUser.id } <br/>
+			<br/>
 			Time: <jsp:useBean id="today" class="java.util.Date" scope="page" />
 			<fmt:formatDate value="${today}" pattern="dd MMM yyyy - HH:mm" />
 		</form>				

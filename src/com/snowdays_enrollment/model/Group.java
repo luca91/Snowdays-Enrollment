@@ -12,13 +12,9 @@ public class Group {
 	 */
 	private int id;
 	/**
-	 * @uml.property  name="id_event"
-	 */
-	private int id_event;
-	/**
 	 * @uml.property  name="id_group_referent"
 	 */
-	private int id_group_referent;
+	private int groupReferentID;
 	/**
 	 * @uml.property  name="name"
 	 */
@@ -26,11 +22,18 @@ public class Group {
 	/**
 	 * @uml.property  name="max_group_number"
 	 */
-	private int max_group_number;
+	private int groupMaxNumber;
 	/**
 	 * @uml.property  name="blocked"
 	 */
 	private boolean blocked;
+	private String country;
+	private int actualParticipantNumber;
+	private String badgeType;
+	private int firstParticipantRegisteredID;
+	private boolean snowvolley;
+	private boolean isApprove;
+	private String groupReferentData;
 
 	/**
 	 * @return
@@ -49,32 +52,17 @@ public class Group {
 
 	/**
 	 * @return
-	 * @uml.property  name="id_event"
-	 */
-	public int getId_event() {
-		return id_event;
-	}
-	/**
-	 * @param id_event
-	 * @uml.property  name="id_event"
-	 */
-	public void setId_event(int id_event) {
-		this.id_event = id_event;
-	}
-
-	/**
-	 * @return
 	 * @uml.property  name="id_group_referent"
 	 */
-	public int getId_group_referent() {
-		return id_group_referent;
+	public int getGroupReferentID() {
+		return groupReferentID;
 	}
 	/**
 	 * @param id_group_referent
 	 * @uml.property  name="id_group_referent"
 	 */
-	public void setId_group_referent(int id_group_referent) {
-		this.id_group_referent = id_group_referent;
+	public void setGroupReferentID(int id_group_referent) {
+		this.groupReferentID = id_group_referent;
 	}
 
 	/**
@@ -96,15 +84,15 @@ public class Group {
 	 * @return
 	 * @uml.property  name="max_group_number"
 	 */
-	public int getMax_group_number() {
-		return max_group_number;
+	public int getGroupMaxNumber() {
+		return this.groupMaxNumber;
 	}
 	/**
 	 * @param max_group_number
 	 * @uml.property  name="max_group_number"
 	 */
-	public void setMax_group_number(int max_group_number) {
-		this.max_group_number = max_group_number;
+	public void setGroupMaxNmber(int max_group_number) {
+		this.groupMaxNumber = max_group_number;
 	}
 
 	/**
@@ -124,9 +112,64 @@ public class Group {
 
 	@Override
     public String toString() {
-        return "User [id=" + id + ", id_event=" + id_event + ", id_group_referent=" + id_group_referent 
-                + ", max_group_number=" + max_group_number + ", blocked=" + blocked  +"]";
+        return "User [id=" + id + ", id_group_referent=" + groupReferentID 
+                + ", max_group_number=" + groupMaxNumber + ", blocked=" + blocked  +"]";
     } 
 	
+	public void setCountry(String country){
+		this.country = country;
+	}
+	
+	public String getCountry(){
+		return this.country;
+	}
+	
+	public void setActualParticipantNumber(int number){
+		actualParticipantNumber = number;
+	}
+	
+	public int getActualParticipantNumber(){
+		return this.actualParticipantNumber;
+	}
+	
+	public void setBadgeType(String type){
+		badgeType = type;
+	}
+	
+	public String getBadgeType(){
+		return this.badgeType;
+	}
+	
+	public void setFirstParticipantRegisteredID(int p){
+		firstParticipantRegisteredID = p;
+	}
+	
+	public int getFirstParticipantRegistered(){
+		return this.firstParticipantRegisteredID;
+	}
+	
+	public boolean getSnowvolley(){
+		return snowvolley;
+	}
+	
+	public void setSnowvolley(boolean flag){
+		snowvolley = flag;
+	}
+	
+	public void setIsApproved(boolean b){
+		isApprove = b;
+	}
+	
+	public boolean getIsApproved(){
+		return this.isApprove;
+	}
+	
+	public void setGroupReferentData(String nameAndSurname){
+		groupReferentData = nameAndSurname;
+	}
+	
+	public String getGroupReferentData(){
+		return this.groupReferentData;
+	}
 	
 }

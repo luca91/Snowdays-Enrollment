@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"	pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
-<title>EMS - Badges Management</title>
+<title>Bolzano Snowdays-Badges</title>
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/tables_style.css" type="text/css" media="screen">
@@ -37,42 +38,21 @@
 	<!-- CONTENT -->
 	<h3 class="htabs">Badges</h3>
 	<p>
+	<c:if test="${fn:length(records) != 0}">
 		<c:choose>
 			<c:when test="${systemUser.role == 'admin'}">
 				<c:if test="${groups != null }">
 					<select>
-						<option id="option-sel-sel" selected="selected">Choose a Group:</option>
+						<option id="option-sel-sel">Choose a Group:</option>
 						<c:forEach items="${groups}" var="group">
-							<c:url value="/private/badgeList.html?action=listRecord&id_group=${group.id}&id_event=${group.id_event}" var="url"/>
+							<c:url value="/private/badgeList.html?action=listRecord&id_group=${group.id}" var="url"/>
 							<option value="${url}" onClick="window.location.href='${url}'">${group.name}</option>
 						</c:forEach>
 					</select>
-					<c:if test="${id_group != 0}">
-						<script>$("#option-sel-sel").text(function () {
-				   			return $(this).text().replace("Choose a Group:", 'Badges for ${group_name}'); });
-						</script>
-					</c:if>	
 				</c:if>
 			</c:when>
-			
-			<c:when test="${systemUser.role == 'event_mng'}">
-				<c:if test="${groups != null }">
-					<select>
-						<option id="option-sel-sel" selected="selected">Choose a Group:</option>
-						<c:forEach items="${groups}" var="group">
-							<c:url value="/private/badgeList.html?action=listRecord&id_group=${group.id}&id_event=${group.id_event}" var="url"/>
-							<option value="${url}" onClick="window.location.href='${url}'">${group.name}</option>
-						</c:forEach>
-					</select>
-					<c:if test="${id_group != 0}">
-						<script>$("#option-sel-sel").text(function () {
-				   			return $(this).text().replace("Choose a Group:", 'Badges for ${group_name}'); });
-						</script>
-					</c:if>	
-				</c:if>
-			</c:when>
-			
 		</c:choose>
+		</c:if>
 		</p><br><br>
 			
 		<!-- TABLE -->
@@ -82,6 +62,7 @@
 			
 			<form method="POST" action="${act}" name="downloadBadge">
 				<table id="box-table-a">
+				<c:if test="${fn:length(records) != 0}">
 					<thead>
 						<tr>
 							<th scope="col">Participant</th>
@@ -91,7 +72,7 @@
 							<th scope="col">Badge</th>
 						</tr>
 					</thead>
-					
+					</c:if>
 					<tbody>					
 						<c:forEach items="${records}" var="record">
 						<tr>

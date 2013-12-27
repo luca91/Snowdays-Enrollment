@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>EMS - Group Management</title>
+<title>Bolzano Snowdays-Group Form</title>
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/tables_style.css" type="text/css" media="screen">
@@ -42,36 +42,78 @@
 		
 		<div id="stylized" class="myform">
 		    <form method="POST" action="${act}" name="frmAddGroup" id="form">
-		    	<h3>Groups form</h3>
-				<p>Edit the data for this group</p>	        
+		    	<h3>Group form</h3><br><br><br>
 		        <!-- HIDDEN --><!-- <label>Group ID : <span class="small">To be hidden</span></label> -->
-		        <input type="hidden" readonly="readonly" name="id" value="${record.id}" />
-		        <!-- HIDDEN --><!-- <label>Event ID : <span class="small">To be hidden</span></label> -->		        
-		        <input type="hidden" name="id_event" readonly="readonly" value="${id_event}" /> 
 
-		        <label>Group Name: 
-		        <span class="small">Input the name for the group</span>
+		        <label>Name: 
 		        </label>
-		        <input type="text" name="name" value="${record.name}" /><br><br><br>
+		        <input type="text" name="name" value="${record.name}" required/><br><br><br>
 		        
-		        <label>Group referent : 
-		        <span class="small">Contact person for the group</span>
+		        <label>Referent: 
 		        </label>
-       	        <select name="id_group_referent">
+       	        <select name="id_group_referent" required>
+       	        	<option value=""></option>
           			<c:forEach items="${listOfGroup_mng}" var="options">	               
            				<option value="${options.id }" 
-           					<c:if test="${options.id == record.id_group_referent }">selected</c:if>
-           						>${options.id } - ${options.fname} ${options.lname }
+           					<c:if test="${options.id == record.id_group_referent }">selected</c:if>>
+           						${options.fname} ${options.lname }
            				</option>
            			</c:forEach>
-           		</select><br><br><br>           		
-		        <label>Max # participants : 
-		        <span class="small">Nr. of people allowed for the group</span>
+           		</select> <br><br><br>           		
+		        <label>Max participants: 
 		        </label>
-		        <input type="text" name="max_group_number" value="${record.max_group_number}" /><br><br><br><br>
+		        <input type="text" name="max_group_number" value="${record.max_group_number}"required/><br><br><br><br>
+		        
+		        <label>
+		        	Snowvolley Team:
+		        </label>
+		        <select name="snowvolley" required>
+		        	<option value=""></option>
+		        	<option value="YES">YES</option>
+		        	<option value="NO">NO</option>
+		        </select> <br><br><br><br>
+		        
+		        <label>
+		        	Badge type:
+		        </label>
+		         <select name="badge" required>
+		         	<option value=""></option>
+		         	<option value="PARTICIPANT">PARTICIPANT</option>
+		        	<option value="STAFF">STAFF</option>
+		        	<option value="PARTY/HOST">PARTY/HOST</option>
+		        </select> <br><br><br><br>
+		        
+		        <label>
+		        	Country:
+		        </label>
+		        <select name="country" required>
+		        	<option value=""></option>
+		        	<option value="Italy(IT)">Italy(IT)</option>
+		        	<option value="Austria(A)">Austria(A)</option>
+		        	<option value="Germany(D)">Germany(D)</option>
+		        	<option value="Spain(E)">Spain(E)</option>
+		        </select> <br><br><br><br>
+		        
+		        <label>
+		        	Approved
+		        </label>
+		        <select name="approved" required>
+		        	<option value=""></option>
+		        	<option value="YES">YES</option>
+		        	<option value="NO">NO</option>
+		        </select> <br><br><br><br>
+		        
+		        <label>
+		        	Blocked:
+		        </label>
+		        <select name="blocked" required>
+		        	<option value=""></option>
+		        	<option value="YES">YES</option>
+		        	<option value="NO">NO</option>
+		        </select> <br><br><br><br>
+		        
 		        
 		        <!-- BUTTONS -->
-		        <input type="hidden" name="blocked" value="${record.blocked}" />
 		        <input type="submit" value="Submit" class="input" />
 		        <input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />
 		        <c:if test="${param.id eq null }">

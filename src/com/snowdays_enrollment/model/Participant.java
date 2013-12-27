@@ -1,5 +1,8 @@
 package com.snowdays_enrollment.model;
 
+import java.util.ArrayList;
+import java.sql.Date;
+
 /**
 * User is the JavaBean representing the record of the table Participant
 * 
@@ -28,25 +31,22 @@ public class Participant {
 	 */
 	private String email;
 	/**
-	 * @uml.property  name="uuid"
-	 */
-	private String uuid;
-	/**
 	 * @uml.property  name="date_of_birth"
 	 */
 	private String date_of_birth;
 	/**
-	 * @uml.property  name="registration_date"
-	 */
-	private String registration_date;
-	/**
 	 * @uml.property  name="approved"
 	 */
 	private boolean approved;
-	/**
-	 * @uml.property  name="blocked"
-	 */
-	private boolean blocked;
+	private int fridayProgram;
+	private ArrayList<String> intolerances;
+	private String tShirtSize;
+	private int rentalOption;
+	private String birthday;
+	private String photoLocation;
+	private String registrationTime;
+	private String gender;
+	
 	
 	
 	//Getters and Setters
@@ -121,20 +121,6 @@ public class Participant {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	/**
-	 * @return
-	 * @uml.property  name="uuid"
-	 */
-	public String getUuid() {
-		return uuid;
-	}
-	/**
-	 * @param uuid
-	 * @uml.property  name="uuid"
-	 */
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
 	
 	/**
 	 * @return
@@ -152,20 +138,6 @@ public class Participant {
 	}
 	/**
 	 * @return
-	 * @uml.property  name="registration_date"
-	 */
-	public String getRegistration_date() {
-		return registration_date;
-	}
-	/**
-	 * @param registration_date
-	 * @uml.property  name="registration_date"
-	 */
-	public void setRegistration_date(String registration_date) {
-		this.registration_date = registration_date;
-	}
-	/**
-	 * @return
 	 * @uml.property  name="approved"
 	 */
 	public boolean isApproved() {
@@ -178,20 +150,72 @@ public class Participant {
 	public void setApproved(boolean approved) {
 		this.approved = approved;
 	}
-	/**
-	 * @return
-	 * @uml.property  name="blocked"
-	 */
-	public boolean isBlocked() {
-		return blocked;
-	}
-	/**
-	 * @param blocked
-	 * @uml.property  name="blocked"
-	 */
-	public void setBlocked(boolean blocked) {
-		this.blocked = blocked;
+	
+	public void setFridayProgram(int program){
+		this.fridayProgram = program;
 	}
 	
+	public int getFridayProgram(){
+		return this.fridayProgram;
+	}
 	
+	public void setIntolerances(ArrayList<String> intol){
+		intolerances = intol;
+	}
+	
+	public ArrayList<String> getIntolerances(){
+		return this.intolerances;
+	}
+	
+	public void setTShirtSize(String c){
+		tShirtSize = c;
+	}
+	
+	public String getTShirtSize(){
+		return this.tShirtSize;
+	}
+	
+	public void setRentalOption(int opt){
+		rentalOption = opt;
+	}
+	
+	public int getRentalOption(){
+		return this.rentalOption;
+	}
+		
+	public void setBirthday(String d){
+		birthday = d;
+	}
+	
+	public String getBirthday(){
+		return this.birthday;
+	}
+	
+	public void setPhotoURL(String url){
+		photoLocation = url;
+	}
+	
+	public String getPhotoURL(){
+		return this.photoLocation;
+	}
+	
+	public void setRegistrationTime(String d){
+		registrationTime = d;
+	}
+	
+	public String getRegistrationTime(){
+		return this.registrationTime;
+	}
+	
+	public void setGender(String g){
+		gender = g;
+	}
+	
+	public String getGender(){
+		return gender;
+	}
+	
+	public String intolerancesToString(){
+		return intolerances.toString();
+	}
 }

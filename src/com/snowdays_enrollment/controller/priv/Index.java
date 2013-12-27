@@ -47,7 +47,9 @@ public class Index extends HttpServlet {
 		
 		User u = new User();
 		UserDao ud = new UserDao();
-		u = ud.getUserByEmail(request.getParameter("username"));
+		System.out.println("User: " + request.getUserPrincipal().getName());
+		u = ud.getUserByUsername(request.getUserPrincipal().getName());
+		System.out.println("User: " + u.getUsername());
 		
 		HttpSession session = request.getSession(true);
 		session.setAttribute("systemUser", u);
@@ -71,7 +73,7 @@ public class Index extends HttpServlet {
 		
 		User u = new User();
 		UserDao ud = new UserDao();
-		u = ud.getUserByEmail(request.getParameter("username"));
+		u = ud.getUserByUsername((String)request.getAttribute("username"));
 		
 		HttpSession session = request.getSession(true);
 		session.setAttribute("systemUser", u);

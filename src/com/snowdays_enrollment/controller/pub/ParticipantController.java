@@ -34,8 +34,8 @@ public class ParticipantController extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 
-	private static String form = "/WEB-INF/jsp/public/participant.jsp";
-	private static String showFeedback = "/WEB-INF/jsp/public/participantFeedback.jsp";
+	private static String form = "/public/jsp/participant.jsp";
+	private static String showFeedback = "/public/participantFeedback.jsp";
 	
 	private static String feedback = "enrollmentForm.html?message=y";
 	
@@ -125,9 +125,8 @@ public class ParticipantController extends HttpServlet {
     	
     	String currentdate = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
     	log.debug("current date&time: " + currentdate);
-    	record.setRegistration_date(currentdate);
+    	record.setRegistrationTime(currentdate);;
     	record.setApproved(false);
-    	record.setBlocked(false);
     	
     	String id = request.getParameter("id");
         
@@ -142,10 +141,10 @@ public class ParticipantController extends HttpServlet {
     	request.setAttribute("group", g);
     	request.setAttribute("nrEnrolledParticipant", alreadyEnrolled);
     	
-    	log.debug("g.getMax_group_number(): " + g.getMax_group_number());
+    	log.debug("g.getMax_group_number(): " + g.getGroupMaxNumber());
     	log.debug("alreadyEnrolled: " + alreadyEnrolled);
     	
-    	if(alreadyEnrolled < g.getMax_group_number()){
+    	if(alreadyEnrolled < g.getGroupMaxNumber()){
     		log.debug("places are available");
 	        dao.addRecord(id_group, record);
 	        request.setAttribute("record", record);

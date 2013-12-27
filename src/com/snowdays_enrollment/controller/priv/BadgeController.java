@@ -44,7 +44,7 @@ public class BadgeController extends HttpServlet {
 	
 	private static String OUTPUT = "/output";
 	private static String DOWNLOAD_LIST = "/badge.jsp";
-	private static String UNAUTHORIZED_PAGE = "/WEB-INF/jsp/private/errors/unauthorized.jsp";
+	private static String UNAUTHORIZED_PAGE = "/private/jsp/errors/unauthorized.jsp";
 	
 	/**
 	 * @uml.property  name="dao"
@@ -71,7 +71,7 @@ public class BadgeController extends HttpServlet {
 		log.trace("START");
 
 		UserDao ud = new UserDao();
-		User  systemUser = ud.getUserByEmail(request.getUserPrincipal().getName());
+		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		ParticipantDao pDao = new ParticipantDao();
 		
 		HttpSession session = request.getSession(true);
@@ -169,7 +169,7 @@ public class BadgeController extends HttpServlet {
         log.debug("action: " + action);
     	        
         if(!action.equalsIgnoreCase("download"))
-        		forward = "/WEB-INF/jsp/private" + forward;
+        		forward = "/private/jsp" + forward;
 
         
 		try {
@@ -198,13 +198,9 @@ public class BadgeController extends HttpServlet {
             GroupDao gd = new GroupDao();
             request.setAttribute("groups", gd.getAllRecords());
         }
-        else if (systemUser.getRole().equals("event_mng")){
-            GroupDao gd = new GroupDao();
-            request.setAttribute("groups", gd.getRecordsById_manager(systemUser.getId()));
-        }
         else if (systemUser.getRole().equals("group_mng")){
             GroupDao gd = new GroupDao();
-            request.setAttribute("groups", gd.getRecordsById_group_referent(systemUser.getId()));
+            request.setAttribute("groups", gd.getRecordsByGroupReferentID(systemUser.getId()));
         }
 		
 		int id_group = 0;

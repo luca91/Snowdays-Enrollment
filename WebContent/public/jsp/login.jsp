@@ -24,9 +24,9 @@
 		<form method="POST" action="j_security_check" name="loginForm" id="form">
 			<h3>Login</h3><br><br><br>
 			<label>Username</label>
-			<input type="text" name="j_username"/><br><br>
+			<input type="text" name="j_username" value="${username}"/><br><br>
 			<label>Password</label>
-			<input type="password" name="j_password"/><br><br>
+			<input type="password" name="j_password" value="${password}"/><br><br>
 			
 			<!-- BUTTONS -->			
 		    <input type="submit" value="Login" class="input" />

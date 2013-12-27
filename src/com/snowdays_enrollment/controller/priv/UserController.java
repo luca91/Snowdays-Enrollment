@@ -32,7 +32,8 @@ public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private static String INSERT_OR_EDIT = "/user.jsp";
     private static String LIST_USER = "/userList.jsp";
-    private static String UNAUTHORIZED_PAGE = "/WEB-INF/jsp/private/errors/unauthorized.jsp";
+    private static String UNAUTHORIZED_PAGE = "/private/jsp/errors/unauthorized.jsp";
+    private String forward;
     
     /**
 	 * @uml.property  name="dao"
@@ -62,11 +63,9 @@ public class UserController extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	log.trace("START");
-    	String forward="";
         String action = request.getParameter("action");
-        
 		UserDao ud = new UserDao();
-		User  systemUser = ud.getUserByEmail(request.getUserPrincipal().getName());
+		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
@@ -78,43 +77,33 @@ public class UserController extends HttpServlet {
         	log.debug("action is NULL");
         	action="";
         }
-// #########################################################################################          
+        
+        //Delete user
         if (action.equalsIgnoreCase("delete")){
             log.debug("action: DELETE - " + action);
-            int id = Integer.parseInt(request.getParameter("id"));
-            if (systemUser.getRole().equals("admin")){
-            	dao.deleteUser(id);
-            	forward = LIST_USER;
-            	request.setAttribute("users", dao.getAllUsers());
-            }              
+            deleteUser(request, systemUser);
         } 
-// #########################################################################################        
+        
+        //Edit user
         else if (action.equalsIgnoreCase("edit")){
-            log.debug("action: EDIT - " + action);
-            forward = INSERT_OR_EDIT;
-            int id = Integer.parseInt(request.getParameter("id"));
-            if (systemUser.getRole().equals("admin")){
-            	User user = dao.getUserById(id);
-            	request.setAttribute("user", user);
-            }
+        	log.debug("action: EDIT - " + action);
+        	editUser(request, systemUser);
         }
-// #########################################################################################        
+        
+        //Insert user
         else if (action.equalsIgnoreCase("insert")){
             log.debug("action: INSERT - " + action);
-            request.removeAttribute("user");
-            if (systemUser.getRole().equals("admin")){
-            	forward = INSERT_OR_EDIT;
-            }
+            insertUser(request, systemUser);
         } 
-// #########################################################################################        
+        
+        //List users
         else if (action.equalsIgnoreCase("listUser")){
             log.debug("action: listUser - " + action);
-            forward = LIST_USER;
-            request.setAttribute("users", dao.getAllUsers());
+            listUsers(request);
+           
         } else {
             log.debug("action: ELSE - " + action);
-            forward = LIST_USER;
-            request.setAttribute("users", dao.getAllUsers());
+            listUsers(request);
         }
     	
         log.debug("forward: " + forward);
@@ -125,7 +114,7 @@ public class UserController extends HttpServlet {
         
 		if (systemUser.getRole().equals("admin")){
 	        log.debug("systemUser is an admin");
-		    forward = "/WEB-INF/jsp/private" + forward;
+		    forward = "/private/jsp" + forward;
 		}
 		else {
 	        log.debug("systemUser is NOT an admin");
@@ -151,12 +140,22 @@ public class UserController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	log.trace("START");
     	User user = new User();
+    	UserDao uDao = new UserDao();
+    	
+    	User systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
+    	
+    	HttpSession session = request.getSession(true);
+		session.removeAttribute("systemUser");
+		session.setAttribute("systemUser",systemUser);
+		String forward;
+		
         user.setFname(request.getParameter("fname"));
         user.setLname(request.getParameter("lname"));
         user.setDate_of_birth(request.getParameter("date_of_birth"));
         user.setPassword(request.getParameter("password"));
         user.setEmail(request.getParameter("email"));
         user.setRole(request.getParameter("role"));
+        user.setUsername(request.getParameter("username"));
         String id = request.getParameter("id");
         
 
@@ -171,16 +170,6 @@ public class UserController extends HttpServlet {
 
         	log.debug("INSERT");
             dao.addUser(user);
-            Email e = new Email();
-            String message = "Hi " + user.getFname() + "\n" +
-            				"An account on the EMS site has been created\n" +
-            				"\nClick the following link to enter the EMS Sytem\n" +
-            				"\nhttp://" + request.getServerName() + ":8080/ems/private/index.html" + 
-            				"\n\nYou default password is: " + user.getPassword() +            				
-            				"\n\nTo change you password click the following link:\n" +
-            				"\nhttp://" + request.getServerName() + ":8080/ems/public/changePassword.html" +
-            				"\n\nThe Staff";
-            e.sendEmail(user.getEmail(), "[EMS] - Account created", message);
         }
         else
         {
@@ -189,14 +178,7 @@ public class UserController extends HttpServlet {
             dao.updateUser(user);
         }
         
-        /*
-        RequestDispatcher view = request.getRequestDispatcher(LIST_USER);
-        request.setAttribute("users", dao.getAllUsers());
-        view.forward(request, response);
-        
-        */
-        
-        String forward = "/WEB-INF/jsp/private" + LIST_USER;
+        forward = "/private/jsp" + LIST_USER;
         log.debug("forward: " + forward);
         request.setAttribute("users", dao.getAllUsers());
 		try {
@@ -206,6 +188,44 @@ public class UserController extends HttpServlet {
 				ex.printStackTrace();
 			}
     	log.trace("END");
+	}
+	
+	public void deleteUser(HttpServletRequest request, User systemUser){
+		log.trace("START");
+		 int id = Integer.parseInt(request.getParameter("id"));
+         if (systemUser.getRole().equals("admin")){
+         	dao.deleteUser(id);
+         	forward = LIST_USER;
+         	request.setAttribute("users", dao.getAllUsers());
+         }   
+         log.trace("END");
+	}
+	
+	public void insertUser(HttpServletRequest request, User systemUser){
+		log.trace("START");
+		  request.removeAttribute("user");
+          if (systemUser.getRole().equals("admin")){
+        	  forward = INSERT_OR_EDIT;
+          }
+          log.trace("END");
+	}
+	
+	public void listUsers(HttpServletRequest request){
+		log.trace("START");
+		forward = LIST_USER;
+        request.setAttribute("users", dao.getAllUsers());
+        log.trace("END");
+	}
+	
+	public void editUser(HttpServletRequest request, User systemUser){
+		log.trace("START");
+		forward = INSERT_OR_EDIT;
+        int id = Integer.parseInt(request.getParameter("id"));
+        if (systemUser.getRole().equals("admin")){
+        	User user = dao.getUserById(id);
+         	request.setAttribute("user", user);
+         }
+        log.trace("END");
 	}
 
 }

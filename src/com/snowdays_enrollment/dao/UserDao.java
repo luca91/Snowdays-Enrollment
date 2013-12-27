@@ -84,21 +84,22 @@ public class UserDao {
         try {
         	
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("insert into user(fname,lname,date_of_birth,email,password,role) values (?, ?, ?, ?, ?, ? )");
+                    .prepareStatement("insert into users(user_name,user_surname,user_birthday,user_email,user_password,user_role,user_username) values (?, ?, ?, ?, ?, ?, ? )");
             preparedStatement.setString(1, user.getFname());
             preparedStatement.setString(2, user.getLname());
             preparedStatement.setString(3, user.getDate_of_birth());
             preparedStatement.setString(4, user.getEmail());
             preparedStatement.setString(5, user.getPassword());
             preparedStatement.setString(6, user.getRole());
+            preparedStatement.setString(7, user.getUsername());
                         
         	log.debug("addUser Execute Update on table user");
             preparedStatement.executeUpdate();
             
             preparedStatement = connection
-                    .prepareStatement("insert into user_role(ROLE_NAME,email) values (?, ?)");
+                    .prepareStatement("insert into roles(role_name,user_username) values (?, ?)");
             preparedStatement.setString(1, user.getRole());
-            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(2, user.getUsername());
 
 
         	log.debug("addUser Execute Update on table user_role");
@@ -123,14 +124,14 @@ public class UserDao {
             User u = getUserById(id);
             
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("delete from user where id=?");
-            preparedStatement.setInt(1, id); 
+                    .prepareStatement("delete from roles where user_username=?");
+            preparedStatement.setString(1, u.getUsername());
             log.debug(preparedStatement.toString());
             preparedStatement.executeUpdate();
-                  
+            
             preparedStatement = connection
-                    .prepareStatement("delete from user_role where email=?");
-            preparedStatement.setString(1, u.getEmail());
+                    .prepareStatement("delete from users where user_id=?");
+            preparedStatement.setInt(1, id); 
             log.debug(preparedStatement.toString());
             preparedStatement.executeUpdate();
             
@@ -155,23 +156,25 @@ public class UserDao {
         	log.debug("oldUser.email: " +oldUser.getEmail());
         	
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("update user set fname=?, lname=?, date_of_birth=?,email=?, password=?, role=? " +
-                            "where id=?");
+                    .prepareStatement("update users set user_name=?, user_surname=?, user_birthday=?, "
+                    		+ "user_email=?, user_password=?, user_role=?, user_group=? " +
+                            "where user_id=?");
             preparedStatement.setString(1, user.getFname());
             preparedStatement.setString(2, user.getLname());
             preparedStatement.setString(3, user.getDate_of_birth());
             preparedStatement.setString(4, user.getEmail());
             preparedStatement.setString(5, user.getPassword());
             preparedStatement.setString(6, user.getRole());
-            preparedStatement.setInt(7, user.getId());
+            preparedStatement.setString(7, user.getGroup());
+            preparedStatement.setInt(8, user.getId());
             preparedStatement.executeUpdate();
             
             preparedStatement = connection
-                    .prepareStatement("update user_role set ROLE_NAME=?, email=? " +
-                            "where email=?");
+                    .prepareStatement("update roles set role_name=?, user_username=? " +
+                            "where user_username=?");
             preparedStatement.setString(1, user.getRole());
-            preparedStatement.setString(2, user.getEmail());
-            preparedStatement.setString(3, oldUser.getEmail());
+            preparedStatement.setString(2, user.getUsername());
+            preparedStatement.setString(3, oldUser.getUsername());
             log.debug(preparedStatement.toString());
             preparedStatement.executeUpdate();
             
@@ -221,16 +224,17 @@ public class UserDao {
     	List<User> users = new ArrayList<User>();
         try {
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM user, user_role WHERE user.email = user_role.email");
+            ResultSet rs = statement.executeQuery("SELECT * FROM users, roles WHERE users.user_username = roles.user_username");
             while (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setFname(rs.getString("fname"));
-                user.setLname(rs.getString("lname"));
-                user.setDate_of_birth(rs.getString("date_of_birth"));
-                user.setPassword(rs.getString("password"));
-                user.setEmail(rs.getString("email"));
-                user.setRole(rs.getString("ROLE_NAME"));
+                user.setId(rs.getInt("user_id"));
+                user.setFname(rs.getString("user_name"));
+                user.setLname(rs.getString("user_surname"));
+                user.setDate_of_birth(rs.getString("user_birthday"));
+                user.setPassword(rs.getString("user_password"));
+                user.setEmail(rs.getString("user_email"));
+                user.setRole(rs.getString("role_name"));
+                user.setGroup(rs.getString("user_group"));
                 users.add(user);
             }
             rs.close();
@@ -255,21 +259,20 @@ public class UserDao {
             Statement statement = connection.createStatement();
             String sql = "SELECT * " +
 						" FROM " +
-						" ems.user, user_role " +
-						" WHERE user.email = user_role.email " +
-						" and user_role.ROLE_NAME = '" + aRole +"'";
+						" snowdays_enrollment.users, roles " +
+						" WHERE users.user_role = '" + aRole +"' and users.user_username = roles.user_username and roles.group_assigned = false ";
             log.debug(sql);
             ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setFname(rs.getString("fname"));
-                user.setLname(rs.getString("lname"));
-                user.setDate_of_birth(rs.getString("date_of_birth"));
-                user.setPassword(rs.getString("password"));
-                user.setEmail(rs.getString("email"));
-                user.setRole(rs.getString("ROLE_NAME"));
+                user.setId(rs.getInt("user_id"));
+                user.setFname(rs.getString("user_name"));
+                user.setLname(rs.getString("user_surname"));
+                user.setDate_of_birth(rs.getString("user_birthday"));
+                user.setPassword(rs.getString("user_password"));
+                user.setEmail(rs.getString("user_email"));
+                user.setRole(rs.getString("user_role"));
                 users.add(user);
             }
             rs.close();
@@ -292,17 +295,18 @@ public class UserDao {
         User user = new User();
         try {
             PreparedStatement preparedStatement = connection.
-                    prepareStatement("SELECT * FROM user, user_role WHERE user.email = user_role.email AND id = ?");
+                    prepareStatement("SELECT * FROM users, roles WHERE users.user_username = roles.user_username AND user_id =?");
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
-                user.setId(rs.getInt("id"));
-                user.setFname(rs.getString("fname"));
-                user.setLname(rs.getString("lname"));
-                user.setDate_of_birth(rs.getString("date_of_birth"));
-                user.setPassword(rs.getString("password"));
-                user.setEmail(rs.getString("email"));
-                user.setRole(rs.getString("ROLE_NAME"));
+                user.setId(rs.getInt("user_id"));
+                user.setFname(rs.getString("user_name"));
+                user.setLname(rs.getString("user_surname"));
+                user.setDate_of_birth(rs.getString("user_birthday"));
+                user.setPassword(rs.getString("user_password"));
+                user.setUsername(rs.getString("user_username"));
+                user.setEmail(rs.getString("user_email"));
+                user.setRole(rs.getString("role_name"));
             }
             rs.close();
             preparedStatement.close();
@@ -374,7 +378,7 @@ public class UserDao {
         User user = new User();
         try {
             PreparedStatement preparedStatement = connection.
-                    prepareStatement("SELECT * FROM users, roles WHERE users.user_email = roles.role_user_email AND users.user_email=?");
+                    prepareStatement("SELECT * FROM users, roles WHERE users.user_email = roles.user_email AND users.user_email=?");
             preparedStatement.setString(1, email);
             ResultSet rs = preparedStatement.executeQuery();
             log.debug(preparedStatement.toString());
@@ -395,4 +399,37 @@ public class UserDao {
     	log.trace("END");
         return user;
     }   
+    
+    public User getUserByUsername(String username){
+    	log.trace("START");
+    	User user = new User();
+    	try{
+    		PreparedStatement userInfo = connection
+    				.prepareStatement("SELECT * FROM users, roles WHERE users.user_username=? AND roles.user_username=?");
+    		userInfo.setString(1, username);
+    		userInfo.setString(2, username);
+    		ResultSet rs = userInfo.executeQuery();
+    		log.debug(userInfo.toString());
+    		rs.beforeFirst();
+//    		System.out.println(rs.getString("user_username"));
+    		if(rs.next()){
+    			user.setId(rs.getInt("user_id"));
+    			user.setFname(rs.getString("user_name"));
+    			user.setLname(rs.getString("user_surname"));
+    			user.setDate_of_birth(rs.getString("user_birthday"));
+                user.setPassword(rs.getString("user_password"));
+                user.setEmail(rs.getString("user_email"));
+                user.setRole(rs.getString("user_role"));
+                user.setUsername(rs.getString("user_username"));
+                System.out.println("User (UserDao): " + user.getUsername());
+    		}
+    		rs.close();
+    		userInfo.close();
+    	}
+    	catch (SQLException e){
+    		e.printStackTrace();
+    	}
+    	log.trace("END");
+    	return user;
+    }
 }

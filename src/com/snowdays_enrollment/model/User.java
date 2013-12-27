@@ -41,6 +41,11 @@ public class User implements Serializable {
 	 * @uml.property  name="role"
 	 */
 	private String role;
+	/**
+	 * @uml.property name="username"
+	 */
+	private String username;
+	private String group;
 	
 	public User(){ }
 	
@@ -51,6 +56,7 @@ public class User implements Serializable {
 		this.password = password;
 		this.email = email;
 		this.role = role;
+		
 	}
 	
 	/**
@@ -152,12 +158,27 @@ public class User implements Serializable {
 		this.role = role;
 	}
 	
+	public void setUsername(String username){
+		this.username = username;
+	}
+	
+	public String getUsername(){
+		return this.username;
+	}
+	
 	@Override
     public String toString() {
         return "User [id=" + id + ", fname=" + fname
                 + ", lname=" + lname + ", password=" + password + ", email="
                 + email + ", " + "role=" + role +"]";
-    } 
+    }
 	
+	public void setGroup(String groupName){
+		group = groupName;
+	}
+	
+	public String getGroup(){
+		return this.group;
+	}
 	
 }
