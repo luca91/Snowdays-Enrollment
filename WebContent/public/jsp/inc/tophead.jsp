@@ -6,7 +6,7 @@
 	<!-- TOP + LOGO -->
 	<div class="row-1">
 		<h1>
-			<a class="logo" href="/private/index.html"><img alt="" src="../images/logo_snowdays.png"></a>
+			<a class="logo" href="index.html"><img alt="" src="../images/logo_snowdays.png"></a>
 			<strong class="slog">Enrollment Management System</strong>						
 		</h1>
 		<form id="session-id">

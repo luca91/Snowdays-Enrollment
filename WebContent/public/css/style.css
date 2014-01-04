@@ -233,15 +233,15 @@ header {
 }
 
 .row-1 {
-	width: 100%;
+	width: 100;
 	height: 113px;
 	overflow: hidden;
-	padding-top: 24px
+	padding-top: 11px
 }
 
 .row-2 {
 	width: 100%;
-	min-height: 85px;
+	min-height: 180px;
 	position: relative;
 	z-index: 1
 }
@@ -261,18 +261,18 @@ h1 {
 
 .logo {
 	display: block;
-	width: 224px;
+	width: 270px;
 	height: 45px;
 	text-indent: -5000px;
 	background: url(../images/logo.png) 0 0 no-repeat;
-	margin: 10px 0 8px 0
+	margin: 0px 0 8px 0
 }
 
 .slog {
 	display: block;
 	font-size: 14px;
 	line-height: 1.2em;
-	color: #8a8a8a;
+	color: #64C6D8;
 	text-transform: uppercase;
 	letter-spacing: -1px
 }
@@ -618,15 +618,16 @@ h6 {
 
 .button-2 {
 	display: inline-block;
-	font-size: 19px;
-	line-height: 1.21em;
+	font-size: 23px;
+	line-height: 1.30em;
 	letter-spacing: -1px;
 	color: #fefefe;
-	padding: 9px 20px 11px;
+	padding: 9px 40px 11px;
 	background: url(../images/button-tail.gif) 0 0 repeat-x #3c3c3c;
 	border-radius: 8px;
 	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px
+	-webkit-border-radius: 8px;
+	position: absolute; right:0px; bottom: 20px ;
 }
 
 .button-2:hover {

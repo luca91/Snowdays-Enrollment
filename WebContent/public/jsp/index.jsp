@@ -33,41 +33,35 @@
                 <div class="main">
                         <header>
                                 <div class="row-1">
-                                        <h1>
-                                                <a class="logo" href="index.html">Bolzano Snowdays - Enrollment</a>
-                                                <strong class="slog">Bolzano Snowdays - Enrollment</strong>
-                                        </h1>                                        
+                                       <h1>
+											<a class="logo" href="index.html"><img alt="" src="../images/logo_snowdays.png"></a>
+											<strong class="slog">Enrollment Management System</strong>						
+									   </h1>                                        
                                 </div>
-                                <div class="row-2">
-                                        <nav>
-                                                <ul class="menu">
-                                                  <li><a class="active" href="index.html">Home Page</a></li>
-                                                  <li><a href="#">Events</a></li>
-                                                  <li><a href="#">Media</a></li>
-                                                  <li><a href="#">Contact Us</a></li>
-                                                  <li class="last-item"><a href="/snowdays-enrollment/login.html">Login</a></li>                                                  
-                                                </ul>
-                                        </nav>
+                                <div class="row-2">                                       
+                                                <div class="menu">                                                                                        
+                                                  <a class="button-2" href="/snowdays-enrollment/login.html">Login</a>                                                  
+                                                </div>                                      
                                 </div>
                                 <div class="row-3">
                                         <div class="slider-wrapper">
                                                 <div class="slider">
                                                   <ul class="items">
-                                                        <li><img src="public/images/slider-img1.jpg" alt="">
+                                                        <li><img src="../images/slider-img1.jpg" alt="">
                                                                 <strong class="banner">
                                                                         <strong class="b1">Save the date:</strong>
                                                                         <strong class="b2">Snowdays 2014</strong>
-                                                                        <strong class="b3">Three days of sports, snow & fun!<br>Next March, 2014!</strong>
+                                                                        <strong class="b3">Three days of sports, snow and fun!<br>Next March, 2014!</strong>
                                                                 </strong>
                                                         </li>
-                                                        <li><img src="public/images/slider-img2.jpg" alt="">
+                                                        <li><img src="snowdays-enrollment/public/images/slider-img2.jpg" alt="">
                                                                 <strong class="banner">
                                                                         <strong class="b1">Summer is close:</strong>
                                                                         <strong class="b2">Big Concert!</strong>
                                                                         <strong class="b3">Reserve you place for the big night<br>at Museion at mid June!</strong>
                                                                 </strong>
                                                         </li>
-                                                        <li><img src="public/images/slider-img3.jpg" alt="">
+                                                        <li><img src="snowdays-enrollment/public/images/slider-img3.jpg" alt="">
                                                                 <strong class="banner">
                                                                         <strong class="b1">Time has come:</strong>
                                                                         <strong class="b2">Degree Ceremony</strong>
