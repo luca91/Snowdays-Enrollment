@@ -42,6 +42,7 @@ public class Registrations extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
+		session.setMaxInactiveInterval(1200);
 		
 		String forward = null;
 		String action = request.getParameter("action");

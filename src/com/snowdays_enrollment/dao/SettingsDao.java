@@ -69,6 +69,7 @@ static Logger log = Logger.getLogger(SettingsDao.class.getName());
 						.prepareStatement("insert into settings values(?,?)");
 				stmt.setString(1, name);
 				stmt.setString(2, description);
+				log.debug(stmt.toString());
 				stmt.executeUpdate();
 				stmt.close();
 			}
@@ -199,6 +200,7 @@ static Logger log = Logger.getLogger(SettingsDao.class.getName());
 					.prepareStatement("update settings set setting_value=? where setting_name=?");
 			stmt.setString(1, value);
 			stmt.setString(2, name);
+			stmt.executeUpdate();
 		}
 		catch(SQLException e){
 			e.printStackTrace();

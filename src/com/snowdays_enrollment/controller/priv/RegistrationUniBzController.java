@@ -44,6 +44,7 @@ public class RegistrationUniBzController extends HttpServlet {
 		session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
+		session.setMaxInactiveInterval(1200);
 		
 		RegistrationUniBzDao ruDao = new RegistrationUniBzDao();
 		

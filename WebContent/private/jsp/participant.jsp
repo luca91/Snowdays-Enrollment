@@ -2,6 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
+<%
+int timeout = session.getMaxInactiveInterval();
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+%>
 <html>
 <head>
 <title>Bolzano Snowdays-Participant Form</title>
@@ -82,7 +86,9 @@
 		        </c:forEach>
 	        </select>       <br><br><br> 
 	        <label>Photo</label>
-	        <input type="file"/> <br><br><br>
+	        <input type="file" name="photo" value=""/> <br><br><br>
+	        <label>Student ID photo</label>
+	        <input type="file" name="idphoto" value=""/> <br><br><br>
 	        
 	             	                  
 	        <input type="submit" value="Submit" class="input" />

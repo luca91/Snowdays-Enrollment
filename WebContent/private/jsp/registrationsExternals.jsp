@@ -3,6 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
+<%
+int timeout = session.getMaxInactiveInterval();
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+%>
 <html>
 <head>
 <title>Bolzano Snowdays-Externals</title>

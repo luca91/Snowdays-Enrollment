@@ -57,6 +57,7 @@ public class RegistrationExternalsController extends HttpServlet {
 		session = request.getSession();
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser", systemUser);
+		session.setMaxInactiveInterval(1200);
 		
 		if(systemUser.getRole().equals("admin")){
 			log.debug("role: " + "admin");

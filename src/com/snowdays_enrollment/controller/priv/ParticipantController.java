@@ -1,6 +1,7 @@
 package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +14,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import sun.util.locale.StringTokenIterator;
 
 import com.snowdays_enrollment.dao.GroupDao;
 import com.snowdays_enrollment.dao.ParticipantDao;
 import com.snowdays_enrollment.dao.RegistrationExternalsDao;
+import com.snowdays_enrollment.dao.SettingsDao;
 import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.Participant;
@@ -82,10 +89,12 @@ public class ParticipantController extends HttpServlet {
 
 		UserDao ud = new UserDao();
 		systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
+		SettingsDao sDao = new SettingsDao();
 		
 		session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
+		session.setMaxInactiveInterval(1200);
 
     	log.debug("id_group: " + request.getParameter("id_group"));
     	
@@ -126,10 +135,12 @@ public class ParticipantController extends HttpServlet {
 
         //list record using a group_id
         else if (action.equalsIgnoreCase("listRecord")){
+        	request.setAttribute("groupMaxNumber", sDao.getSetting("maxpergroup"));
         	listParticipantsByGroup(request, response);
         }
         //list records without an id_group
         else {
+        	request.setAttribute("groupMaxNumber", sDao.getSetting("maxpergroup"));
             if (systemUser.getRole().equals("admin")){
                 log.debug("admin");
                 forward = LIST_USER;
@@ -451,4 +462,31 @@ public class ParticipantController extends HttpServlet {
     	
     	return result;
     }
-}
+    
+    public void uploadPhotosFiles(HttpServletRequest request, HttpServletResponse response) throws ServletException{
+    	log.trace("START");
+    	List<FileItem> items;
+		try {
+			items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+	        for (FileItem item : items) {
+	            if (item.isFormField()) {
+	                // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
+	                String fieldname = item.getFieldName();
+	                String fieldvalue = item.getString();
+	                // ... (do your job here)
+	            } 
+	            else {
+	                // Process form file field (input type="file").
+	                String fieldname = item.getFieldName();
+	                String filename = FilenameUtils.getName(item.getName());
+	                InputStream filecontent = item.getInputStream();
+	            }
+	        }
+        } catch (org.apache.commons.fileupload.FileUploadException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        log.trace("END");
+        }
+    }
+

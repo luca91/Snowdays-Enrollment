@@ -70,6 +70,7 @@ public class UserController extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
+		session.setMaxInactiveInterval(1200);
         
         
         

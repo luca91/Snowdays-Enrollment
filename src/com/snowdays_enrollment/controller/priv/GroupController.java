@@ -1,5 +1,6 @@
 package com.snowdays_enrollment.controller.priv;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import com.snowdays_enrollment.dao.GroupDao;
+import com.snowdays_enrollment.dao.SettingsDao;
 import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.User;
@@ -71,6 +73,7 @@ public class GroupController extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
+		session.setMaxInactiveInterval(1200);
     	
     	String forward="";
         String action = request.getParameter("action");
@@ -192,7 +195,7 @@ public class GroupController extends HttpServlet {
     	
         if(id == null || id.isEmpty()) {
         	log.debug("INSERT");
-            dao.addRecord( record);
+            dao.addRecord(record);
         }
         else
         {
@@ -209,6 +212,17 @@ public class GroupController extends HttpServlet {
         else if (systemUser.getRole().equals("group_manager")){
             request.setAttribute("records", dao.getRecordsByGroupReferentID(systemUser.getId()));
         }
+        
+        String realPath = getServletConfig().getServletContext().getRealPath("/");
+        File groupFolder = new File(realPath+"/"+record.getName());
+        System.out.println(groupFolder.getPath());
+        groupFolder.mkdir();
+        File photosFolder = new File(realPath+"/"+record.getName()+"/profile");
+        photosFolder.mkdir();
+        File idsFolder = new File(realPath+"/"+record.getName()+"/studentids");
+        idsFolder.mkdir();
+        File badgeFilder = new File(realPath+"/"+record.getName()+"/badges");
+        badgeFilder.mkdir();
         
         forward =  "groupList.html";
         log.debug("forward: " + forward);

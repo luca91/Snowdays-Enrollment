@@ -80,6 +80,7 @@ public class BadgeController extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
+		session.setMaxInactiveInterval(1200);
 		
 		GroupDao gdao = new GroupDao();
     	request.setAttribute("groups", gdao.getAllRecords());

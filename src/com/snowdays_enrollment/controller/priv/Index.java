@@ -53,6 +53,7 @@ public class Index extends HttpServlet {
 		
 		HttpSession session = request.getSession(true);
 		session.setAttribute("systemUser", u);
+		session.setMaxInactiveInterval(1200);
 		 
 		try {
 			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);

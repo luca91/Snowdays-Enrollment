@@ -2,6 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
+<%
+int timeout = session.getMaxInactiveInterval();
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+%>
 <html>
 <head>
 <title>Bolzano Snowdays-User Form</title>
@@ -53,7 +57,7 @@
 	        <label>Birthday:
 	         <span class="small">(YYYY/MM/DD)</span>
 	         </label>
-	        <input type="text" name="date_of_birth" value="${user.date_of_birth}" required/> <br><br><br> 	  
+	        <input type="text" name="date_of_birth" value="${user.date_of_birth}"/> <br><br><br> 	  
 	        <label>Password:</label>          
 	       	<input type="password" name="password" value="${user.password}" required/> <br><br><br>
 	            

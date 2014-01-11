@@ -3,6 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
+<%
+int timeout = session.getMaxInactiveInterval();
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+%>
 <html>
 <head>
 <title>Bolzano Snowdays-Groups </title>
@@ -65,7 +69,8 @@
 					<c:forEach items="${records}" var="record">
 						<tr>
 							<td>${record.name}</td>
-							<td>${record.groupReferentData}</td>
+							<c:if test="${record.groupReferentData != 'null null'}"><td>${record.groupReferentData}</td></c:if>
+							<c:if test="${record.groupReferentData == 'null null'}"><td>No</td></c:if>
 							<td>${record.groupMaxNumber}</td>
 							<td>${record.actualParticipantNumber}
 							<td>${record.country}</td>

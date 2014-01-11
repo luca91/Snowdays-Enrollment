@@ -5,6 +5,10 @@
 <%
 System.out.println("index.html");
 %>
+<%
+int timeout = session.getMaxInactiveInterval();
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+%>
 <html lang="en">
 <head>
 <title>Bolzano Snowdays - Enrollment</title>
@@ -22,21 +26,14 @@ System.out.println("index.html");
 <script type="text/javascript" src="private/js/FF-cash.js"></script>  
 <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<!--[if lt IE 7]>
-	<div style=' clear: both; text-align:center; position: relative;'>
-		<a href="http://www.microsoft.com/windows/internet-explorer/default.aspx?ocid=ie6_countdown_bannercode"><img src="http://www.theie6countdown.com/images/upgrade.jpg" border="0"  alt="" /></a>
-	</div>
-<![endif]-->
-<!--[if lt IE 9]>
-	<script type="text/javascript" src="/private/js/html5.js"></script>
-	<link rel="stylesheet" href="/private/css/ie.css" type="text/css" media="screen">
-<![endif]-->
 </head>
 <body id="page5">
 <div class="bg">
 	<div class="main">
 		<!-- HEADER -->
 			<c:import url="inc/tophead.jsp"/>
-				<a href='settings.html'><h3 class="htabs">Settings</h3></a><br><hr><br>						
+			<c:if test="${systemUser.role == 'admin' }">
+				<a href='settings.html'><h3 class="htabs">Settings</h3></a><br><hr><br>
+			</c:if>						
 			<c:import url="inc/bottom.jsp"></c:import>
 </html>

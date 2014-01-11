@@ -52,6 +52,7 @@ public class SettingsController extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser", systemUser);
+		session.setMaxInactiveInterval(1200);
 		
 		SettingsDao sDao = new SettingsDao();
 		ArrayList<Country> countries = (ArrayList<Country>) sDao.getAllCountries();

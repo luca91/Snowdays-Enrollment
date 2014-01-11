@@ -3,6 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
+<%
+int timeout = session.getMaxInactiveInterval();
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+%>
 <html>
 <head>
 <title>Bolzano Snowdays-Participants</title>
@@ -55,12 +59,12 @@
 			<br>
 			
 			<c:choose>
-				<c:when test="${id_group != -1}">
+				<c:when test="${id_group > 0}">
 						<h6>Max #${groupMaxNumber} participants</h6>		
 				</c:when>				
 			</c:choose>
 			<c:choose>				
-				<c:when test="${id_group != null && (nrEnrolledParticipant >= group.groupMaxNumber)}">
+				<c:when test="${id_group > 0 && (nrEnrolledParticipant >= groupMaxNumber)}">
 				<h5 class="alert">ATTENTION: Max nr. of enrolled people reached for this group!</h5>
 				</c:when>				
 			</c:choose>
@@ -99,7 +103,7 @@
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
 			<div class="table-buttons">
 				
-				<c:if test="${((systemUser.role == 'admin') && (fn:length(groups) != 0) && (id_group != null)) || ((systemUser.role == 'group_manager') && (nrEnrolledParticipant <= groupMaxNumber) && (id_group != -1))}">
+				<c:if test="${((systemUser.role == 'admin') && (fn:length(groups) != 0) && (id_group > 0)) || ((systemUser.role == 'group_manager') && (nrEnrolledParticipant <= groupMaxNumber) && (id_group > 0))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
 				</c:if>
 				
