@@ -31,9 +31,11 @@ public class Group {
 	private int actualParticipantNumber;
 	private String badgeType;
 	private int firstParticipantRegisteredID;
-	private boolean snowvolley;
+	private String snowvolley;
 	private boolean isApprove;
 	private String groupReferentData;
+	private String timeFirstRegistration;
+	private int position;
 
 	/**
 	 * @return
@@ -148,12 +150,12 @@ public class Group {
 		return this.firstParticipantRegisteredID;
 	}
 	
-	public boolean getSnowvolley(){
+	public String getSnowvolley(){
 		return snowvolley;
 	}
 	
-	public void setSnowvolley(boolean flag){
-		snowvolley = flag;
+	public void setSnowvolley(String s){
+		snowvolley = s;
 	}
 	
 	public void setIsApproved(boolean b){
@@ -170,6 +172,22 @@ public class Group {
 	
 	public String getGroupReferentData(){
 		return this.groupReferentData;
+	}
+	
+	public void setTimeFirstRegistration(String time){
+		timeFirstRegistration = time;
+	}
+		
+	public String getTimeFirstRegistration(){
+		return timeFirstRegistration;
+	}
+	
+	public void setPosition(int p){
+		position = p;
+	}
+	
+	public int getPosition(){
+		return this.position;
 	}
 	
 }

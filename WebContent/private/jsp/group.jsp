@@ -60,25 +60,22 @@
            				</option>
            			</c:forEach>
            		</select> <br><br><br>           		
-		        <label>Max participants: 
-		        </label>
-		        <input type="text" name="max_group_number" value="${record.max_group_number}"required/><br><br><br><br>
 		        
 		        <label>
-		        	Snowvolley Team:
+		        	Saturday activity:
 		        </label>
-		        <select name="snowvolley" required>
-		        	<option value=""></option>
-		        	<option value="YES">YES</option>
-		        	<option value="NO">NO</option>
+		        <select name="saturday" required>
+		        	<option value="snowvolley">Snowvolley</option>
+		        	<option value="dodgeball">Dodgeball</option>
+		        	<option value="none">none</option>
 		        </select> <br><br><br><br>
 		        
 		        <label>
 		        	Badge type:
 		        </label>
 		         <select name="badge" required>
-		         	<option value=""></option>
 		         	<option value="PARTICIPANT">PARTICIPANT</option>
+		         	<option value=""></option>
 		        	<option value="STAFF">STAFF</option>
 		        	<option value="PARTY/HOST">PARTY/HOST</option>
 		        </select> <br><br><br><br>
@@ -86,30 +83,31 @@
 		        <label>
 		        	Country:
 		        </label>
-		        <select name="country" required>
-		        	<option value=""></option>
-		        	<option value="Italy(IT)">Italy(IT)</option>
-		        	<option value="Austria(A)">Austria(A)</option>
-		        	<option value="Germany(D)">Germany(D)</option>
-		        	<option value="Spain(E)">Spain(E)</option>
-		        </select> <br><br><br><br>
+		       <select name="country" required>
+       	        	<option value=""></option>
+          			<c:forEach items="${countries}" var="country">	               
+           				<option value="${country}">
+           						${country}
+           				</option>
+           			</c:forEach>
+           		</select> <br><br><br>
 		        
 		        <label>
 		        	Approved
 		        </label>
 		        <select name="approved" required>
+		        	<option value="NO">NO</option>
 		        	<option value=""></option>
 		        	<option value="YES">YES</option>
-		        	<option value="NO">NO</option>
 		        </select> <br><br><br><br>
 		        
 		        <label>
 		        	Blocked:
 		        </label>
 		        <select name="blocked" required>
+		        	<option value="NO">NO</option>
 		        	<option value=""></option>
 		        	<option value="YES">YES</option>
-		        	<option value="NO">NO</option>
 		        </select> <br><br><br><br>
 		        
 		        

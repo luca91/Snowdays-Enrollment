@@ -19,9 +19,11 @@ import sun.util.locale.StringTokenIterator;
 
 import com.snowdays_enrollment.dao.GroupDao;
 import com.snowdays_enrollment.dao.ParticipantDao;
+import com.snowdays_enrollment.dao.RegistrationExternalsDao;
 import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.Participant;
+import com.snowdays_enrollment.model.RegistrationExternal;
 import com.snowdays_enrollment.model.User;
 import com.snowdays_enrollment.tools.Email;
 
@@ -87,10 +89,6 @@ public class ParticipantController extends HttpServlet {
 
     	log.debug("id_group: " + request.getParameter("id_group"));
     	
-    	// Used for invitation
-    	request.setAttribute("count", request.getParameter("count"));
-    	request.setAttribute("showCount", request.getParameter("showCount"));
-    	
     	GroupDao gdao = new GroupDao();
     	request.setAttribute("groups", gdao.getAllRecords());
     		
@@ -98,15 +96,13 @@ public class ParticipantController extends HttpServlet {
     	if (request.getParameter("id_group") != null){
     		log.debug("id_group is not null!");
     		id_group = Integer.parseInt(request.getParameter("id_group").toString());
-        	
+    		log.debug("id_group: "+id_group);
         	Group g = gdao.getRecordById(id_group);
         	request.setAttribute("group", g);
         	request.setAttribute("nrEnrolledParticipant", gdao.getNrEnrolledParticipant(id_group));
     	}
     	
     	request.setAttribute("id_group", request.getParameter("id_group"));
-    	log.debug("id_group: " + id_group);
-    	
     	
     	action = request.getParameter("action");
         if (action == null){
@@ -143,9 +139,14 @@ public class ParticipantController extends HttpServlet {
             }
             else if (systemUser.getRole().equals("group_manager")){
                 forward = LIST_USER;
+                GroupDao gDao = new GroupDao();
+                id_group = gDao.getGroupByIDGroupReferent(systemUser.getId());
+                System.out.println(id_group);
+                request.setAttribute("id_group", id_group);
+                Group g = gDao.getRecordById(id_group);
+                request.setAttribute("groupMaxNumber", g.getGroupMaxNumber());
+                request.setAttribute("nrEnrolledParticipant", g.getActualParticipantNumber());
                 request.setAttribute("records", dao.getAllRecordsById_group(id_group));
-                GroupDao gd = new GroupDao();
-                request.setAttribute("groups", gd.getRecordsByGroupReferentID(systemUser.getId()));
             }
         }
 // #########################################################################################     	
@@ -154,13 +155,16 @@ public class ParticipantController extends HttpServlet {
     	        
 		forward = "/private/jsp" + forward;
 
-        
-		try {
-			getServletConfig().getServletContext().getRequestDispatcher(forward).forward(request, response);
-			} 
-		catch (Exception ex) {
-				ex.printStackTrace();
-			}
+		if(action.equals("delete"))
+			response.sendRedirect("participantList.html");
+		else{
+			try {
+				getServletConfig().getServletContext().getRequestDispatcher(forward).forward(request, response);
+				} 
+			catch (Exception ex) {
+					ex.printStackTrace();
+				}
+		}
 	}
 
 	/**
@@ -211,7 +215,6 @@ public class ParticipantController extends HttpServlet {
 	    	record.setLname(request.getParameter("lname"));
 	    	record.setEmail(request.getParameter("email"));
 	    	record.setGender(request.getParameter("gender"));
-	    	System.out.println(request.getParameter("friday"));
 	    	record.setFridayProgram(pDao.getProgramID(request.getParameter("friday")));
 	    	record.setDate_of_birth(request.getParameter("date_of_birth"));
 	    	record.setTShirtSize(request.getParameter("tshirt"));
@@ -224,6 +227,13 @@ public class ParticipantController extends HttpServlet {
 	        	log.debug("INSERT");
 	            dao.addRecord(id_group, record);
 	            request.setAttribute("id_group", id_group);
+	            RegistrationExternal r = new RegistrationExternal();
+	            int idPar = dao.getIDByParticipant(record.getFname(), record.getLname(), id_group);
+	            r.setParticipantID(idPar);
+	            r.setGroupName(new GroupDao().getRecordById(id_group).getName());
+	            r.setTime(dao.getRecordById(idPar).getRegistrationTime());
+	            RegistrationExternalsDao reDao = new RegistrationExternalsDao();
+	            reDao.addRegistration(r);
 	        }
 	        else
 	        {
@@ -351,13 +361,21 @@ public class ParticipantController extends HttpServlet {
     public void insertParticipant(HttpServletRequest request, HttpServletResponse response){
     	request.removeAttribute("record");
         forward = INSERT_OR_EDIT;
+        request.setAttribute("programs", new String[] {"", "Ski Race", "Snowboard Race", "Snowshoe Hike", "Relax"});
+        request.setAttribute("tshirts", new String[] {"", "Small", "Medium", "Large", "Extra Large"});
+        request.setAttribute("rentals", new String[] {"none", "Only skis", "Only snowboard", "Skis and boots", "Snowboard and boots"});
+        request.setAttribute("genders", new String[] {"", "Female", "Male"});
+        request.setAttribute("group", new GroupDao().getRecordById(Integer.parseInt(request.getParameter("id_group"))).getName());
     }
     
     public void deleteParticipant(HttpServletRequest request, HttpServletResponse response){
     	 int id = Integer.parseInt(request.getParameter("id"));
          
          List<Integer> listOfAuthorizedId = dao.canBeChangedBy(id);
+         log.debug("before if");
          if (listOfAuthorizedId.contains(systemUser.getId())){
+        	log.debug("inside if");
+        	log.debug("id: "+id);
          	dao.deleteRecord(id);
          	forward = LIST_USER;
          	request.setAttribute("records", dao.getAllRecords());  
@@ -373,12 +391,26 @@ public class ParticipantController extends HttpServlet {
     	  log.debug("action: EDIT - " + action);
           log.debug("systemUser: " + systemUser.getId());
           int id = Integer.parseInt(request.getParameter("id"));
+          System.out.println(id);
 
           List<Integer> listOfAuthorizedId = dao.canBeChangedBy(id);
           if (listOfAuthorizedId.contains(systemUser.getId())){
           	log.debug("systemUser can modify the record");
               Participant record = dao.getRecordById(id);
               request.setAttribute("record", record);   
+              request.setAttribute("programs", new String[] {"", "Ski Race", "Snowboard Race", "Snowshoe Hike", "Relax"});
+              request.setAttribute("tshirts", new String[] {"", "Small", "Medium", "Large", "Extra Large"});
+              request.setAttribute("rentals", new String[] {"none", "Only skis", "Only snowboard", "Skis and boots", "Snowboard and boots"});
+              request.setAttribute("id", record.getId());
+              request.setAttribute("genders", new String[] {"", "Female", "Male"});
+              System.out.println(record.getGender());
+              System.out.println(dao.getProgramByID(record.getFridayProgram()));
+              System.out.println(record.getTShirtSize());
+              System.out.println(dao.getRentalByID(record.getRentalOption()));
+              request.setAttribute("selGen", record.getGender());
+              request.setAttribute("selPro", dao.getProgramByID(record.getFridayProgram()));
+              request.setAttribute("selTS", record.getTShirtSize());
+              request.setAttribute("selRen", dao.getRentalByID(record.getRentalOption()));
               forward = INSERT_OR_EDIT;
           }
           else {
@@ -399,9 +431,14 @@ public class ParticipantController extends HttpServlet {
           }
           else if (systemUser.getRole().equals("group_manager")){
               forward = LIST_USER;
+              GroupDao gDao = new GroupDao();
+              id_group = gDao.getGroupByIDGroupReferent(systemUser.getId());
+              System.out.println(id_group);
+              request.setAttribute("id_group", id_group);
+              Group g = gDao.getRecordById(id_group);
+              request.setAttribute("groupMaxNumber", g.getGroupMaxNumber());
+              request.setAttribute("nrEnrolledParticipant", g.getActualParticipantNumber());
               request.setAttribute("records", dao.getAllRecordsById_group(id_group));
-              GroupDao gd = new GroupDao();
-              request.setAttribute("groups", gd.getRecordsByGroupReferentID(systemUser.getId()));
           }   
     }
     

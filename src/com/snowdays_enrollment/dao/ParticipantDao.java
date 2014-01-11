@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
+import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.Participant;
 
 /**
@@ -104,8 +105,9 @@ public class ParticipantDao {
             log.debug(preparedStatement.toString());
         	log.debug("addRecord Execute Update");
             preparedStatement.executeUpdate();
-            
             preparedStatement.close();
+            GroupDao gDao = new GroupDao();
+            gDao.updateActualParticipantNr(anId_group, 1);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -121,12 +123,20 @@ public class ParticipantDao {
     public void deleteRecord(int id) {
     	log.trace("START");
         try {
-            PreparedStatement preparedStatement = connection
-                    .prepareStatement("delete from participants where participant_id=?");
+        	PreparedStatement preparedStatement = connection
+             		.prepareStatement("delete from registrations where registration_participant_id=?");
             preparedStatement.setInt(1, id);
             log.debug(preparedStatement.toString());
             preparedStatement.executeUpdate();
-            
+            preparedStatement = connection
+                    .prepareStatement("delete from participants where participant_id=?");
+            preparedStatement.setInt(1, id);
+         
+            GroupDao gDao = new GroupDao();
+            log.debug("group id: "+getRecordById(id).getId_group());
+            gDao.updateActualParticipantNr(getRecordById(id).getId_group(), -1);
+            System.out.println("ecco qui");
+            preparedStatement.executeUpdate();
             preparedStatement.close();
 
         } catch (SQLException e) {
@@ -142,21 +152,23 @@ public class ParticipantDao {
      */
     public void updateRecord(Participant aRecord) {
     	log.debug("START");
+    	System.out.println("");
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update participants " +
                     					"set " +
-                    					"participant_id_group=?, " +
+                    					"participant_group_id=?, " +
                     					"participant_name=?, " +
                     					"participant_surname=?, " +
                     					"participant_email=?, " +
                     					"participant_birthday=?," +
                       					"participant_approved=?, " +
-                    					"participant_friday_program=? "
-                    					+ "particpant_gender"
-                    					+ "participant_intolerance"
-                    					+ "participant_rental_option"
-                    					+ "participant_photo" +
+                    					"participant_friday_program=?, "
+                    					+ "participant_gender=?,"
+                    					+ "participant_intolerance=?,"
+                    					+ "participant_rental_option_id=?,"
+                    					+ "participant_photo=?,"
+                    					+ "participant_t_shirt_size=?"+
                             			"where participant_id=?");
             log.debug(aRecord.getDate_of_birth()); 
             preparedStatement.setInt(1, aRecord.getId_group());
@@ -170,6 +182,8 @@ public class ParticipantDao {
             preparedStatement.setString(9, aRecord.intolerancesToString());
             preparedStatement.setInt(10, aRecord.getRentalOption());
             preparedStatement.setString(11, aRecord.getPhotoURL());
+            preparedStatement.setString(12, aRecord.getTShirtSize());
+            preparedStatement.setInt(13, aRecord.getId());
             preparedStatement.executeUpdate();
             preparedStatement.close();
             
@@ -187,6 +201,7 @@ public class ParticipantDao {
     public List<Participant> getAllRecords() {
         log.trace("START");
     	List<Participant> records = new ArrayList<Participant>();
+    	GroupDao gDao = new GroupDao();
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("select * from participants");
@@ -206,6 +221,8 @@ public class ParticipantDao {
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
                 record.setPhotoURL(rs.getString("participant_photo"));
                 record.setRegistrationTime(rs.getString("participant_registration_time"));
+                Group g = gDao.getRecordById(record.getId_group());
+                record.setGroupName(g.getName());
                 records.add(record);
             }
             rs.close();
@@ -229,6 +246,7 @@ public class ParticipantDao {
     public List<Participant> getAllRecordsById_group(int anId_group) {
         log.trace("START");
     	List<Participant> records = new ArrayList<Participant>();
+    	GroupDao gDao = new GroupDao();
         try {
             PreparedStatement preparedStatement = connection.
                     prepareStatement("select * from participants where participant_group_id=?");
@@ -251,6 +269,8 @@ public class ParticipantDao {
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
 //                record.setPhotoURL(rs.getString("participant_photo"));
 //                record.setRegistrationTime(rs.getString("participant_registration_time"));
+                Group g = gDao.getRecordById(record.getId_group());
+                record.setGroupName(g.getName());
                 records.add(record);
             }
             rs.close();
@@ -273,18 +293,23 @@ public class ParticipantDao {
     	Participant record = new Participant();
         try {
             PreparedStatement preparedStatement = connection.
-                    prepareStatement("select * from participant where id=?");
+                    prepareStatement("select * from participants where participant_id=?");
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-                record.setId(rs.getInt("id"));
-                record.setId_group(rs.getInt("id_group"));
-                record.setFname(rs.getString("fname"));
-                record.setLname(rs.getString("lname"));
-                record.setEmail(rs.getString("email"));            
-                record.setDate_of_birth(rs.getString("date_of_birth"));
-                record.setApproved(rs.getBoolean("approved"));
+                record.setId(rs.getInt("participant_id"));
+                record.setId_group(rs.getInt("participant_group_id"));
+                log.debug("id group: "+record.getId_group());
+                record.setFname(rs.getString("participant_name"));
+                record.setLname(rs.getString("participant_surname"));   
+                record.setDate_of_birth(rs.getString("participant_birthday"));
+                record.setApproved(rs.getBoolean("participant_approved"));
+                record.setRegistrationTime(rs.getString("participant_registration_time"));
+                record.setGender(rs.getString("participant_gender"));
+                record.setFridayProgram(rs.getInt("participant_friday_program"));
+                record.setTShirtSize(rs.getString("participant_t_shirt_size"));
+                record.setRentalOption(rs.getInt("participant_rental_option_id"));
             }
             rs.close();
             preparedStatement.close();
@@ -303,6 +328,7 @@ public class ParticipantDao {
      */
     public List<Integer>  canBeChangedBy(int anId_participant) {
     	log.trace("START");
+    	log.debug("participant id: "+anId_participant);
         List<Integer> listOfId = new ArrayList<Integer>();
         try {
         	
@@ -321,19 +347,32 @@ public class ParticipantDao {
                 log.debug("id_group_referent: " + rs1.getInt("group_referent_id"));
                 log.debug("id_group: " + rs1.getInt("group_id"));
             }
+           //looks for group managers
+            PreparedStatement preparedStatement2 = connection
+                    .prepareStatement("SELECT user_id " +
+                    					" FROM snowdays_enrollment.users, snowdays_enrollment.roles" +
+                    					" WHERE snowdays_enrollment.users.user_username = snowdays_enrollment.roles.user_username" +
+                    					" AND snowdays_enrollment.roles.role_name = 'group_manager'");
+            log.debug(preparedStatement2.toString());
+            ResultSet rs2 = preparedStatement2.executeQuery();
+            while (rs2.next()) {
+            	log.debug("there are admins");
+                listOfId.add(rs2.getInt("user_id"));
+                log.debug("id_admin: " + rs2.getInt("user_id"));
+            }
             
             //look for admins
             PreparedStatement preparedStatement3= connection
-                    .prepareStatement("SELECT id " +
+                    .prepareStatement("SELECT user_id " +
                     					" FROM snowdays_enrollment.users, snowdays_enrollment.roles" +
                     					" WHERE snowdays_enrollment.users.user_username = snowdays_enrollment.roles.user_username" +
-                    					" AND snowdays_enrollmet.roles.role_name = 'admin'");
+                    					" AND snowdays_enrollment.roles.role_name = 'admin'");
             log.debug(preparedStatement3.toString());
             ResultSet rs3 = preparedStatement3.executeQuery();
             while (rs3.next()) {
             	log.debug("there are admins");
-                listOfId.add(rs3.getInt("id"));
-                log.debug("id_admin: " + rs3.getInt("id"));
+                listOfId.add(rs3.getInt("user_id"));
+                log.debug("id_admin: " + rs3.getInt("user_id"));
             }
             
             for (int  i = 0; i < listOfId.size(); i++){
@@ -391,6 +430,7 @@ public class ParticipantDao {
     
     public int getProgramID(String program){
     	log.trace("START");
+    	int res = -1;
     	try{
     		PreparedStatement preparedStatement = connection.
     				prepareStatement("select program_id from programs where program_description=?");
@@ -398,17 +438,19 @@ public class ParticipantDao {
     		ResultSet rs = preparedStatement.executeQuery();
     		rs.beforeFirst();
     		if(rs.next()){
-    			return rs.getInt("program_id");
+    			res = rs.getInt("program_id");
+    			preparedStatement.close();
     	}
     } catch (SQLException e) {
         e.printStackTrace();
     }
 	log.trace("END");
-	return -1;
+	return res;
     }
     
     public int getRentalOptionID(String option){
     	log.trace("START");
+    	int res = -1;
     	try{
     		PreparedStatement preparedStatement = connection.
     				prepareStatement("select rent_option_id from rental_options where rent_option_description=?");
@@ -416,12 +458,54 @@ public class ParticipantDao {
     		ResultSet rs = preparedStatement.executeQuery();
     		rs.beforeFirst();
     		if(rs.next()){
-    			return rs.getInt("rent_option_id");
+    			res = rs.getInt("rent_option_id");
+    			preparedStatement.close();
     	}
     } catch (SQLException e) {
         e.printStackTrace();
     }
 	log.trace("END");
-	return -1;
+	return res;
     }
+    
+    public String getProgramByID(int id){
+    	log.trace("START");
+    	String result = null;
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("select program_description from programs where program_id=?");
+    		stmt.setInt(1, id);
+    		ResultSet rs = stmt.executeQuery();
+    		rs.beforeFirst();
+    		if(rs.next()){
+    			result = rs.getString("program_description");
+    		}
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	log.trace("END");
+    	return result;
+    }
+    
+    public String getRentalByID(int id){
+    	log.trace("START");
+    	String result = null;
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("select rent_option_description from rental_options where rent_option_id=?");
+    		stmt.setInt(1, id);
+    		ResultSet rs = stmt.executeQuery();
+    		rs.beforeFirst();
+    		if(rs.next()){
+    			result = rs.getString("rent_option_description");
+    		}
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	log.trace("END");
+    	return result;
+    }
+    
 }

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Bolzano Snowdays-UNIBZ</title>
+<title>Bolzano Snowdays-Externals</title>
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/tables_style.css" type="text/css" media="screen">
@@ -27,26 +27,8 @@
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<h3 class="htabs">Registrations UNIBZ</h3> 
-			<br></br><br>	
-			
-			<c:url value="private/unibzRegistrations.html?action=check" var="act"></c:url>
-			<form method="POST" action="${act}" name="frmAddParticipan">
-				<input type="text" name="unibzpartname" placeholder="Name"/>
-				<input type="text" name="unibzparsurname" placeholder="Surname"/>
-				<input type="text" name="email" value="${email}" placeholder="Email"/> <br><br><br>
-				<c:choose>
-					<c:when test="${systemUser.role == 'admin'}">			    
-					    <select name="faculty">
-					    	<option value="computerscience">Computer Science</option>
-					    	<option value="design">Design</option>
-					    	<option value="sciencetechnology">Science and Technology</option>
-					    	<option value="economics">Economics</option>
-					    	<option value="education">Education</option>
-						</select>
-					</c:when>
-				</c:choose>
-			</form>
+		<h3 class="htabs">Registrations externals</h3> 
+			<br></br><br>		
 
 			<!-- TABLES -->
 				<table id="box-table-a">
@@ -63,7 +45,7 @@
 					<tbody>
 						<c:forEach items="${records}" var="record">
 							<tr>
-								<td></td>
+								<td>${record.position}</td>
 								<td>${record.name}</td>
 								<td>${record.actualParticipantNumber}</td>
 								<td>${record.timeFirstRegistration}</td>

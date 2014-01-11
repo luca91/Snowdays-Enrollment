@@ -86,18 +86,17 @@ public class GroupDao {
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into snowdays_enrollment.groups(group_id, group_name, group_referent_id, "
-                    		+ "group_max_participants, group_country, group_is_blocked, group_actual_participants_number, "
-                    		+ "group_badge_type, group_snowvolley) "
-                    		+ "values(?,?,?,?,?,?,?,?,?)");
+                    		+ "group_country, group_is_blocked, group_actual_participants_number, "
+                    		+ "group_badge_type, group_saturday) "
+                    		+ "values(?,?,?,?,?,?,?,?)");
             preparedStatement.setInt(1, aRecord.getId());
             preparedStatement.setString(2, aRecord.getName());
             preparedStatement.setInt(3, aRecord.getGroupReferentID());
-            preparedStatement.setInt(4, aRecord.getGroupMaxNumber());
-            preparedStatement.setString(5, aRecord.getCountry());
-            preparedStatement.setBoolean(6, aRecord.isBlocked());
-            preparedStatement.setInt(7, aRecord.getActualParticipantNumber());
-            preparedStatement.setString(8, aRecord.getBadgeType());
-            preparedStatement.setBoolean(9, aRecord.getSnowvolley());
+            preparedStatement.setString(4, aRecord.getCountry());
+            preparedStatement.setBoolean(5, aRecord.isBlocked());
+            preparedStatement.setInt(6, aRecord.getActualParticipantNumber());
+            preparedStatement.setString(7, aRecord.getBadgeType());
+            preparedStatement.setString(8, aRecord.getSnowvolley());
             UserDao uDao = new UserDao();
             User u = uDao.getUserById(aRecord.getGroupReferentID());
             setAssignedReferent(u.getUsername());
@@ -124,7 +123,15 @@ public class GroupDao {
         	Group g = getRecordById(id);
         	UserDao uDao = new UserDao();
         	User u = uDao.getUserById(g.getGroupReferentID());
-            PreparedStatement preparedStatement = connection
+        	PreparedStatement preparedStatement = connection
+        			.prepareStatement("delete from registrations where registration_participant_group_id=?");
+        	preparedStatement.setInt(1, id);
+        	preparedStatement.executeUpdate();
+        	preparedStatement = connection
+             		.prepareStatement("delete from participants where participant_group_id=?");
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            preparedStatement = connection
                     .prepareStatement("delete from snowdays_enrollment.groups where group_id=?");
             preparedStatement.setInt(1, id);
             log.debug(preparedStatement.toString());
@@ -155,10 +162,10 @@ public class GroupDao {
     	log.debug(aRecord.toString());
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("update snowdays_enrollment.group set "
+                    .prepareStatement("update snowdays_enrollment.groups set "
                     		+ "group_name=?, group_referent=?, "
                     		+ "group_max_participants=?, group_country=?, group_is_blocked=?, group_actual_participants_number=?, "
-                    		+ "group_first_participant_registered=?, group_badge_type=?, group_snowvolley=? " +
+                    		+ "group_first_participant_registered=?, group_badge_type=?, group_saturday=? " +
                             "where group_id=?");
             
             preparedStatement.setInt(10, aRecord.getId());
@@ -170,7 +177,7 @@ public class GroupDao {
             preparedStatement.setInt(6, aRecord.getActualParticipantNumber());
             preparedStatement.setInt(7, aRecord.getFirstParticipantRegistered());
             preparedStatement.setString(8, aRecord.getBadgeType());
-            preparedStatement.setBoolean(9, aRecord.getSnowvolley());
+            preparedStatement.setString(9, aRecord.getSnowvolley());
         	log.debug("Update done");
         	
             preparedStatement.close();
@@ -204,9 +211,10 @@ public class GroupDao {
                 aRecord.setBlocked(rs.getBoolean("group_is_blocked"));
                 aRecord.setActualParticipantNumber(rs.getInt("group_actual_participants_number"));
                 aRecord.setBadgeType(rs.getString("group_badge_type"));
-                aRecord.setSnowvolley(rs.getBoolean("group_snowvolley"));
+                aRecord.setSnowvolley(rs.getString("group_saturday"));
                 User u = uDao.getUserById(aRecord.getGroupReferentID());
                 aRecord.setGroupReferentData(u.getFname() + " " + u.getLname());
+                aRecord.setFirstParticipantRegisteredID(rs.getInt("group_first_participant_registered_id"));
                 list.add(aRecord);
             }
             rs.close();
@@ -228,8 +236,8 @@ public class GroupDao {
     	List<Group> list = new ArrayList<Group>();
         try {
             PreparedStatement preparedStatement = connection.
-                    prepareStatement("select * from ems.group" + 
-                    					" where snowdays_enrollment.groups.group_referent_id = " + groupReferentID);
+                    prepareStatement("select * from groups" + 
+                    					" where group_referent_id = " + groupReferentID);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 Group aRecord = new Group();
@@ -237,12 +245,11 @@ public class GroupDao {
                 aRecord.setName(rs.getString("group_name"));    
                 aRecord.setGroupReferentID(rs.getInt("group_referent_id"));
                 aRecord.setGroupMaxNmber(rs.getInt("group_max_participants"));
-                aRecord.setCountry(rs.getString("group_contry"));
+                aRecord.setCountry(rs.getString("group_country"));
                 aRecord.setBlocked(rs.getBoolean("group_is_blocked"));
                 aRecord.setActualParticipantNumber(rs.getInt("group_actual_participants_number"));
-                aRecord.setFirstParticipantRegisteredID(rs.getInt("group_first_participant_registerd"));
                 aRecord.setBadgeType(rs.getString("group_badge_type"));
-                aRecord.setSnowvolley(rs.getBoolean("group_snowvolley"));
+                aRecord.setSnowvolley(rs.getString("group_saturday"));
                 list.add(aRecord);
             }
             rs.close();
@@ -278,7 +285,7 @@ public class GroupDao {
                  aRecord.setBlocked(rs.getBoolean("group_is_blocked"));
                  aRecord.setActualParticipantNumber(rs.getInt("group_actual_participants_number"));
                  aRecord.setBadgeType(rs.getString("group_badge_type"));
-                 aRecord.setSnowvolley(rs.getBoolean("group_snowvolley"));
+                 aRecord.setSnowvolley(rs.getString("group_saturday"));
             }
             rs.close();
             preparedStatement.close();
@@ -404,5 +411,164 @@ public class GroupDao {
                e.printStackTrace();
            }
        	log.trace("END");
+    }
+    
+    public int getActualParticipantByGroup(int id){
+    	log.trace("START");
+    	int res = 0;
+    	try {
+    		PreparedStatement stmt = connection
+    				.prepareStatement("select group_actual_participants_number from groups where group_id=?");
+    		stmt.setInt(1, id);
+    		ResultSet rs = stmt.executeQuery();
+    		rs.beforeFirst();
+    		if(rs.next())
+    			res = rs.getInt("group_actual_participants_number");
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	log.trace("END");
+    	return res;
+    }
+    
+    public void updateActualParticipantNr(int id, int update){
+    	log.trace("START");
+    	log.debug("id: "+id);
+    	log.debug("update: "+update);
+    	try{
+    		int oldNr = getActualParticipantByGroup(id);
+    		PreparedStatement stmt = connection
+    				.prepareStatement("update groups set group_actual_participants_number=? where group_id=?");
+    		if(update > 0){
+    			oldNr += 1;
+    			stmt.setInt(1, oldNr);
+    			System.out.println(oldNr);
+    		}
+    		else{
+    			oldNr -= 1;
+    			stmt.setInt(1, oldNr);
+    			System.out.println(oldNr);
+    		}
+    		stmt.setInt(2, id);
+    		log.debug(stmt.toString());
+    		stmt.executeUpdate();
+    		stmt.close();
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	log.trace("END");
+    }
+    
+    public int getGroupByIDGroupReferent(int id){
+    	log.trace("START");
+    	int res = -1;
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("select group_id from groups where group_referent_id=?");
+    		stmt.setInt(1, id);
+    		ResultSet rs = stmt.executeQuery();
+    		rs.beforeFirst();
+    		if(rs.next()){
+    			res = rs.getInt("group_id");
+    			rs.close();
+    			stmt.close();
+    		}
+    	}
+    	
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	return res;
+    }
+    
+    public ArrayList<String> getAllGroupsNames(){
+    	log.trace("START");
+    	ArrayList<String> res = new ArrayList<String>();
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("select group_name from groups");
+    		ResultSet rs = stmt.executeQuery();
+    		rs.beforeFirst();
+    		while(rs.next()){
+    			res.add(rs.getString("group_name"));
+    		}
+    		rs.close();
+			stmt.close();
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    		return res;
+    }
+    
+    public Group getGroupByName(String name){
+    	log.trace("START");
+    	UserDao uDao = new UserDao();
+    	Group aRecord = new Group();
+    	try {
+    		PreparedStatement stmt = connection
+    				.prepareStatement("select * from groups where group_name=?");
+    		stmt.setString(1, name);
+    		ResultSet rs = stmt.executeQuery();
+    		rs.beforeFirst();
+    		if(rs.next()){
+                aRecord.setId(rs.getInt("group_id"));
+                aRecord.setName(rs.getString("group_name"));    
+                aRecord.setGroupReferentID(rs.getInt("group_referent_id"));
+                aRecord.setGroupMaxNmber(rs.getInt("group_max_participants"));
+                aRecord.setCountry(rs.getString("group_country"));
+                aRecord.setBlocked(rs.getBoolean("group_is_blocked"));
+                aRecord.setActualParticipantNumber(rs.getInt("group_actual_participants_number"));
+                aRecord.setBadgeType(rs.getString("group_badge_type"));
+                aRecord.setSnowvolley(rs.getString("group_saturday"));
+                User u = uDao.getUserById(aRecord.getGroupReferentID());
+                aRecord.setGroupReferentData(u.getFname() + " " + u.getLname());
+                aRecord.setFirstParticipantRegisteredID(rs.getInt("group_first_participant_registered_id"));
+    		}
+    		rs.close();
+    		stmt.close();
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	log.trace("END");
+    	return aRecord;
+    }
+    
+    public void setFirstRegistered(int id, int groupID){
+    	log.trace("START");
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("update groups set group_first_participant_registered_id=? where group_id=?");
+    		stmt.setInt(1, id);
+    		stmt.setInt(2, groupID);
+    		stmt.executeUpdate();
+    		stmt.close();
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	log.trace("END");
+    }
+    
+    public ArrayList<String> getCountries(){
+    	log.trace("START");
+    	ArrayList<String> result = new ArrayList<String>();
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("select country_name from countries");
+    		ResultSet rs = stmt.executeQuery();
+    		rs.beforeFirst();
+    		while(rs.next()) {
+				result.add(rs.getString("country_name"));
+			}
+    	}
+    	catch(SQLException e){
+			e.printStackTrace();
+		}
+    	log.trace("END");
+		return result;
     }
 }

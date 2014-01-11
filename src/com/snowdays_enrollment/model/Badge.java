@@ -25,7 +25,7 @@ public class Badge {
 	 * @uml.property  name="group"
 	 */
 	private int group;
-
+	
 	/**
 	 * Default constructor.
 	 */
@@ -116,5 +116,4 @@ public class Badge {
 	public void setGroup(int group){
 		this.group = group;
 	}
-
 }

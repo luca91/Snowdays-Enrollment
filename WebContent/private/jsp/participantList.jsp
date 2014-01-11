@@ -21,22 +21,13 @@
 <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="js/user_inter_act.js"></script>
-<!--[if lt IE 7]>
-	<div style=' clear: both; text-align:center; position: relative;'>
-		<a href="http://www.microsoft.com/windows/internet-explorer/default.aspx?ocid=ie6_countdown_bannercode"><img src="http://www.theie6countdown.com/images/upgrade.jpg" border="0"  alt="" /></a>
-	</div>
-<![endif]-->
-<!--[if lt IE 9]>
-	<script type="text/javascript" src="/private/js/html5.js"></script>
-	<link rel="stylesheet" href="/private/css/ie.css" type="text/css" media="screen">
-<![endif]-->
 </head>
 <body id="page5">
 <div class="bg">
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<h3 class="htabs">Participants</h3> 
+		<h3 class="htabs">Participants</h3>
 		<c:if test="${fn:length(groups) != 0}">
 		<c:choose>
 			<c:when test="${systemUser.role == 'admin'}">
@@ -64,8 +55,8 @@
 			<br>
 			
 			<c:choose>
-				<c:when test="${id_group != null}">
-						<h6>Max #${group.groupMaxNumber} participants</h6>		
+				<c:when test="${id_group != -1}">
+						<h6>Max #${groupMaxNumber} participants</h6>		
 				</c:when>				
 			</c:choose>
 			<c:choose>				
@@ -81,10 +72,9 @@
 				<c:if test="${fn:length(records) != 0}">
 					<thead>
 						<tr>
-							<th scope="col">Participant Id</th>
-							<th scope="col">Group Id</th>
 							<th scope="col">First Name</th>
 							<th scope="col">Last Name</th>
+							<th scope="col">Group</th>
 							<th scope="col">Date of birth</th>
 							<th scope="col" colspan=3>Action</th>
 						</tr>
@@ -93,15 +83,14 @@
 					<tbody>
 						<c:forEach items="${records}" var="record">
 							<tr>
-								<td>${record.id}</td>
-								<td>${record.id_group}</td>
 								<td>${record.fname}</td>
 								<td>${record.lname}</td>
+								<td>${record.groupName}</td>
 								<td>${record.date_of_birth}</td>
 								<td><a
-									href="<c:url value='/private/participant.jsp?action=edit&id=${record.id}&id_group=${id_group}'/>">Update</a></td>
+									href="<c:url value='/private/participant.jsp?action=edit&id=${record.id}&id_group=${record.id_group}'/>">Update</a></td>
 								<td><a
-									href="<c:url value='/private/participantDelete?action=delete&id=${record.id}&id_group=${id_group}'/>"
+									href="<c:url value='/private/participantDelete?action=delete&id=${record.id}&id_group=${record.id_group}'/>"
 									onclick="return confirmDelete();">Delete</a></td>
 							</tr>
 						</c:forEach>
@@ -110,7 +99,7 @@
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
 			<div class="table-buttons">
 				
-				<c:if test="${(systemUser.role == 'admin') && (fn:length(groups) > 0) && (id_group != null)}">
+				<c:if test="${((systemUser.role == 'admin') && (fn:length(groups) != 0) && (id_group != null)) || ((systemUser.role == 'group_manager') && (nrEnrolledParticipant <= groupMaxNumber) && (id_group != -1))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
 				</c:if>
 				

@@ -37,23 +37,25 @@
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
 	<h3 class="htabs">Badges</h3>
-	<p>
-	<c:if test="${fn:length(records) != 0}">
+	<c:if test="${fn:length(groups) != 0}">
 		<c:choose>
 			<c:when test="${systemUser.role == 'admin'}">
 				<c:if test="${groups != null }">
 					<select>
-						<option id="option-sel-sel">Choose a Group:</option>
+						<c:url value="/private/badgeList.html" var="url_gen"></c:url>
+						<option value="empty" onClick="window.location.href='${url_gen}'"></option>
+							<c:if test="${id_group == null}">selected</c:if>
 						<c:forEach items="${groups}" var="group">
 							<c:url value="/private/badgeList.html?action=listRecord&id_group=${group.id}" var="url"/>
-							<option value="${url}" onClick="window.location.href='${url}'">${group.name}</option>
+							<option value="${group.name}" onClick="window.location.href='${url}'"
+							<c:if test="${group.id == id_group}">selected</c:if>>${group.name}</option>
 						</c:forEach>
 					</select>
 				</c:if>
 			</c:when>
 		</c:choose>
-		</c:if>
-		</p><br><br>
+	</c:if>
+		<br><br>
 			
 		<!-- TABLE -->
 			<c:set var="act">
@@ -65,22 +67,18 @@
 				<c:if test="${fn:length(records) != 0}">
 					<thead>
 						<tr>
-							<th scope="col">Participant</th>
 							<th scope="col">First Name</th>
 							<th scope="col">Last Name</th>
-							<th scope="col">Event</th>
 							<th scope="col">Badge</th>
 						</tr>
 					</thead>
 					</c:if>
 					<tbody>					
 						<c:forEach items="${records}" var="record">
-						<tr>
-							<td>${record.id}</td>							
+						<tr>						
 							<td>${record.fname}</td>
 							<td>${record.lname}</td>
-							<td>${id_event}</td>
-							<td><a href="<c:url value='/private/downloadBadge?action=download&id=${record.id}&id_group=${id_group}&event_id=${id_event}'/>">Generate</a></td>
+							<td><a href="<c:url value='/private/downloadBadge?action=download&id=${record.id}&id_group=${record.id_group}'/>">Generate</a></td>
 						</tr>
 						</c:forEach>					
 					</tbody>

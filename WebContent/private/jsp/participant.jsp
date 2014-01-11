@@ -23,6 +23,7 @@
 <script type="text/javascript" src="js/FF-cash.js"></script>  
 <script type="text/javascript" src="js/user_inter_act.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
 <script type="text/javascript" > 
 	$(function(){
 		("#datepicker").datepicker();	
@@ -39,49 +40,46 @@
 		</c:set>
 	<div id="stylized" class="myform">
 	    <form method="POST" action="${act}" name="frmAddParticipan">
-	    	<h3>Participant form</h3> <br><br><br>
+	    	<h3>Participant form</h3>
 	        
-	        <label>Group</label>
-	        <input type="text" readonly="readonly" name="id_group" value="${id_group}"/> <br><br><br>
+	        <input type="hidden" name="id_group" value="${id_group}"/> 
+	        <input type="hidden" name="id" value="${id}"/> <br><br><br>
 	        <label>Name</label> 
 	        <input type="text" name="fname" value="${record.fname}" required/> <br><br><br>
 	        <label>Surname</label>
 	        <input type="text" name="lname" value="${record.lname}" required/> <br><br><br>
 	        <label>Gender</label>
 	        <select name="gender" required>
-	        <option value=""/>
-	        <option value="male">M</option>
-	        <option value="female">F</option> 
+	       		<c:forEach items="${genders}" var="gender">
+	        		<option value="${gender}" <c:if test="${selGen == gender }">selected</c:if>>${gender}		        	
+		        </c:forEach>
 	        </select> <br><br><br> 
-	        <label>Friday activity</label>
-	        <select name="friday"required>
-	        	<option value=""/>
-	        	<option value="skirace">Ski Race</option>
-	        	<option value="snowboardrace">Snowboard Race</option>
-	        	<option value="snowshoehike"> Snowshoe Hike</option>
-	        	<option value="relax">Relax</option>
-	        </select> <br><br><br> 	            	            
-	        
 	        <label>Birthday</label>
 	        <input type="text" name="date_of_birth" id="datepicker" value="${record.date_of_birth}" class="hasDatepicker" required/>  <br><br><br>
+	        <c:if test="${group == UNIBZ}">
+	        	<label>Adresse</label>
+	        	<input name="adresse" placeholder="Adresse" type="text"/> <br><br><br>
+	        </c:if>
+	        <label>Friday activity</label>
+	        <select name="friday"required>
+	        	<c:forEach items="${programs}" var="program">
+	        		<option value="${program}" <c:if test="${selPro == program }">selected</c:if>>${program}		        	
+		        </c:forEach>
+	        </select> <br><br><br> 	            	            
+	        
 	        <label>Intolerances</label>
 	        <input type="text" name="intolerances" value="${record.intolerances}"/> <br><br><br>
 	        <label>T-Shirt size</label>
 	        <select name="tshirt"required>
-	        	<option value=""></option>
-	        	<option value="small">S</option>
-	        	<option value="medium">M</option>
-	        	<option value="large">L</option>
-	        	<option value="xlarge">XL</option>
+	        	<c:forEach items="${tshirts}" var="tshirt">
+	        		<option value="${tshirt}" <c:if test="${selTS == tshirt }">selected</c:if>>${tshirt}		        	
+		        </c:forEach>
 	        </select>    <br><br><br>
 	        <label>Rental</label>
 	        <select name="rental" required>
-	        	<option value=""></option>
-	        	<option value="none">none</option>
-	        	<option value="skis">Only Skis</option>
-	        	<option value="snowboard">Only Snowboard</option>
-	        	<option value="skiandboots">Skis with boots</option>
-	        	<option value="snowboardandboots">Snowboard with boots</option>
+	        	<c:forEach items="${rentals}" var="rental">
+	        		<option value="${rental}" <c:if test="${selRen == rental}">selected</c:if>>${rental}		        	
+		        </c:forEach>
 	        </select>       <br><br><br> 
 	        <label>Photo</label>
 	        <input type="file"/> <br><br><br>

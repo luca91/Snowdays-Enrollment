@@ -46,6 +46,7 @@ public class Participant {
 	private String photoLocation;
 	private String registrationTime;
 	private String gender;
+	private String groupName;
 	
 	
 	
@@ -217,5 +218,13 @@ public class Participant {
 	
 	public String intolerancesToString(){
 		return intolerances.toString();
+	}
+	
+	public void setGroupName(String name){
+		groupName = name;
+	}
+	
+	public String getGroupName(){
+		return this.groupName;
 	}
 }

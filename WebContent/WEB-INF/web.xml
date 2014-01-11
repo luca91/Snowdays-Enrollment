@@ -14,10 +14,10 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <security-role>
-      <role-name>admin</role-name>
+    <role-name>admin</role-name>
   </security-role>
   <security-role>
-      <role-name>group_manager</role-name>
+    <role-name>group_manager</role-name>
   </security-role>
   <security-constraint>
     <web-resource-collection>
@@ -41,12 +41,4 @@
       <form-error-page>/public/jsp/loginError.jsp</form-error-page>
     </form-login-config>
   </login-config>
-<!--   <filter id="Filter_1">
-    <filter-name>LoginFilter</filter-name>
-    <filter-class>LoginFilter</filter-class>
-  </filter>
-   <filter-mapping>
-    <filter-name>LoginFilter</filter-name>
-    <url-pattern>/j_security_check</url-pattern>
-  </filter-mapping>  -->
 </web-app>

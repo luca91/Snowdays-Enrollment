@@ -21,7 +21,7 @@ import com.snowdays_enrollment.model.Badge;
  */
 public class BadgeDao {
 	
-	static Logger log = Logger.getLogger(ParticipantDao.class.getName());
+	static Logger log = Logger.getLogger(BadgeDao.class.getName());
 	
 	/**
 	 * @uml.property  name="connection"

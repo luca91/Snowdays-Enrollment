@@ -37,6 +37,6 @@ System.out.println("index.html");
 	<div class="main">
 		<!-- HEADER -->
 			<c:import url="inc/tophead.jsp"/>
-				<h3 class="welcome">Hi, ${systemUser.fname} ${systemUser.lname} - Welcome to the private portal</h3><br><hr><br>						
+				<a href='settings.html'><h3 class="htabs">Settings</h3></a><br><hr><br>						
 			<c:import url="inc/bottom.jsp"></c:import>
 </html>

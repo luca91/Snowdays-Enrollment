@@ -103,6 +103,7 @@ public class GroupController extends HttpServlet {
             forward = INSERT_OR_EDIT;
             List<User> listOfGroup_mng = ud.getAllRecordWithRole("group_manager");
             session.setAttribute("listOfGroup_mng", listOfGroup_mng);
+            session.setAttribute("countries", dao.getCountries());
         }
 // #########################################################################################        
         else if (action.equalsIgnoreCase("listRecord")){
@@ -132,21 +133,26 @@ public class GroupController extends HttpServlet {
         log.debug("######################");
         log.debug("systemUser.getRole(): " + systemUser.getRole().toString());
         
-		if (systemUser.getRole().equals("admin") 
-				|| systemUser.getRole().equals("group_manager")){
-	        log.debug("systemUser is an admin");
-		    forward = "/private/jsp" + forward;
-		}
-		else {
-			forward = UNAUTHORIZED_PAGE;
-		}
-        
-		try {
-			getServletConfig().getServletContext().getRequestDispatcher(forward).forward(request, response);
-			} 
-		catch (Exception ex) {
-				ex.printStackTrace();
+        if(action.equals("delete")){
+        	response.sendRedirect("groupList.html");
+        }
+        else{
+			if (systemUser.getRole().equals("admin") 
+					|| systemUser.getRole().equals("group_manager")){
+		        log.debug("systemUser is an admin");
+			    forward = "/private/jsp" + forward;
 			}
+			else {
+				forward = UNAUTHORIZED_PAGE;
+			}
+	        
+			try {
+				getServletConfig().getServletContext().getRequestDispatcher(forward).forward(request, response);
+				} 
+			catch (Exception ex) {
+					ex.printStackTrace();
+				}
+        }
 	}
 
 	/**
@@ -175,10 +181,9 @@ public class GroupController extends HttpServlet {
     	record.setCountry(request.getParameter("country"));
     	record.setBadgeType(request.getParameter("badge"));
     	record.setIsApproved(Boolean.parseBoolean(request.getParameter("approved")));
-    	record.setGroupMaxNmber(Integer.parseInt(request.getParameter("max_group_number")));
     	record.setBlocked(Boolean.parseBoolean(request.getParameter("blocked")));
     	record.setActualParticipantNumber(0);
-    	record.setSnowvolley(Boolean.parseBoolean(request.getParameter("snowvolley")));
+    	record.setSnowvolley(request.getParameter("saturday"));
     	record.setBlocked(Boolean.parseBoolean(request.getParameter("blocked")));
     	record.setFirstParticipantRegisteredID(-1);
     	String id = request.getParameter("id");
