@@ -28,9 +28,10 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 <script type="text/javascript" src="js/user_inter_act.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script type="text/javascript" > 
 	$(function(){
-		("#datepicker").datepicker();	
+		$("#datepicker").datepicker({ dateFormat: 'yy-mm-dd'});
 	})
 </script>
 </head>
@@ -59,7 +60,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		        </c:forEach>
 	        </select> <br><br><br> 
 	        <label>Birthday</label>
-	        <input type="text" name="date_of_birth" id="datepicker" value="${record.date_of_birth}" class="hasDatepicker" required/>  <br><br><br>
+	        <input type="text" name="date_of_birth" id="datepicker" value="${record.date_of_birth}" required/>  <br><br><br>
 	        <c:if test="${group == UNIBZ}">
 	        	<label>Adresse</label>
 	        	<input name="adresse" placeholder="Adresse" type="text"/> <br><br><br>
@@ -86,9 +87,9 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		        </c:forEach>
 	        </select>       <br><br><br> 
 	        <label>Photo</label>
-	        <input type="file" name="photo" value=""/> <br><br><br>
+	        <input type="file" name="photo" value=""/> <br><br><br><br>
 	        <label>Student ID photo</label>
-	        <input type="file" name="idphoto" value=""/> <br><br><br>
+	        <input type="file" name="idphoto" value=""/> <br><br><br><br>
 	        
 	             	                  
 	        <input type="submit" value="Submit" class="input" />

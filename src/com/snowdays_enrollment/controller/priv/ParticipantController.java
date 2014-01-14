@@ -33,6 +33,7 @@ import com.snowdays_enrollment.model.Participant;
 import com.snowdays_enrollment.model.RegistrationExternal;
 import com.snowdays_enrollment.model.User;
 import com.snowdays_enrollment.tools.Email;
+import com.snowdays_enrollment.tools.FileUpload;
 
 
 /**
@@ -231,6 +232,10 @@ public class ParticipantController extends HttpServlet {
 	    	record.setTShirtSize(request.getParameter("tshirt"));
 	    	record.setRentalOption(pDao.getRentalOptionID(request.getParameter("rental")));
 	    	String id = request.getParameter("id");
+	    	String filePath = request.getParameter("photo");
+	    	System.out.println(filePath);
+	    	FileUpload uf = new FileUpload();
+	    	uf.saveFile(request, filePath);
 	        
 	    	log.debug("id: " + id);
 	    	

@@ -172,6 +172,11 @@ p {
 	padding-top: 22px
 }
 
+.indent6 {
+	position: absolute;
+	right: 220px;
+}
+
 .indent-bot {
 	margin-bottom: 22px
 }
@@ -808,8 +813,8 @@ footer {
 }
 
 .list-services li {
-	line-height: 24px;
-	padding-left: 28px
+	line-height: 36px;
+	padding-left: 36px
 }
 
 .list-services li a {
@@ -822,16 +827,17 @@ footer {
 }
 
 .list-services li.item-1 {
-	background: url(../images/facebook.png) 0 3px no-repeat
+	background: url(../images/48x48/Facebook.png) 0 6px no-repeat
 }
 
 .list-services li.item-2 {
-	background: url(../images/twitter.png) 0 3px no-repeat
+	background: url(../images/48x48/Twitter.png) 0 6px no-repeat
 }
 
 .list-services li.item-3 {
-	background: url(../images/linkedin.png) 0 3px no-repeat
+	background: url(../images/48x48/Vimeo.png) 0 6px no-repeat
 }
+
 
 .footer-logo {
 	display: block;

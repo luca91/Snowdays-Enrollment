@@ -9,6 +9,7 @@
 		<li><a href='participantList.html' id="listparticip">Participants</a></li>
 		<li><a href='badgeList.html' id="listbadges">Badges</a></li>
 		<li><a href='registrations.html' id="registrations">Registrations</a></li>
+		<li><a href='settings.html' id="settings">Settings</a></li>
 	</c:when>
 	<c:when test="${systemUser.role == 'group_manager' }">
 		<li><a href='<c:url value="/private/index.html"/>'>Home</a></li>

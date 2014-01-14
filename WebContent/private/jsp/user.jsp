@@ -24,15 +24,14 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 <script type="text/javascript" src="js/FF-cash.js"></script>  
 <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<!--[if lt IE 7]>
-	<div style=' clear: both; text-align:center; position: relative;'>
-		<a href="http://www.microsoft.com/windows/internet-explorer/default.aspx?ocid=ie6_countdown_bannercode"><img src="http://www.theie6countdown.com/images/upgrade.jpg" border="0"  alt="" /></a>
-	</div>
-<![endif]-->
-<!--[if lt IE 9]>
-	<script type="text/javascript" src="/private/js/html5.js"></script>
-	<link rel="stylesheet" href="/private/css/ie.css" type="text/css" media="screen">
-<![endif]-->
+<script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" > 
+	$(function(){
+		$("#datepicker").datepicker({ dateFormat: 'yy-mm-dd'});	
+	})
+</script>
 </head>
 <body id="page5">
 <div class="bg">
@@ -47,23 +46,22 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 	    	<input type="hidden" name="id" value="${user.id}"/>
 	    
 			<h3>Users</h3> <br><br><br>
-	        <label>First Name:</label>
+	        <label>Name</label>
 	        <input type="text" name="fname" value="${user.fname}" required placeholder="Name"/> <br><br><br>
 	         
-	        <label>Last Name:</label>
+	        <label>Surame</label>
 	        <input type="text" name="lname" value="${user.lname}" required placeholder="Surname"/> <br><br><br> 
-	         <label>Username:</label>
-	        <input type="text" name="username" value="${user.username}" required/> <br><br><br> 
-	        <label>Birthday:
-	         <span class="small">(YYYY/MM/DD)</span>
-	         </label>
-	        <input type="text" name="date_of_birth" value="${user.date_of_birth}"/> <br><br><br> 	  
-	        <label>Password:</label>          
-	       	<input type="password" name="password" value="${user.password}" required/> <br><br><br>
+	         <label>Username</label>
+	        <input type="text" name="username" value="${user.username}" placeholder="Username" required/> <br><br><br> 
+	        <label>Birthday
+	        </label>
+	        <input type="text" name="date_of_birth" id="datepicker" value="${user.date_of_birth}" placeholder="Birthday"/> <br><br><br> 	  
+	        <label>Password</label>          
+	       	<input type="password" name="password" value="${user.password}" placeholder="Password" required/> <br><br><br>
 	            
-	        <label>Email:</label>
+	        <label>Email</label>
 	        <input type="text" name="email" value="${user.email}" required placeholder="Enter a valid email"/> <br><br><br> 
-	        <label>Role:</label>
+	        <label>Role</label>
 	        	<select name="role" required>
 	        			<option value=""></option>
 	        			<option value="admin" 

@@ -51,7 +51,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 
 		        <label>Name: 
 		        </label>
-		        <input type="text" name="name" value="${record.name}" required/><br><br><br>
+		        <input type="text" name="name" value="${record.name}" placeholder="Group Name" required/><br><br><br>
 		        
 		        <label>Referent: 
 		        </label>

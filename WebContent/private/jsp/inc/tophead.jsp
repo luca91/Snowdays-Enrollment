@@ -5,10 +5,6 @@
 <header>
 	<!-- TOP + LOGO -->
 	<div class="row-1">
-		<h1>
-			<a class="logo" href="index.html">Bolzano Snowdays - Enrollment</a>
-			<strong class="slog">Bolzano Snowdays-Enrollment/strong>						
-		</h1>
 		<form id="session-id">
 			Welcome, ${systemUser.username}  <a href="<c:url value='/logout.html'/>">(Logout)</a> <br>
 			Role:

@@ -171,6 +171,11 @@ p {
 	padding-top: 22px
 }
 
+.indent6 {
+	position: absolute;
+	left: 220px;
+}
+
 .indent-bot {
 	margin-bottom: 22px
 }
@@ -209,7 +214,7 @@ p {
 
 .img-indent-r {
 	float: right;
-	margin: 4px 0px 0px 15px
+	margin: 0px 0px 0px 15px
 }
 
 .prev-indent-bot {
@@ -233,14 +238,14 @@ header {
 
 .row-1 {
 	width: 100%;
-	height: 113px;
+	height: 255px;
 	overflow: hidden;
 	padding-top: 24px
 }
 
 .row-2 {
 	width: 100%;
-	min-height: 88px;
+	min-height: 90px;
 	position: relative;
 	z-index: 1
 }
@@ -277,15 +282,16 @@ h1 {
 }
 /* session-id */
 #session-id {
-	width: 300px;
-	min-height: 29px;
-	padding: 20px;
-	margin-right: 10px;
+	width: 190px;
+	min-height: 25px;
+	padding: 15px;
+	margin-right: 5px;
 	background: #fefefe;
 	border-radius: 18px;
 	-moz-border-radius: 18px;
 	-webkit-border-radius: 18px;
-	float: right
+	float: right;
+	position: absolute; right:0px; bottom: 120px ;
 }
 
 .session-id {
@@ -299,9 +305,9 @@ h1 {
 
 #session-id input {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 14px;
+	font-size: 15px;
 	line-height: 1.214em;
-	width: 170px;
+	width: 150px;
 	padding: 10px 8px 8px;
 	margin: 0;
 	color: #9d9d9d;
@@ -342,7 +348,7 @@ h1 {
 .menu li {
 	float: left;
 	position: relative;
-	margin-right: 1px
+	margin-right: 0px
 }
 
 .menu li.last-item {
@@ -351,8 +357,8 @@ h1 {
 
 .menu li a {
 	display: inline-block;
-	width: 150px;
-	font-size: 16px;
+	width: 140px;
+	font-size: 18px;
 	line-height: 1.22em;
 	padding: 16px 0 38px;
 	margin-top: 10px;

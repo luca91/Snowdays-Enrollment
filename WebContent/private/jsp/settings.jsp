@@ -26,6 +26,14 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="js/user_inter_act.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" > 
+	$(function(){
+		$("#datepicker").datepicker({ dateFormat: 'yy-mm-dd'});
+	})
+</script>
 </head>
 <body id="page5">
 <div class="bg">
@@ -41,48 +49,43 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		        <!-- HIDDEN --><!-- <label>Group ID : <span class="small">To be hidden</span></label> -->
 
 		        <label>Max Participants per group</label>
-		        <input type="text" name="maxpergroup" value="${maxPerGroup}" required/><br><br><br>
+		        <div class="indent6"><input type="text" name="maxpergroup" value="${maxPerGroup}" required/></div><br><br><br>
 		        
-		        <label>Badge files</label><br><br><br>
+		        <label>Badge files</label> <br>
 		        <c:if test="${fn:length(countries) != 0 }">
 			        <c:choose>
 							<c:when test="${systemUser.role == 'admin'}">
 								<c:forEach items="${badges}" var="badge">
-									<h5>${badge}</h5><input name="${badge}" type="file"/><br><br><br><br>
+									<div class="indent6"><h5>${badge}</h5><input name="${badge}" type="file"/></div><br><br><br>
 								</c:forEach>
 							</c:when>
 					</c:choose>
 				</c:if>
-		        
+		        <br><br>
 
-		        <label>
-		        	Max people per country
-		        </label> <br><br><br>
+		        <label>Max people per country</label><br>
 		        <c:if test="${fn:length(countries) != 0}">
 					<c:choose>
 						<c:when test="${systemUser.role == 'admin'}">
 							<c:forEach items="${countries}" var="country">
-								<h5>${country.name}</h5><input name="${country.name}" value="${country.maxPeople}"/><br><br><br>
+								<div class="indent6"><h5>${country.name}</h5><input name="${country.name}" value="${country.maxPeople}"/></div><br><br><br>
 							</c:forEach>
 						</c:when>
 					</c:choose>
 				</c:if>
-		        <br><br><br>
+		        <br><br>
 		        
 		        <label>
 		        	Max UNIBZ participants
 		        </label>
-		        <input type="text" name="maxinternals" value="${maxInternals}"/>
-		          <br><br><br><br>
+		        <div class="indent6"><input type="text" name="maxinternals" value="${maxInternals}"/></div><br><br><br><br>
 		        
 		        <label>
 		        	Enrollment from (externals)
 		        </label>
-		        <input type="datetime" name="enrollmentstartext" value="${enrollmentStartExt}"/>
+		        <div class="indent6"><input type="text" name="enrollmentstartext" id="datepicker" value="${enrollmentStartExt}"/></div>
 		        <br><br><br><br>
 		       
-		        
-		        
 		        <!-- BUTTONS -->
 	       		 <input type="submit" value="Save" class="input" />
 	        	<input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />

@@ -64,7 +64,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				</c:when>				
 			</c:choose>
 			<c:choose>				
-				<c:when test="${id_group > 0 && (nrEnrolledParticipant >= groupMaxNumber)}">
+				<c:when test="${id_group != null && (nrEnrolledParticipant >= groupMaxNumber)}">
 				<h5 class="alert">ATTENTION: Max nr. of enrolled people reached for this group!</h5>
 				</c:when>				
 			</c:choose>
@@ -103,7 +103,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
 			<div class="table-buttons">
 				
-				<c:if test="${((systemUser.role == 'admin') && (fn:length(groups) != 0) && (id_group > 0)) || ((systemUser.role == 'group_manager') && (nrEnrolledParticipant <= groupMaxNumber) && (id_group > 0))}">
+				<c:if test="${((systemUser.role == 'admin') && (fn:length(groups) != 0) && (id_group != null)) || ((systemUser.role == 'group_manager') && (nrEnrolledParticipant <= groupMaxNumber) && (id_group > 0))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
 				</c:if>
 				
@@ -127,6 +127,5 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 					</c:if>
 					</form> --> 
 			</div>						
-		<hr>
 	<!-- BOTTOM --><c:import url="inc/bottom.jsp"/>
 </html>

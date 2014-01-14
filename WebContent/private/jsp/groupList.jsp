@@ -25,15 +25,6 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="js/user_inter_act.js"></script>
-<!--[if lt IE 7]>
-	<div style=' clear: both; text-align:center; position: relative;'>
-		<a href="http://www.microsoft.com/windows/internet-explorer/default.aspx?ocid=ie6_countdown_bannercode"><img src="http://www.theie6countdown.com/images/upgrade.jpg" border="0"  alt="" /></a>
-	</div>
-<![endif]-->
-<!--[if lt IE 9]>
-	<script type="text/javascript" src="/private/js/html5.js"></script>
-	<link rel="stylesheet" href="/private/css/ie.css" type="text/css" media="screen">
-<![endif]-->
 </head>
 <body id="page5">
 <div class="bg">
@@ -69,8 +60,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 					<c:forEach items="${records}" var="record">
 						<tr>
 							<td>${record.name}</td>
-							<c:if test="${record.groupReferentData != 'null null'}"><td>${record.groupReferentData}</td></c:if>
-							<c:if test="${record.groupReferentData == 'null null'}"><td>No</td></c:if>
+							<td>${record.groupReferentData}</td>
 							<td>${record.groupMaxNumber}</td>
 							<td>${record.actualParticipantNumber}
 							<td>${record.country}</td>
@@ -95,7 +85,6 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				</c:if>
 			</tbody>
 		</table>
-		<hr>
 		<div class="table-buttons">
 		<c:if test="${systemUser.role == 'admin' }">
 				<a class="button-2" href="group.jsp?action=insert">Add Group</a>

@@ -358,16 +358,16 @@ public class GroupDao {
         try {	
         	//look for group_referent
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("SELECT count(*) AS count" +
-                    					" FROM participants" +
-                    					" WHERE participant_group_id = ?");
+                    .prepareStatement("SELECT group_actual_participants_number" +
+                    					" FROM groups" +
+                    					" WHERE group_id = ?");
             preparedStatement.setInt(1, anId_group);
             ResultSet rs = preparedStatement.executeQuery();
 
             
             
             if (rs.next()) {
-            	nrEnrolledParticipant = rs.getInt("count");
+            	nrEnrolledParticipant = rs.getInt("group_actual_participants_number");
             	log.debug("nrEnrolledParticipant: " + nrEnrolledParticipant);
 
             }
