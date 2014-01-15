@@ -32,11 +32,7 @@
         <div class="bg">
                 <div class="main">
                         <header>
-                                <div class="row-1">
-                                       <h1>
-											<a class="logo" href="index.html"><img alt="" src="../images/logo_snowdays.png"></a>
-											<strong class="slog">Enrollment Management System</strong>						
-									   </h1>                                        
+                                <div class="row-1">                                      
                                 </div>
                                 <div class="row-2">                                       
                                                 <div class="menu">                                                                                        
@@ -75,102 +71,7 @@
                                         </div>
                                 </div>
                         </header>
-                        <section id="content">
-                                <div class="padding">
-                                        <div class="box-bg margin-bot">
-                                                <div class="wrapper">
-                                                        <div class="col-1">
-                                                                <div class="box first">
-                                                                        <div class="pad">
-                                                                                <div class="wrapper indent-bot">
-                                                                                        <strong class="numb img-indent2">01</strong>
-                                                                                        <div class="extra-wrap">
-                                                                                                <h3 class="color-1"><strong>Choose</strong>Event</h3>
-                                                                                        </div>
-                                                                                </div>
-                                                                                <div class="wrapper">
-                                                                                        <a class="button img-indent-r" href="#">>></a>
-                                                                                        <div class="extra-wrap">
-                                                                                                Select the event of interest from the <a class="link" href="#">events section</a>
-                                                                                        </div>
-                                                                                </div>
-                                                                        </div>
-                                                                </div>
-                                                        </div>
-                                                        <div class="col-1">
-                                                                <div class="box second">
-                                                                        <div class="pad">
-                                                                                <div class="wrapper indent-bot">
-                                                                                        <strong class="numb img-indent2">02</strong>
-                                                                                        <div class="extra-wrap">
-                                                                                                <h3 class="color-2"><strong>Your</strong>Role</h3>
-                                                                                        </div>
-                                                                                </div>
-                                                                                <div class="wrapper">
-                                                                                        <a class="button img-indent-r" href="#"></a>
-                                                                                        <div class="extra-wrap">
-                                                                                                Define your role, being either referent for your commitee or a participant.
-                                                                                        </div>
-                                                                                </div>
-                                                                        </div>
-                                                                </div>
-                                                        </div>
-                                                        <div class="col-2">
-                                                                <div class="box third">
-                                                                        <div class="pad">
-                                                                                <div class="wrapper indent-bot">
-                                                                                        <strong class="numb img-indent2">03</strong>
-                                                                                        <div class="extra-wrap">
-                                                                                                <h3 class="color-3"><strong>Join</strong>the event!</h3>
-                                                                                        </div>
-                                                                                </div>
-                                                                                <div class="wrapper">
-                                                                                        <a class="button img-indent-r" href="#">>></a>
-                                                                                        <div class="extra-wrap">
-                                                                                                Confirm your participation to the <a class="link" href="#">event</a> and get ready for it!
-                                                                                        </div>
-                                                                                </div>
-                                                                        </div>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                        <div class="wrapper">
-                                                <div class="col-3">
-                                                        <div class="indent">
-                                                                <h2>Our Mission</h2>
-                                                                <p class="color-4 p1">Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla .</p>
-                                                                <div class="wrapper">                                                                        
-                                                                        <div class="extra-wrap">
-                                                                                <div class="indent2">
-                                                                                        More more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more more . 
-                                                                                </div>
-                                                                        </div>
-                                                                </div>                                                                
-                                                        </div>
-                                                </div>
-                                                <div class="col-2">
-                                                        <div class="block-news">
-                                                                <h3 class="color-4 p2">Extra</h3>
-                                                                <div class="wrapper p2">
-                                                                        <time class="tdate-1 fleft" datetime="2013-06-04"><strong>04</strong>June</time>
-                                                                        <div class="extra-wrap">
-                                                                                <h5>Project Deadline</h5> 
-                                                                                Getting ready to <br>deliver everything by this date <a href="#">more</a>
-                                                                        </div>
-                                                                </div>
-                                                                <div class="wrapper">
-                                                                        <time class="tdate-1 fleft" datetime="2013-06-18"><strong>18</strong>June</time>
-                                                                        <div class="extra-wrap">
-                                                                                <h5>Exam date</h5> 
-                                                                                Internet & Mobile<br>Services: Exam Date
-                                                                        </div>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                </div>
-                        </section>
+                     
 <!-- footer -->
                         <footer>
                                 <div class="row-top">
@@ -188,16 +89,17 @@
                                                         <div class="col-2">
                                                                 <h4>Follow Us:</h4>
                                                                 <ul class="list-services">
-                                                                        <li class="item-1"><a href="#">Facebook</a></li>
-                                                                        <li class="item-2"><a href="#">Twitter</a></li>
-                                                                        <li class="item-3"><a href="#">YouTube</a></li>
+                                                                        <li class="item-1"><a href="https://www.facebook.com/Bolzano.Snowdays">Facebook</a></li>
+                                                                        <li class="item-2"><a href="https://twitter.com/bolzanosnowdays">Twitter</a></li>
+                                                                        <li class="item-3"><a href="http://vimeo.com/user5962140">Vimeo</a></li>
+                                                                        
                                                                 </ul>
                                                         </div>
                                                         
                                                         <div class="col-4">
-                                                                <div class="indent3">
-                                                                        <strong class="footer-logo">EMS</strong> Enrollment Management System
-                                                                </div>
+                                                           <div class="indent6">
+                                                                <img src="${pageContext.request.contextPath}/public/images/logo_verticale_2014.png" alt="" height="180" width="120">
+                                                           </div>
                                                         </div>
                                                 </div>
                                         </div>

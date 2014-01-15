@@ -5,25 +5,7 @@
 <header>
 	<!-- TOP + LOGO -->
 	<div class="row-1">
-		<h1>
-			<a class="logo" href="index.html"><img alt="" src="../images/logo_snowdays.png"></a>
-			<strong class="slog">Enrollment Management System</strong>						
-		</h1>
-		<form id="session-id">
-			Welcome - ${systemUser.email}<br>
-			Role:
-			<c:choose>
-				<c:when test="${systemUser.role == 'admin'}">
-					Administrator
-				</c:when>
-				<c:when test="${systemUser.role == 'group_mng'}">
-					Group Manager
-				</c:when>
-			</c:choose>	
-			${systemUser.id } <br/>
-			Time: <jsp:useBean id="today" class="java.util.Date" scope="page" />
-			<fmt:formatDate value="${today}" pattern="dd MMM yyyy - HH:mm" />
-		</form>				
+			
 	</div>
 	<!-- MENU -->
 	<div class="row-2">
