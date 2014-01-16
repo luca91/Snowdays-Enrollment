@@ -9,12 +9,13 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 <html>
 <head>
 <title>Bolzano Snowdays-Participant Form</title>
-<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/tables_style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/style_portal.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/layout.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/forms.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/datepicker.css" type="text/css" media="screen">
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
   <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
   <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -31,7 +32,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script type="text/javascript" > 
 	$(function(){
-		$("#datepicker").datepicker({ dateFormat: 'yy-mm-dd'});
+		$("#datepicker").datepicker({ dateFormat: 'yy-mm-dd', maxDate: new Date(1995,01,01)});
 	})
 </script>
 </head>
@@ -44,7 +45,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 			<c:url value="/private/participantAdd?action=edit" /> 
 		</c:set>
 	<div id="stylized" class="myform">
-	    <form method="POST" action="${act}" name="frmAddParticipan">
+	    <form method="POST" action="${act}" name="frmAddParticipan" enctype="multipart/form-data">
 	    	<h3>Participant form</h3>
 	        
 	        <input type="hidden" name="id_group" value="${id_group}"/> 
@@ -88,8 +89,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 	        </select>       <br><br><br> 
 	        <label>Photo</label>
 	        <input type="file" name="photo" value=""/> <br><br><br><br>
-	        <label>Student ID photo</label>
-	        <input type="file" name="idphoto" value=""/> <br><br><br><br>
+	     <!--    <label>Student ID photo</label>
+	        <input type="file" name="idphoto" value=""/> <br><br><br><br> -->
 	        
 	             	                  
 	        <input type="submit" value="Submit" class="input" />

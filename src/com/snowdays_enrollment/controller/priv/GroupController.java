@@ -69,11 +69,14 @@ public class GroupController extends HttpServlet {
     	
 		UserDao ud = new UserDao();
 		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
+		SettingsDao sDao = new SettingsDao();
 		
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
 		session.setMaxInactiveInterval(1200);
+		
+		request.setAttribute("block", sDao.getSetting("all_blocked"));
     	
     	String forward="";
         String action = request.getParameter("action");

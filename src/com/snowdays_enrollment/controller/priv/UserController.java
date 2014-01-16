@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.jasypt.util.text.BasicTextEncryptor;
 
 import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.User;
@@ -144,6 +145,7 @@ public class UserController extends HttpServlet {
     	UserDao uDao = new UserDao();
     	
     	User systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
+    	System.out.println(systemUser.getPassword());
     	
     	HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
@@ -153,7 +155,8 @@ public class UserController extends HttpServlet {
         user.setFname(request.getParameter("fname"));
         user.setLname(request.getParameter("lname"));
         user.setDate_of_birth(request.getParameter("date_of_birth"));
-        user.setPassword(request.getParameter("password"));
+        user.setPassword(decryptPW(request.getParameter("password")));
+        log.debug("password: "+ user.getPassword());
         user.setEmail(request.getParameter("email"));
         user.setRole(request.getParameter("role"));
         user.setUsername(request.getParameter("username"));
@@ -227,6 +230,11 @@ public class UserController extends HttpServlet {
          	request.setAttribute("user", user);
          }
         log.trace("END");
+	}
+	
+	public String decryptPW(String pw){
+		BasicTextEncryptor textEncr = new BasicTextEncryptor();
+		return textEncr.decrypt(pw);
 	}
 
 }

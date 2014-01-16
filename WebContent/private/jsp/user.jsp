@@ -32,7 +32,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script type="text/javascript" > 
 	$(function(){
-		$("#datepicker").datepicker({ dateFormat: 'yy-mm-dd'});	
+		$("#datepicker").datepicker({ dateFormat: 'yy-mm-dd', maxDate: new Date(1995,01,01)});
 	})
 </script>
 </head>

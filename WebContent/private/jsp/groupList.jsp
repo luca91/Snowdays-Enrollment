@@ -40,6 +40,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				<a class="button-2" href="group.jsp?action=insert&id_event=${param.id_event}">Add Group</a>
 		</c:if>
 		</div>	 -->	
+		<input type="button" value="${block}" name="blockButton"/>
 		<table id="box-table-a">
 		<c:if test="${fn:length(records) != 0}">
 			<thead>

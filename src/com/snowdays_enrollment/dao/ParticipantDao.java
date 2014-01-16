@@ -152,7 +152,6 @@ public class ParticipantDao {
      */
     public void updateRecord(Participant aRecord) {
     	log.debug("START");
-    	System.out.println("");
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update participants " +

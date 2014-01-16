@@ -50,10 +50,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 					</c:forEach>
 				</select>
 			</c:if>
-			</c:when>
-			
-		</c:choose>
-		</c:if>
+		
 			
 			<br></br>
 			<br>
@@ -103,9 +100,66 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
 			<div class="table-buttons">
 				
-				<c:if test="${((systemUser.role == 'admin') && (fn:length(groups) != 0) && (id_group != null)) || ((systemUser.role == 'group_manager') && (nrEnrolledParticipant <= groupMaxNumber) && (id_group > 0))}">
+				<c:if test="${((fn:length(groups) != 0) && (id_group != null))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
 				</c:if>
+				
+		</c:when>
+		<c:otherwise>
+		<c:if test="${!blocked}">
+			<c:choose>
+				<c:when test="${id_group > 0}">
+						<h6>Max #${groupMaxNumber} participants</h6>		
+				</c:when>				
+			</c:choose>
+			<c:choose>				
+				<c:when test="${id_group != null && (nrEnrolledParticipant >= groupMaxNumber)}">
+				<h5 class="alert">ATTENTION: Max nr. of enrolled people reached for this group!</h5>
+				</c:when>				
+			</c:choose>
+				
+		
+
+			<!-- TABLES -->
+				<table id="box-table-a">
+				<c:if test="${fn:length(records) != 0}">
+					<thead>
+						<tr>
+							<th scope="col">First Name</th>
+							<th scope="col">Last Name</th>
+							<th scope="col">Group</th>
+							<th scope="col">Date of birth</th>
+							<th scope="col" colspan=3>Action</th>
+						</tr>
+					</thead>
+				</c:if>
+					<tbody>
+						<c:forEach items="${records}" var="record">
+							<tr>
+								<td>${record.fname}</td>
+								<td>${record.lname}</td>
+								<td>${record.groupName}</td>
+								<td>${record.date_of_birth}</td>
+								<td><a
+									href="<c:url value='/private/participant.jsp?action=edit&id=${record.id}&id_group=${record.id_group}'/>">Update</a></td>
+								<td><a
+									href="<c:url value='/private/participantDelete?action=delete&id=${record.id}&id_group=${record.id_group}'/>"
+									onclick="return confirmDelete();">Delete</a></td>
+							</tr>
+						</c:forEach>
+					</tbody>					
+				</table>
+				<!-- APPROVE ALL / DISAPPROVE ALL -->
+			<div class="table-buttons">
+				
+				<c:if test="${((nrEnrolledParticipant <= groupMaxNumber) && (id_group > 0))}">
+					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
+				</c:if>
+		</c:if>
+		</c:otherwise>
+			
+		</c:choose>
+		</c:if>
 				
 				<!--  <form method="POST" action="${act}" name="frmApproveParticipan">
 				<c:if test="${id_group != 0 && (nrEnrolledParticipant < group.groupMaxNumber)}">

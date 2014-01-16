@@ -84,13 +84,14 @@ public class UserDao {
         try {
         	
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("insert into users(user_name,user_surname,user_email,user_password,user_role,user_username) values (?, ?, ?, ?, ?, ?)");
+                    .prepareStatement("insert into users(user_name,user_surname,user_email,user_password,user_role,user_username, user_birthday) values (?, ?, ?, ?, ?, ?,?)");
             preparedStatement.setString(1, user.getFname());
             preparedStatement.setString(2, user.getLname());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
             preparedStatement.setString(5, user.getRole());
             preparedStatement.setString(6, user.getUsername());
+            preparedStatement.setString(7, user.getDate_of_birth());
                         
         	log.debug("addUser Execute Update on table user");
             preparedStatement.executeUpdate();

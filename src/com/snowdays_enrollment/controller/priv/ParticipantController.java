@@ -1,18 +1,25 @@
 package com.snowdays_enrollment.controller.priv;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -20,6 +27,8 @@ import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import sun.util.locale.StringTokenIterator;
 
@@ -46,10 +55,14 @@ import com.snowdays_enrollment.tools.FileUpload;
 		"/private/participantDelete",
 		"/private/participantApprove"		
 		})
+@MultipartConfig
 public class ParticipantController extends HttpServlet {
 	
 	// commons logging references
 	static Logger log = Logger.getLogger(ParticipantController.class.getName());
+	
+	private static final int MAX_MEMORY_SIZE = 1024 * 1024 * 2;
+    private static final int MAX_REQUEST_SIZE = 1024 * 1024;
 	
 	private static final long serialVersionUID = 1L;
     private static String INSERT_OR_EDIT = "/participant.jsp";
@@ -105,7 +118,7 @@ public class ParticipantController extends HttpServlet {
     	
     	if (request.getParameter("id_group") != null){
     		log.debug("id_group is not null!");
-    		id_group = Integer.parseInt(request.getParameter("id_group").toString());
+    		id_group = Integer.parseInt(request.getParameter("id_group"));
     		log.debug("id_group: "+id_group);
         	Group g = gdao.getRecordById(id_group);
         	request.setAttribute("group", g);
@@ -159,6 +172,7 @@ public class ParticipantController extends HttpServlet {
                 request.setAttribute("groupMaxNumber", g.getGroupMaxNumber());
                 request.setAttribute("nrEnrolledParticipant", g.getActualParticipantNumber());
                 request.setAttribute("records", dao.getAllRecordsById_group(id_group));
+                request.setAttribute("blocked", gDao.getRecordById(id_group).isBlocked());
             }
         }
 // #########################################################################################     	
@@ -191,6 +205,7 @@ public class ParticipantController extends HttpServlet {
     	ParticipantDao pDao = new ParticipantDao();
     	
 		UserDao ud = new UserDao();
+		GroupDao gDao = new GroupDao();
 		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		
 		HttpSession session = request.getSession(true);
@@ -221,7 +236,8 @@ public class ParticipantController extends HttpServlet {
 	    	log.debug("----------------> id_group: " + request.getParameter("id_group"));
 	    	
 	    	String intolerances = request.getParameter("intolerances");
-	    	record.setIntolerances(parseIntolerances(intolerances));
+	    	if(intolerances != null)
+	    		record.setIntolerances(parseIntolerances(intolerances));
 			record.setId_group(id_group);
 	    	record.setFname(request.getParameter("fname"));
 	    	record.setLname(request.getParameter("lname"));
@@ -232,10 +248,10 @@ public class ParticipantController extends HttpServlet {
 	    	record.setTShirtSize(request.getParameter("tshirt"));
 	    	record.setRentalOption(pDao.getRentalOptionID(request.getParameter("rental")));
 	    	String id = request.getParameter("id");
-	    	String filePath = request.getParameter("photo");
-	    	System.out.println(filePath);
-	    	FileUpload uf = new FileUpload();
-	    	uf.saveFile(request, filePath);
+	    	String directory = getServletConfig().getServletContext().getRealPath("/") + gDao.getRecordById(id_group).getName() + "/profile/";
+	    	String photo = uploadFile(request, directory);
+	    	record.setPhotoURL(photo);
+	    	log.debug("filename: "+ record.getPhotoURL());
 	        
 	    	log.debug("id: " + id);
 	    	
@@ -374,7 +390,7 @@ public class ParticipantController extends HttpServlet {
         return em.sendEmail(to, subject, message);
     }
     
-    public void insertParticipant(HttpServletRequest request, HttpServletResponse response){
+    public void insertParticipant(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, ServletException{
     	request.removeAttribute("record");
         forward = INSERT_OR_EDIT;
         request.setAttribute("programs", new String[] {"", "Ski Race", "Snowboard Race", "Snowshoe Hike", "Relax"});
@@ -384,7 +400,7 @@ public class ParticipantController extends HttpServlet {
         request.setAttribute("group", new GroupDao().getRecordById(Integer.parseInt(request.getParameter("id_group"))).getName());
     }
     
-    public void deleteParticipant(HttpServletRequest request, HttpServletResponse response){
+    public void deleteParticipant(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, ServletException{
     	 int id = Integer.parseInt(request.getParameter("id"));
          
          List<Integer> listOfAuthorizedId = dao.canBeChangedBy(id);
@@ -403,7 +419,7 @@ public class ParticipantController extends HttpServlet {
          }
     }
     
-    public void updateParticipant(HttpServletRequest request, HttpServletResponse response){
+    public void updateParticipant(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, ServletException{
     	  log.debug("action: EDIT - " + action);
           log.debug("systemUser: " + systemUser.getId());
           int id = Integer.parseInt(request.getParameter("id"));
@@ -468,30 +484,108 @@ public class ParticipantController extends HttpServlet {
     	return result;
     }
     
-    public void uploadPhotosFiles(HttpServletRequest request, HttpServletResponse response) throws ServletException{
-    	log.trace("START");
-    	List<FileItem> items;
+    public String uploadFile(HttpServletRequest request, String directory) throws IOException, ServletException{
+		log.trace("START");
+		System.out.println("uploadFile");
+		 DiskFileItemFactory factory = new DiskFileItemFactory();
+		 String result = "";
+
+	        // Sets the size threshold beyond which files are written directly to
+	        // disk.
+//	        factory.setSizeThreshold(MAX_MEMORY_SIZE);
+
+	        // Sets the directory used to temporarily store files that are larger
+	        // than the configured size threshold. We use temporary directory for
+	        // java
+	        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+
+	        // constructs the folder where uploaded file will be stored
+	        String uploadFolder = getServletContext().getRealPath("/")
+	                + File.separator + directory;
+
+	        // Create a new file upload handler
+	        ServletFileUpload upload = new ServletFileUpload(factory);
+
+	        // Set overall request size constraint
+	        upload.setSizeMax(MAX_REQUEST_SIZE);
+	        
 		try {
-			items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-	        for (FileItem item : items) {
-	            if (item.isFormField()) {
-	                // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
-	                String fieldname = item.getFieldName();
-	                String fieldvalue = item.getString();
-	                // ... (do your job here)
-	            } 
-	            else {
-	                // Process form file field (input type="file").
-	                String fieldname = item.getFieldName();
-	                String filename = FilenameUtils.getName(item.getName());
-	                InputStream filecontent = item.getInputStream();
+	            // Parse the request
+			List<FileItem> items = upload.parseRequest(request);
+           Iterator<FileItem> iter = items.iterator();
+           System.out.println(iter.hasNext());
+           while (iter.hasNext()) {
+           	FileItem item = (FileItem) iter.next();
+           	System.out.println("item name: " +item.getName());
+
+               if (!item.isFormField()) {
+                   String fileName = new File(item.getName()).getName();
+                   String filePath = uploadFolder + File.separator + fileName;
+                   File uploadedFile = new File(filePath);
+                   System.out.println("file: "+filePath);
+                   // saves the file to upload directory
+                   item.write(uploadedFile);
+                   result = fileName;
+	      }
 	            }
-	        }
-        } catch (org.apache.commons.fileupload.FileUploadException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        log.trace("END");
-        }
+		  } catch (FileUploadException ex) {
+	            throw new ServletException(ex);
+	      } catch (Exception ex) {
+	            throw new ServletException(ex);
+	      }
+		log.trace("END");
+		return result;
     }
+}
+    
+//    public String getInputFile(HttpServletRequest request, String name) throws ServletException, FileUploadException, org.apache.commons.fileupload.FileUploadException{
+//    	log.trace("START");
+//    	System.out.println(name);
+//    	List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+//		for(FileItem item: items){
+//			log.debug(item.getName());
+//			if(!item.isFormField() && (item.getName() == name)){
+//				return FilenameUtils.getName(item.getName());
+//			}
+//		}
+//		log.trace("END");
+//		return null;
+//    }
+//    	
+//    private static String getFileName(Part part){
+//    	for(String cd: part.getHeader("content-position").split(";")){
+//    		if(cd.trim().startsWith("filename")){
+//    			String filename = cd.substring(cd.indexOf('=')+1).trim().replace("\"","");
+//    			return filename.substring(filename.lastIndexOf('/')+1).substring(filename.lastIndexOf('\\')+1);
+//    		}
+//    	}
+//    	return null;
+//    }
+//    
+//    private static String getValue(Part part, HttpServletRequest request) throws IOException{
+//    	 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+//    	    // You can get your file from request
+//    	    CommonsMultipartFile multipartFile =  null; // multipart file class depends on which class you use assuming you are using org.springframework.web.multipart.commons.CommonsMultipartFile
+//
+//    	    Iterator<String> iterator = multipartRequest.getFileNames();
+//    	    String result = "";
+//
+//    	    while (iterator.hasNext()) {
+//    	         String key = (String) iterator.next();
+//    	        // create multipartFile array if you upload multiple files
+//    	        multipartFile = (CommonsMultipartFile) multipartRequest.getFile(key);
+//    	    }
+//    	    result = multipartFile.getOriginalFilename();
+//    	    
+//    	    return result;
+//    	
+////    	 BufferedReader reader = new BufferedReader(new InputStreamReader(part.getInputStream(), "UTF-8"));
+////    	    StringBuilder value = new StringBuilder();
+////    	    char[] buffer = new char[1024];
+////    	    for (int length = 0; (length = reader.read(buffer)) > 0;) {
+////    	        value.append(buffer, 0, length);
+////    	    }
+////    	    return value.toString();
+//    }
+// }
 

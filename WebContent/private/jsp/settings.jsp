@@ -16,6 +16,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 <link rel="stylesheet" href="css/style_portal.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/layout.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/forms.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/datepicker.css" type="text/css" media="screen">
 <script type="text/javascript" src="js/jquery-1.6.min.js"></script>
 <script type="text/javascript" src="js/cufon-yui.js"></script>
 <script type="text/javascript" src="js/cufon-replace.js"></script>
@@ -80,11 +81,13 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		        </label>
 		        <div class="indent6"><input type="text" name="maxinternals" value="${maxInternals}"/></div><br><br><br><br>
 		        
-		        <label>
+		        
+		        
+		       <!--  <label>
 		        	Enrollment from (externals)
 		        </label>
 		        <div class="indent6"><input type="text" name="enrollmentstartext" id="datepicker" value="${enrollmentStartExt}"/></div>
-		        <br><br><br><br>
+		        <br><br><br><br> -->
 		       
 		        <!-- BUTTONS -->
 	       		 <input type="submit" value="Save" class="input" />

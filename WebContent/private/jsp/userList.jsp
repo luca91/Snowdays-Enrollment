@@ -67,9 +67,9 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 							<td>${user.username}</td>
 							<td>${user.email}</td>
 							<td>${user.group}</td>
-							<td>
+							<!-- <td>
 								<a href="<c:url value='/private/user.jsp?action=edit&id=${user.id}'/>">Update</a>
-							</td>
+							</td> -->
 							<td>
 	                    		<c:if test="${user.email != systemUser.email }">
 									<a href="<c:url value='/private/userDelete?action=delete&id=${user.id}'/>" onclick="return confirmDelete();">Delete</a>
@@ -80,7 +80,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				</c:if>
 			</tbody>
 		</table>
-		<p><a class="button-2" href="user.jsp?action=insert" id="addevent">Add User</a></p>
+		<!-- <p><a class="button-2" href="user.jsp?action=insert" id="addevent">Add User</a></p> -->
 		<hr>		
 	<!-- BOTTOM --><c:import url="inc/bottom.jsp"/>	
 <!-- NO </body> -->

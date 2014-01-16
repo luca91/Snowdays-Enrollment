@@ -1,6 +1,8 @@
 package com.snowdays_enrollment.tools;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,32 +23,10 @@ public class FileUpload {
 	
 	static Logger log = Logger.getLogger(ParticipantController.class.getName());
 	
-	public void saveFile(HttpServletRequest request, String path){
-	log.trace("START");
-	List<FileItem> items;
-	try {
-		PrintWriter pw = new PrintWriter(path);
-		items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-        for (FileItem item : items) {
-        	item.getName();
-            if (!item.isFormField()) {
-            	// Process form file field (input type="file").
-                String fieldname = item.getFieldName();
-                String filename = FilenameUtils.getName(item.getName());
-                InputStream filecontent = item.getInputStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(filecontent));
-                String line = null;
-                while((line = br.readLine()) != null){
-                	pw.write(line);
-                }
-                System.out.println("File written");
-            } 
-        }
-    } catch (org.apache.commons.fileupload.FileUploadException | IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-    log.trace("END");
+	private static final int MAX_MEMORY_SIZE = 1024 * 1024 * 2;
+    private static final int MAX_REQUEST_SIZE = 1024 * 1024;
+	
+	public void uploadFile(String directory) throws IOException{
 	}
 
 }
