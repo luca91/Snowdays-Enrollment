@@ -32,7 +32,7 @@ public class Group {
 	private String badgeType;
 	private int firstParticipantRegisteredID;
 	private String snowvolley;
-	private boolean isApprove;
+	private boolean isApproved;
 	private String groupReferentData;
 	private String timeFirstRegistration;
 	private int position;
@@ -159,11 +159,11 @@ public class Group {
 	}
 	
 	public void setIsApproved(boolean b){
-		isApprove = b;
+		isApproved = b;
 	}
 	
 	public boolean getIsApproved(){
-		return this.isApprove;
+		return this.isApproved;
 	}
 	
 	public void setGroupReferentData(String nameAndSurname){

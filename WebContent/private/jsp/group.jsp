@@ -48,6 +48,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		    <form method="POST" action="${act}" name="frmAddGroup" id="form">
 		    	<h3>Group form</h3><br><br><br>
 		        <!-- HIDDEN --><!-- <label>Group ID : <span class="small">To be hidden</span></label> -->
+		        <input type="hidden" name="id" value="${record.id}"/>
 
 		        <label>Name: 
 		        </label>
@@ -59,7 +60,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
        	        	<option value=""></option>
           			<c:forEach items="${listOfGroup_mng}" var="options">	               
            				<option value="${options.id }" 
-           					<c:if test="${options.id == record.id_group_referent }">selected</c:if>>
+           					<c:if test="${options.id == record.groupReferentID }">selected</c:if>>
            						${options.fname} ${options.lname }
            				</option>
            			</c:forEach>
@@ -69,9 +70,11 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		        	Saturday activity:
 		        </label>
 		        <select name="saturday" required>
-		        	<option value="snowvolley">Snowvolley</option>
-		        	<option value="dodgeball">Dodgeball</option>
-		        	<option value="none">none</option>
+		        	<c:forEach items="${satProgs}" var="sat">
+		        		<option value="${sat}" <c:if test="${sat == record.snowvolley }">selected</c:if>>
+           						${sat}
+           				</option>
+		        	</c:forEach>
 		        </select> <br><br><br><br>
 		        
 		        <label>
@@ -90,7 +93,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		       <select name="country" required>
        	        	<option value=""></option>
           			<c:forEach items="${countries}" var="country">	               
-           				<option value="${country}">
+           				<option value="${country}"<c:if test="${country == record.country}">selected</c:if>>
            						${country}
            				</option>
            			</c:forEach>
@@ -100,9 +103,9 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		        	Approved
 		        </label>
 		        <select name="approved" required>
-		        	<option value="NO">NO</option>
-		        	<option value=""></option>
-		        	<option value="YES">YES</option>
+		        <option value=""></option>
+		        	<option value="NO" <c:if test="${!record.isApproved}">selected</c:if>>NO</option>
+		        	<option value="YES" <c:if test="${record.isApproved}">selected</c:if>>YES</option>
 		        </select> <br><br><br><br>
 		        
 		        <label>

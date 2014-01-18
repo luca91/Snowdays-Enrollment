@@ -25,6 +25,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -248,10 +250,31 @@ public class ParticipantController extends HttpServlet {
 	    	record.setTShirtSize(request.getParameter("tshirt"));
 	    	record.setRentalOption(pDao.getRentalOptionID(request.getParameter("rental")));
 	    	String id = request.getParameter("id");
-	    	String directory = getServletConfig().getServletContext().getRealPath("/") + gDao.getRecordById(id_group).getName() + "/profile/";
-	    	String photo = uploadFile(request, directory);
-	    	record.setPhotoURL(photo);
-	    	log.debug("filename: "+ record.getPhotoURL());
+	    	
+	    	 // gets absolute path of the web application
+	        String savePath = getServletConfig().getServletContext().getRealPath("/") + gDao.getRecordById(id_group).getName();	        
+	         
+	        // creates the save directory if it does not exists
+	        File fileSaveDir = new File(savePath);
+	        if (!fileSaveDir.exists()) {
+	            fileSaveDir.mkdir();
+	        }
+	         
+	        for (Part part : request.getParts()) {
+	        	if(part.getName().equals("photo") || part.getName().equals("idphoto")){
+		            String fileName = extractFileName(part);
+		            String subfolder = "";
+		            log.debug("field name: "+part.getName());
+		            if(part.getName().equals("photo"))
+		            	subfolder = "profile";
+		            else if(part.getName().equals("idphoto"))
+		            	subfolder = "studentids";
+		            File finalFile = new File(savePath + File.separator + subfolder+ File.separator + fileName);
+		            part.write(finalFile.getAbsolutePath());
+	        	}
+	        	else
+	        		continue;
+	        }
 	        
 	    	log.debug("id: " + id);
 	    	
@@ -484,108 +507,15 @@ public class ParticipantController extends HttpServlet {
     	return result;
     }
     
-    public String uploadFile(HttpServletRequest request, String directory) throws IOException, ServletException{
-		log.trace("START");
-		System.out.println("uploadFile");
-		 DiskFileItemFactory factory = new DiskFileItemFactory();
-		 String result = "";
-
-	        // Sets the size threshold beyond which files are written directly to
-	        // disk.
-//	        factory.setSizeThreshold(MAX_MEMORY_SIZE);
-
-	        // Sets the directory used to temporarily store files that are larger
-	        // than the configured size threshold. We use temporary directory for
-	        // java
-	        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
-
-	        // constructs the folder where uploaded file will be stored
-	        String uploadFolder = getServletContext().getRealPath("/")
-	                + File.separator + directory;
-
-	        // Create a new file upload handler
-	        ServletFileUpload upload = new ServletFileUpload(factory);
-
-	        // Set overall request size constraint
-	        upload.setSizeMax(MAX_REQUEST_SIZE);
-	        
-		try {
-	            // Parse the request
-			List<FileItem> items = upload.parseRequest(request);
-           Iterator<FileItem> iter = items.iterator();
-           System.out.println(iter.hasNext());
-           while (iter.hasNext()) {
-           	FileItem item = (FileItem) iter.next();
-           	System.out.println("item name: " +item.getName());
-
-               if (!item.isFormField()) {
-                   String fileName = new File(item.getName()).getName();
-                   String filePath = uploadFolder + File.separator + fileName;
-                   File uploadedFile = new File(filePath);
-                   System.out.println("file: "+filePath);
-                   // saves the file to upload directory
-                   item.write(uploadedFile);
-                   result = fileName;
-	      }
-	            }
-		  } catch (FileUploadException ex) {
-	            throw new ServletException(ex);
-	      } catch (Exception ex) {
-	            throw new ServletException(ex);
-	      }
-		log.trace("END");
-		return result;
+    private String extractFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                return s.substring(s.indexOf("=") + 2, s.length()-1);
+            }
+        }
+        return "";
     }
 }
-    
-//    public String getInputFile(HttpServletRequest request, String name) throws ServletException, FileUploadException, org.apache.commons.fileupload.FileUploadException{
-//    	log.trace("START");
-//    	System.out.println(name);
-//    	List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-//		for(FileItem item: items){
-//			log.debug(item.getName());
-//			if(!item.isFormField() && (item.getName() == name)){
-//				return FilenameUtils.getName(item.getName());
-//			}
-//		}
-//		log.trace("END");
-//		return null;
-//    }
-//    	
-//    private static String getFileName(Part part){
-//    	for(String cd: part.getHeader("content-position").split(";")){
-//    		if(cd.trim().startsWith("filename")){
-//    			String filename = cd.substring(cd.indexOf('=')+1).trim().replace("\"","");
-//    			return filename.substring(filename.lastIndexOf('/')+1).substring(filename.lastIndexOf('\\')+1);
-//    		}
-//    	}
-//    	return null;
-//    }
-//    
-//    private static String getValue(Part part, HttpServletRequest request) throws IOException{
-//    	 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-//    	    // You can get your file from request
-//    	    CommonsMultipartFile multipartFile =  null; // multipart file class depends on which class you use assuming you are using org.springframework.web.multipart.commons.CommonsMultipartFile
-//
-//    	    Iterator<String> iterator = multipartRequest.getFileNames();
-//    	    String result = "";
-//
-//    	    while (iterator.hasNext()) {
-//    	         String key = (String) iterator.next();
-//    	        // create multipartFile array if you upload multiple files
-//    	        multipartFile = (CommonsMultipartFile) multipartRequest.getFile(key);
-//    	    }
-//    	    result = multipartFile.getOriginalFilename();
-//    	    
-//    	    return result;
-//    	
-////    	 BufferedReader reader = new BufferedReader(new InputStreamReader(part.getInputStream(), "UTF-8"));
-////    	    StringBuilder value = new StringBuilder();
-////    	    char[] buffer = new char[1024];
-////    	    for (int length = 0; (length = reader.read(buffer)) > 0;) {
-////    	        value.append(buffer, 0, length);
-////    	    }
-////    	    return value.toString();
-//    }
-// }
 

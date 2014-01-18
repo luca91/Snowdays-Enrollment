@@ -41,7 +41,7 @@ public class LogoutController extends HttpServlet {
         log.debug("session invalidated");
         
         try {
-			response.sendRedirect("http://localhost:8080/snowdays-enrollment/");
+			response.sendRedirect("http://scub.unibz.it:8080/snowdays-enrollment/");
 			} 
 		catch (Exception ex) {
 				ex.printStackTrace();

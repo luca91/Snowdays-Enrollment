@@ -88,9 +88,9 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		        </c:forEach>
 	        </select>       <br><br><br> 
 	        <label>Photo</label>
-	        <input type="file" name="photo" value=""/> <br><br><br><br>
-	     <!--    <label>Student ID photo</label>
-	        <input type="file" name="idphoto" value=""/> <br><br><br><br> -->
+	        <input type="file" name="photo"/> <br><br><br><br>
+	        <label>Student ID photo</label>
+	        <input type="file" name="idphoto"/> <br><br><br><br> 
 	        
 	             	                  
 	        <input type="submit" value="Submit" class="input" />

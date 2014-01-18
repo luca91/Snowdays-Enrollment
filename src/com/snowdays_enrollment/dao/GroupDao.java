@@ -163,9 +163,9 @@ public class GroupDao {
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update snowdays_enrollment.groups set "
-                    		+ "group_name=?, group_referent=?, "
+                    		+ "group_name=?, group_referent_id=?, "
                     		+ "group_max_participants=?, group_country=?, group_is_blocked=?, group_actual_participants_number=?, "
-                    		+ "group_first_participant_registered=?, group_badge_type=?, group_saturday=? " +
+                    		+ "group_first_participant_registered_id=?, group_badge_type=?, group_saturday=? " +
                             "where group_id=?");
             
             preparedStatement.setInt(10, aRecord.getId());
@@ -179,7 +179,7 @@ public class GroupDao {
             preparedStatement.setString(8, aRecord.getBadgeType());
             preparedStatement.setString(9, aRecord.getSnowvolley());
         	log.debug("Update done");
-        	
+        	preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -564,11 +564,27 @@ public class GroupDao {
     		while(rs.next()) {
 				result.add(rs.getString("country_name"));
 			}
+    		rs.close();
+    		stmt.close();
     	}
     	catch(SQLException e){
 			e.printStackTrace();
 		}
     	log.trace("END");
 		return result;
+    }
+    
+    public void blockAll(boolean block){
+    	log.trace("START");
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("update groups set group_is_blocked=?");
+    		stmt.setBoolean(1, block);
+    		stmt.executeUpdate();
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	log.trace("END");
     }
 }

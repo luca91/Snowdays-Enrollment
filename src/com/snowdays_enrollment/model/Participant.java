@@ -43,10 +43,11 @@ public class Participant {
 	private String tShirtSize;
 	private int rentalOption;
 	private String birthday;
-	private String photoLocation;
+	private String photo;
 	private String registrationTime;
 	private String gender;
 	private String groupName;
+	private String studentID;
 	
 	
 	
@@ -195,12 +196,12 @@ public class Participant {
 		return this.birthday;
 	}
 	
-	public void setPhotoURL(String url){
-		photoLocation = url;
+	public void setPhoto(String url){
+		photo = url;
 	}
 	
-	public String getPhotoURL(){
-		return this.photoLocation;
+	public String getPhoto(){
+		return this.photo;
 	}
 	
 	public void setRegistrationTime(String d){
@@ -229,5 +230,13 @@ public class Participant {
 	
 	public String getGroupName(){
 		return this.groupName;
+	}
+	
+	public void setStudentID(String id){
+		studentID = id;
+	}
+	
+	public String getStudentID(){
+		return this.studentID;
 	}
 }

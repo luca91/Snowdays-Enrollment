@@ -86,8 +86,8 @@ public class ParticipantDao {
                     .prepareStatement("insert into participants(participant_name,"
                     		+ "participant_surname, participant_group_id, participant_gender, participant_friday_program,"
                     		+ "participant_intolerance, participant_t_shirt_size, participant_rental_option_id, "
-                    		+ "participant_birthday, participant_id) " +
-                    					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    		+ "participant_birthday, participant_id, participant_approved, participant_photo, participant_student_card) " +
+                    					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)");
             preparedStatement.setInt(10, aRecord.getId());
             preparedStatement.setString(1, aRecord.getFname());
             preparedStatement.setString(2, aRecord.getLname());
@@ -96,12 +96,11 @@ public class ParticipantDao {
             preparedStatement.setInt(5, aRecord.getFridayProgram());
             preparedStatement.setString(6, aRecord.intolerancesToString());
             preparedStatement.setString(7, aRecord.getTShirtSize());
-//            preparedStatement.setBoolean(9, aRecord.isApproved());
-            preparedStatement.setInt(8, aRecord.getRentalOption());
-//            preparedStatement.setString(11, aRecord.getEmail());          
+            preparedStatement.setInt(8, aRecord.getRentalOption());         
             preparedStatement.setString(9, aRecord.getDate_of_birth());
-//            preparedStatement.setString(13, aRecord.getPhotoURL());
-//            preparedStatement.setString(14, aRecord.getRegistrationTime());
+            preparedStatement.setBoolean(11, aRecord.isApproved());
+            preparedStatement.setString(12, aRecord.getPhoto());
+            preparedStatement.setString(13, aRecord.getStudentID());
             log.debug(preparedStatement.toString());
         	log.debug("addRecord Execute Update");
             preparedStatement.executeUpdate();
@@ -167,7 +166,8 @@ public class ParticipantDao {
                     					+ "participant_intolerance=?,"
                     					+ "participant_rental_option_id=?,"
                     					+ "participant_photo=?,"
-                    					+ "participant_t_shirt_size=?"+
+                    					+ "participant_t_shirt_size=?,"
+                    					+ "participant_student_card=?"+
                             			"where participant_id=?");
             log.debug(aRecord.getDate_of_birth()); 
             preparedStatement.setInt(1, aRecord.getId_group());
@@ -180,9 +180,10 @@ public class ParticipantDao {
             preparedStatement.setString(8, aRecord.getGender());
             preparedStatement.setString(9, aRecord.intolerancesToString());
             preparedStatement.setInt(10, aRecord.getRentalOption());
-            preparedStatement.setString(11, aRecord.getPhotoURL());
+            preparedStatement.setString(11, aRecord.getPhoto());
             preparedStatement.setString(12, aRecord.getTShirtSize());
-            preparedStatement.setInt(13, aRecord.getId());
+            preparedStatement.setString(13, aRecord.getStudentID());
+            preparedStatement.setInt(14, aRecord.getId());
             preparedStatement.executeUpdate();
             preparedStatement.close();
             
@@ -218,8 +219,9 @@ public class ParticipantDao {
 //                record.setIntolerances(strings);
                 record.setTShirtSize(rs.getString("participant_t_shirt_size"));
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
-                record.setPhotoURL(rs.getString("participant_photo"));
+                record.setPhoto(rs.getString("participant_photo"));
                 record.setRegistrationTime(rs.getString("participant_registration_time"));
+                record.setStudentID(rs.getString("participant_student_card"));
                 Group g = gDao.getRecordById(record.getId_group());
                 record.setGroupName(g.getName());
                 records.add(record);
@@ -309,6 +311,8 @@ public class ParticipantDao {
                 record.setFridayProgram(rs.getInt("participant_friday_program"));
                 record.setTShirtSize(rs.getString("participant_t_shirt_size"));
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
+                record.setPhoto(rs.getString("participant_photo"));
+                record.setPhoto(rs.getString("participant_student_card"));
             }
             rs.close();
             preparedStatement.close();

@@ -40,7 +40,12 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				<a class="button-2" href="group.jsp?action=insert&id_event=${param.id_event}">Add Group</a>
 		</c:if>
 		</div>	 -->	
-		<input type="button" value="${block}" name="blockButton"/>
+		<c:if test="${block == 'blocked'}">
+			<input type="button" value="Unblock" name="blockButton" onClick="location.href='groupStatus?status=unblock'"/>
+		</c:if>
+		<c:if test="${block == 'unblocked'}">
+			<input type="button" value="Block" name="blockButton" onClick="location.href='groupStatus?status=block'"/>
+		</c:if>
 		<table id="box-table-a">
 		<c:if test="${fn:length(records) != 0}">
 			<thead>
@@ -50,7 +55,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 					<th scope="col">Max participants</th>
 					<th scope="col">Actual participants</th>
 					<th scope="col">Country</th>
-					<th scope="col">Snowvolley</th>
+					<th scope="col">Saturday</th>
 					<!-- <th scope="col">Blocked</th> -->
 					<th scope="col" colspan="4" style="text-align: center;">Action</th>
 				</tr>

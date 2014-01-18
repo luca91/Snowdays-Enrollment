@@ -235,6 +235,7 @@ public class UserDao {
                 user.setEmail(rs.getString("user_email"));
                 user.setRole(rs.getString("role_name"));
                 user.setGroup(rs.getString("user_group"));
+                user.setUsername(rs.getString("user_username"));
                 users.add(user);
             }
             rs.close();
