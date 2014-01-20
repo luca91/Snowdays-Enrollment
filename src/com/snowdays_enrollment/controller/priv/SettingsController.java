@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import com.snowdays_enrollment.dao.GroupDao;
 import com.snowdays_enrollment.dao.SettingsDao;
 import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.Country;
@@ -65,7 +66,7 @@ public class SettingsController extends HttpServlet {
 		request.setAttribute("maxPerGroup", sDao.getSetting("maxpergroup"));
 		request.setAttribute("maxInternals", sDao.getSetting("maxinternals"));
 		System.out.println(sDao.getSetting("maxinternals"));
-		request.setAttribute("enrollmentStartExt", sDao.getSetting("enrollmentstartext"));
+		request.setAttribute("maxExternals", sDao.getSetting("maxexternals"));
 		
 		
 		String forward = "/private/jsp/settings.jsp";
@@ -86,6 +87,7 @@ public class SettingsController extends HttpServlet {
 		log.trace("START");
 		SettingsDao sDao = new SettingsDao();
 		Settings s = new Settings();
+		GroupDao gDao = new GroupDao();
 		
 		UserDao ud = new UserDao();
 		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
@@ -96,7 +98,7 @@ public class SettingsController extends HttpServlet {
 		
 		s.setMaxParticipantsPerGroup(Integer.parseInt(request.getParameter("maxpergroup")));
 		s.setMaxInternals(Integer.parseInt(request.getParameter("maxinternals")));
-		s.setStartExternalsEnrollment(request.getParameter("enrollmentstartext"));
+		s.setMaxExternals(Integer.parseInt(request.getParameter("maxexternals")));
 		
 		ArrayList<Country> countries = (ArrayList<Country>) sDao.getAllCountries();
 		Map<String, Integer> list = new HashMap<String, Integer>();
@@ -105,9 +107,10 @@ public class SettingsController extends HttpServlet {
 		}
 		sDao.setPeoplePerCountry(list);
 		sDao.addSettings("maxpergroup", request.getParameter("maxpergroup"));
+		gDao.updateMaxParticipants(Integer.parseInt(request.getParameter("maxpergroup")));
 		sDao.addSettings("maxinternals", request.getParameter("maxinternals"));
 		System.out.println(request.getParameter("maxinternals")+ "doPost");
-		sDao.addSettings("enrollmentstartext", request.getParameter("enrollmentstartext"));
+		sDao.addSettings("maxexternals", request.getParameter("maxexternals"));
 		response.sendRedirect("/snowdays-enrollment/private/index.html");
 	}
 

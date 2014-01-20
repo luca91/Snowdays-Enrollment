@@ -152,7 +152,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
 			<div class="table-buttons">
 				
-				<c:if test="${((nrEnrolledParticipant <= groupMaxNumber) && (id_group > 0))}">
+				<c:if test="${((nrEnrolledParticipant < groupMaxNumber) && (id_group > 0))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
 				</c:if>
 		</c:if>

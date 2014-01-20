@@ -122,5 +122,26 @@ public class RegistrationExternalsDao {
 		log.trace("END");
 		return re;
 	}
+	
+	public int getRegistrationsCount(){
+		log.trace("START");
+		int result = 0;
+		try{
+			PreparedStatement stmt = connection
+					.prepareStatement("select count(registration_id) from registrations");
+			ResultSet rs = stmt.executeQuery();
+			rs.beforeFirst();
+			if(rs.next()){
+				result = rs.getInt("count(registration_id)");
+			}
+			rs.close();
+			stmt.close();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		log.trace("END");
+		return result;
+	}
 
 }

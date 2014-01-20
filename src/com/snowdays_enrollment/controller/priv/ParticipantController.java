@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import javax.sound.midi.SysexMessage;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -81,6 +82,8 @@ public class ParticipantController extends HttpServlet {
 	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
     private ParticipantDao dao;   
+    private GroupDao gDao;
+    private SettingsDao sDao;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -90,6 +93,8 @@ public class ParticipantController extends HttpServlet {
         log.debug("###################################");
     	log.trace("START");
 		dao = new ParticipantDao();
+		gDao = new GroupDao();
+		sDao =  new SettingsDao();
         log.debug("Dao object instantiated");
         log.trace("END");
     }
@@ -105,7 +110,6 @@ public class ParticipantController extends HttpServlet {
 
 		UserDao ud = new UserDao();
 		systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
-		SettingsDao sDao = new SettingsDao();
 		
 		session = request.getSession(true);
 		session.removeAttribute("systemUser");
@@ -114,17 +118,16 @@ public class ParticipantController extends HttpServlet {
 
     	log.debug("id_group: " + request.getParameter("id_group"));
     	
-    	GroupDao gdao = new GroupDao();
-    	request.setAttribute("groups", gdao.getAllRecords());
+    	request.setAttribute("groups", gDao.getAllRecords());
     		
     	
     	if (request.getParameter("id_group") != null){
     		log.debug("id_group is not null!");
     		id_group = Integer.parseInt(request.getParameter("id_group"));
     		log.debug("id_group: "+id_group);
-        	Group g = gdao.getRecordById(id_group);
+        	Group g = gDao.getRecordById(id_group);
         	request.setAttribute("group", g);
-        	request.setAttribute("nrEnrolledParticipant", gdao.getNrEnrolledParticipant(id_group));
+        	request.setAttribute("nrEnrolledParticipant", gDao.getNrEnrolledParticipant(id_group));
     	}
     	
     	request.setAttribute("id_group", request.getParameter("id_group"));
@@ -161,8 +164,7 @@ public class ParticipantController extends HttpServlet {
                 log.debug("admin");
                 forward = LIST_USER;
                 request.setAttribute("records", dao.getAllRecords());
-                GroupDao gd = new GroupDao();
-                request.setAttribute("groups", gd.getAllRecords());
+                request.setAttribute("groups", gDao.getAllRecords());
             }
             else if (systemUser.getRole().equals("group_manager")){
                 forward = LIST_USER;
@@ -263,14 +265,17 @@ public class ParticipantController extends HttpServlet {
 	        for (Part part : request.getParts()) {
 	        	if(part.getName().equals("photo") || part.getName().equals("idphoto")){
 		            String fileName = extractFileName(part);
-		            String subfolder = "";
-		            log.debug("field name: "+part.getName());
-		            if(part.getName().equals("photo"))
-		            	subfolder = "profile";
-		            else if(part.getName().equals("idphoto"))
-		            	subfolder = "studentids";
-		            File finalFile = new File(savePath + File.separator + subfolder+ File.separator + fileName);
-		            part.write(finalFile.getAbsolutePath());
+		            log.debug("file name: "+fileName);
+		            if(!fileName.equals("")){
+			            String subfolder = "";
+			            log.debug("field name: "+part.getName());
+			            if(part.getName().equals("photo"))
+			            	subfolder = "profile";
+			            else if(part.getName().equals("idphoto"))
+			            	subfolder = "studentids";
+			            File finalFile = new File(savePath + File.separator + subfolder+ File.separator + fileName);
+			            part.write(finalFile.getAbsolutePath());
+		            }
 	        	}
 	        	else
 	        		continue;
@@ -415,7 +420,7 @@ public class ParticipantController extends HttpServlet {
     
     public void insertParticipant(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, ServletException{
     	request.removeAttribute("record");
-        forward = INSERT_OR_EDIT;
+   		forward = INSERT_OR_EDIT;
         request.setAttribute("programs", new String[] {"", "Ski Race", "Snowboard Race", "Snowshoe Hike", "Relax"});
         request.setAttribute("tshirts", new String[] {"", "Small", "Medium", "Large", "Extra Large"});
         request.setAttribute("rentals", new String[] {"none", "Only skis", "Only snowboard", "Skis and boots", "Snowboard and boots"});

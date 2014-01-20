@@ -1,6 +1,7 @@
 package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+
+import com.snowdays_enrollment.tools.DBConnection;
 
 /**
  * Servlet implementation class LogoutController
@@ -39,6 +42,12 @@ public class LogoutController extends HttpServlet {
     	session = request.getSession();
         session.invalidate();
         log.debug("session invalidated");
+        try {
+			DBConnection.closeConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         try {
 			response.sendRedirect("http://scub.unibz.it:8080/snowdays-enrollment/");

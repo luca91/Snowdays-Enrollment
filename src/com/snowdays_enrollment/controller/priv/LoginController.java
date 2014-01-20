@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.snowdays_enrollment.tools.DBConnection;
+
 @WebServlet("/login.html")
 public class LoginController extends HttpServlet {
 	
@@ -24,6 +26,7 @@ public class LoginController extends HttpServlet {
 		log.debug("START");
 		try {
 //			getServletConfig().getServletContext().getRequestDispatcher("/private/index.html").forward(request, response);
+			DBConnection.openConnection();
 			response.sendRedirect("/snowdays-enrollment/private/index.html");
 			} 
 		catch (Exception ex) {

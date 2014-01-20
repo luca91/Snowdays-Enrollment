@@ -87,8 +87,8 @@ public class GroupDao {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into snowdays_enrollment.groups(group_id, group_name, group_referent_id, "
                     		+ "group_country, group_is_blocked, group_actual_participants_number, "
-                    		+ "group_badge_type, group_saturday) "
-                    		+ "values(?,?,?,?,?,?,?,?)");
+                    		+ "group_badge_type, group_saturday, group_max_participants) "
+                    		+ "values(?,?,?,?,?,?,?,?,?)");
             preparedStatement.setInt(1, aRecord.getId());
             preparedStatement.setString(2, aRecord.getName());
             preparedStatement.setInt(3, aRecord.getGroupReferentID());
@@ -97,6 +97,7 @@ public class GroupDao {
             preparedStatement.setInt(6, aRecord.getActualParticipantNumber());
             preparedStatement.setString(7, aRecord.getBadgeType());
             preparedStatement.setString(8, aRecord.getSnowvolley());
+            preparedStatement.setInt(9, aRecord.getGroupMaxNumber());
             UserDao uDao = new UserDao();
             User u = uDao.getUserById(aRecord.getGroupReferentID());
             setAssignedReferent(u.getUsername());
@@ -580,6 +581,20 @@ public class GroupDao {
     		PreparedStatement stmt = connection
     				.prepareStatement("update groups set group_is_blocked=?");
     		stmt.setBoolean(1, block);
+    		stmt.executeUpdate();
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	log.trace("END");
+    }
+    
+    public void updateMaxParticipants(int nr){
+    	log.trace("START");
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("update groups set group_max_participants=?");
+    		stmt.setInt(1, nr);
     		stmt.executeUpdate();
     	}
     	catch(SQLException e){

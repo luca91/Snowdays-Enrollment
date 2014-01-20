@@ -31,8 +31,12 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<h3 class="htabs">Registrations externals</h3> 
+		<h3 class="htabs">Registrations Externals</h3> 
 			<br></br><br>		
+			
+			<h6>Total ${actualParticipants}/${totalParticipants}</h6>
+			<h6>Total registered ${totalRegistered}</h6>
+			
 
 			<!-- TABLES -->
 				<table id="box-table-a">

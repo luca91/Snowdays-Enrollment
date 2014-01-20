@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 import com.snowdays_enrollment.model.Country;
+import com.snowdays_enrollment.model.Settings;
 
 public class SettingsDao {
 	
@@ -106,16 +107,17 @@ static Logger log = Logger.getLogger(SettingsDao.class.getName());
 		return result;
 	}
 	
-	public Map<String, String> getAllSettings(){
+	public Settings getAllSettings(){
 		log.trace("START");
-		Map<String, String> result = new HashMap<String, String>();
+		Settings result = new Settings();
 		try{
 			PreparedStatement stmt = connection
 					.prepareStatement("select * from settings");
 			ResultSet rs = stmt.executeQuery();
 			rs.beforeFirst();
 			while(rs.next()){
-				result.put(rs.getString("setting_description"), rs.getString("setting_value"));
+				if(!rs.getString("setting_name").equals("all_blocked"))
+					setAllSettings(rs.getString("setting_name"),Integer.parseInt(rs.getString("setting_value")), result);
 			}
 			rs.close();
 			stmt.close();
@@ -204,6 +206,20 @@ static Logger log = Logger.getLogger(SettingsDao.class.getName());
 		}
 		catch(SQLException e){
 			e.printStackTrace();
+		}
+	}
+	
+	public void setAllSettings(String name, int value, Settings s){
+		switch (name){
+		case "maxexternals":
+			s.setMaxExternals(value);
+			break;
+		case "maxinternals":
+			s.setMaxInternals(value);
+			break;
+		case "maxpergroup":
+			s.setMaxParticipantsPerGroup(value);
+			break;
 		}
 	}
 

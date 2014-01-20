@@ -76,8 +76,12 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				</c:if>
 		        <br><br>
 		        
+		         <label>
+		        	Max externals
+		        </label>
+		        <div class="indent6"><input type="text" name="maxexternals" value="${maxExternals}"/></div><br><br><br><br>
 		        <label>
-		        	Max UNIBZ participants
+		        	Max UNIBZ
 		        </label>
 		        <div class="indent6"><input type="text" name="maxinternals" value="${maxInternals}"/></div><br><br><br><br>
 		        

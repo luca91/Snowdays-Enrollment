@@ -18,6 +18,7 @@ import com.snowdays_enrollment.dao.GroupDao;
 import com.snowdays_enrollment.dao.SettingsDao;
 import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.Group;
+import com.snowdays_enrollment.model.Settings;
 import com.snowdays_enrollment.model.User;
 
 
@@ -207,6 +208,7 @@ public class GroupController extends HttpServlet {
     	record.setIsApproved(Boolean.parseBoolean(request.getParameter("approved")));
     	record.setBlocked(Boolean.parseBoolean(request.getParameter("blocked")));
     	record.setActualParticipantNumber(0);
+    	record.setGroupMaxNmber(Integer.parseInt(new SettingsDao().getSetting("maxpergroup")));
     	record.setSnowvolley(request.getParameter("saturday"));
     	System.out.println(record.getSnowvolley());
     	record.setBlocked(Boolean.parseBoolean(request.getParameter("blocked")));
