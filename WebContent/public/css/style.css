@@ -173,8 +173,8 @@ p {
 }
 
 .indent6 {
-	position: absolute;
-	right: 220px;
+	position: relative;
+	right: -310px;
 }
 
 .indent-bot {

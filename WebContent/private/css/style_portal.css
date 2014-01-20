@@ -199,7 +199,8 @@ p {
 
 .img-indent2 {
 	float: left;
-	margin: 0 15px 0px 0
+	margin: 0 15px 0px 0;
+	
 }
 
 .img-indent3 {
@@ -214,7 +215,9 @@ p {
 
 .img-indent-r {
 	float: right;
-	margin: 0px 0px 0px 15px
+	margin: 0px 0px 0px 15px;
+	position: relative; 
+	bottom: 145px;
 }
 
 .prev-indent-bot {
@@ -376,6 +379,16 @@ h1 {
 	padding: 26px 0 38px;
 	margin: 0
 }
+
+.mask {
+  width:704px; height:90px;
+  padding: 0px 0 0px;
+  background: #fff;
+	border-radius: 18px 18px 0 0;
+	-moz-border-radius: 18px 18px 0 0;
+	-webkit-border-radius: 18px 18px 0 0
+}
+
 /* slider */
 .slider-wrapper {
 	overflow: hidden;
@@ -525,7 +538,7 @@ h3.welcomelinks {
 }
 
 h3.htabs {
-	font-size: 30px;
+	font-size: 35px;
 	color: #00a9ff;
 	line-height: 1.3em;
 	margin-top: -5px;

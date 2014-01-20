@@ -14,5 +14,6 @@
 	<c:when test="${systemUser.role == 'group_manager' }">
 		<li><a href='<c:url value="/private/index.html"/>'>Home</a></li>
 		<li class="class-item"><a href='participantList.html' id="listparticip">Participants</a></li>
+		<li class="mask"></li>
 	</c:when>
 </c:choose>

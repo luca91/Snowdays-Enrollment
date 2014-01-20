@@ -6,13 +6,19 @@ margin:0 auto;
 width:auto;
 height:auto;
 padding:14px;
+
 }
 
 /* ----------- stylized ----------- */
 #stylized{
-border:solid 2px #b7ddf2;
-background:#ebf4fb;
+	padding: 27px 33px 30px;
+	border: 1px solid #eaeaea;
+	background: url(../images/block-news-tail.gif) 0 0 repeat-x #f9f9f9;
+	border-radius: 18px;
+	-moz-border-radius: 18px;
+	-webkit-border-radius: 18px
 }
+
 #stylized h1 {
 font-size:14px;
 font-weight:bold;
