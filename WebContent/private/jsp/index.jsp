@@ -69,6 +69,11 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 						Guidelines<br><br>
 					</h3>
 					<ul>
+						<li><h4>IMPORTANT</h4>
+							1. Photo to upload must be less than 2MB<br>
+							2. Fill all the form field with "*"<br>
+							3. Click on "Conclude" if you inserted everybody<br>
+							4. Use ";" to separate the intolerances<br><br></li>
 						<li><h4>Add a participant</h4>
  				  			1. Click on “ Add participant”<br>
 						   	2. Fill the form you see (all the field with “*” near the name are required)<br>

@@ -169,7 +169,7 @@ public class GroupDao {
                     		+ "group_first_participant_registered_id=?, group_badge_type=?, group_saturday=?, group_approved=? " +
                             "where group_id=?");
             
-            preparedStatement.setInt(10, aRecord.getId());
+            preparedStatement.setInt(11, aRecord.getId());
             preparedStatement.setString(1, aRecord.getName());
             preparedStatement.setInt(2, aRecord.getGroupReferentID());
             preparedStatement.setInt(3, aRecord.getGroupMaxNumber());
@@ -180,7 +180,7 @@ public class GroupDao {
             preparedStatement.setInt(7, aRecord.getFirstParticipantRegistered());
             preparedStatement.setString(8, aRecord.getBadgeType());
             preparedStatement.setString(9, aRecord.getSnowvolley());
-            preparedStatement.setBoolean(11, aRecord.getIsApproved());
+            preparedStatement.setBoolean(10, aRecord.getIsApproved());
             log.debug(preparedStatement);
         	log.debug("Update done");
         	preparedStatement.executeUpdate();

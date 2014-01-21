@@ -76,6 +76,7 @@ public class GroupController extends HttpServlet {
 		UserDao ud = new UserDao(c);
 		User systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		SettingsDao sDao = new SettingsDao(c);
+		dao = new GroupDao(c);
 		
 		
 		session.removeAttribute("systemUser");
@@ -228,6 +229,7 @@ public class GroupController extends HttpServlet {
     	Group record = new Group();
 		UserDao ud = new UserDao(c);
 		User systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
+		dao = new GroupDao(c);
 		
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
@@ -238,6 +240,7 @@ public class GroupController extends HttpServlet {
 		System.out.println(request.getParameter("max_group_number"));
     	record.setGroupReferentID(Integer.parseInt(request.getParameter("id_group_referent")));
     	record.setName(request.getParameter("name"));
+    	log.debug("name: "+record.getName());
     	record.setFirstParticipantRegisteredID(-1);
     	record.setCountry(request.getParameter("country"));
     	record.setBadgeType(request.getParameter("badge"));
@@ -246,6 +249,7 @@ public class GroupController extends HttpServlet {
     	record.setSnowvolley(request.getParameter("saturday"));
     	System.out.println(record.getSnowvolley());
     	record.setIsBlocked(Boolean.parseBoolean(request.getParameter("blocked")));
+    	log.debug("blocked: "+record.getIsBlocked());
     	record.setFirstParticipantRegisteredID(-1);
     	
 //    	if(request.getParameter("approved").equals("NO"))
@@ -263,7 +267,18 @@ public class GroupController extends HttpServlet {
     	
         if(id == null || id.isEmpty()) {
         	log.debug("INSERT");
+        	record.setIsBlocked(true);
             dao.addRecord(record);
+            String realPath = getServletConfig().getServletContext().getRealPath("/");
+            File groupFolder = new File(realPath+"/"+record.getName());
+            System.out.println(groupFolder.getPath());
+            groupFolder.mkdir();
+            File photosFolder = new File(realPath+"/"+record.getName()+"/profile");
+            photosFolder.mkdir();
+            File idsFolder = new File(realPath+"/"+record.getName()+"/studentids");
+            idsFolder.mkdir();
+            File badgeFilder = new File(realPath+"/"+record.getName()+"/badges");
+            badgeFilder.mkdir();
         }
         else
         {
@@ -280,17 +295,6 @@ public class GroupController extends HttpServlet {
         else if (systemUser.getRole().equals("group_manager")){
             request.setAttribute("records", dao.getRecordsByGroupReferentID(systemUser.getId()));
         }
-        
-        String realPath = getServletConfig().getServletContext().getRealPath("/");
-        File groupFolder = new File(realPath+"/"+record.getName());
-        System.out.println(groupFolder.getPath());
-        groupFolder.mkdir();
-        File photosFolder = new File(realPath+"/"+record.getName()+"/profile");
-        photosFolder.mkdir();
-        File idsFolder = new File(realPath+"/"+record.getName()+"/studentids");
-        idsFolder.mkdir();
-        File badgeFilder = new File(realPath+"/"+record.getName()+"/badges");
-        badgeFilder.mkdir();
         
         forward =  "groupList.html";
         log.debug("forward: " + forward);

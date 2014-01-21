@@ -109,8 +109,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 		        	Blocked:
 		        </label>
 		        <select name="blocked" required>
-		        	<option value="NO" <c:if test="${!record.isBlocked}">selected</c:if>>NO</option>
-		        	<option value="YES" <c:if test="${record.isBlocked}">selected</c:if>>YES</option>
+		        	<option value="false" <c:if test="${!record.isBlocked}">selected</c:if>>NO</option>
+		        	<option value="true" <c:if test="${record.isBlocked}">selected</c:if>>YES</option>
 		        </select> <br><br><br><br>
 		        
 		        

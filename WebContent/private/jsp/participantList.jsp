@@ -105,7 +105,6 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 				
 		</c:when>
 		<c:otherwise>
-		<c:if test="${!blocked}">
 			<c:choose>
 				<c:when test="${id_group > 0}">
 						<h6>Max ${groupMaxNumber} participants - Actual participants: ${nrEnrolledParticipant}</h6>		
@@ -150,7 +149,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 				</table>
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
 			<div class="table-buttons">
-				
+		<c:if test="${!blocked}">	
 				<c:if test="${((nrEnrolledParticipant < groupMaxNumber) && (id_group > 0))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
 				</c:if>

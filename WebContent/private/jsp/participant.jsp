@@ -48,23 +48,23 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 	        
 	        <input type="hidden" name="id_group" value="${id_group}"/> 
 	        <input type="hidden" name="id" value="${id}"/> <br><br><br>
-	        <label>Name</label> 
+	        <label>Name*</label> 
 	        <input type="text" name="fname" value="${record.fname}" required/> <br><br><br>
-	        <label>Surname</label>
+	        <label>Surname*</label>
 	        <input type="text" name="lname" value="${record.lname}" required/> <br><br><br>
-	        <label>Gender</label>
+	        <label>Gender*</label>
 	        <select name="gender" required>
 	       		<c:forEach items="${genders}" var="gender">
 	        		<option value="${gender}" <c:if test="${selGen == gender }">selected</c:if>>${gender}		        	
 		        </c:forEach>
 	        </select> <br><br><br> 
-	        <label>Birthday</label>
+	        <label>Birthday*</label>
 	        <input type="text" name="date_of_birth" id="datepicker" value="${record.date_of_birth}" required/>  <br><br><br>
 	        <c:if test="${group == UNIBZ}">
 	        	<label>Adresse</label>
 	        	<input name="adresse" placeholder="Adresse" type="text"/> <br><br><br>
 	        </c:if>
-	        <label>Friday activity</label>
+	        <label>Friday activity*</label>
 	        <select name="friday"required>
 	        	<c:forEach items="${programs}" var="program">
 	        		<option value="${program}" <c:if test="${selPro == program }">selected</c:if>>${program}		        	
@@ -73,13 +73,13 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 	        
 	        <label>Intolerances</label>
 	        <input type="text" name="intolerances" value="${record.intolerances}"/> <br><br><br>
-	        <label>T-Shirt size</label>
+	        <label>T-Shirt size*</label>
 	        <select name="tshirt"required>
 	        	<c:forEach items="${tshirts}" var="tshirt">
 	        		<option value="${tshirt}" <c:if test="${selTS == tshirt }">selected</c:if>>${tshirt}		        	
 		        </c:forEach>
 	        </select>    <br><br><br>
-	        <label>Rental</label>
+	        <label>Rental*</label>
 	        <select name="rental" required>
 	        	<c:forEach items="${rentals}" var="rental">
 	        		<option value="${rental}" <c:if test="${selRen == rental}">selected</c:if>>${rental}		        	

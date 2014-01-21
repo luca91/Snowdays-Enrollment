@@ -158,9 +158,13 @@ public class RegistrationExternalsController extends HttpServlet {
 		int totalMaxPeople = Integer.parseInt(sDao.getSetting("maxexternals"));
 		int actualPeople = reDao.getRegistrationsCount();
 		int actualUpdate = actualPeople+groupActualNr;
+		int placesLeft = totalMaxPeople-actualPeople;
+		int maxExceed = placesLeft*2;
 		if(actualUpdate <= totalMaxPeople)
 			return true;
+		else if (maxExceed <= 10)
+			if(actualUpdate <= (totalMaxPeople+maxExceed))
+				return true;
 		return false;
 	}
-
 }
