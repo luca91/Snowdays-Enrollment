@@ -26,7 +26,7 @@ public class Group {
 	/**
 	 * @uml.property  name="blocked"
 	 */
-	private boolean blocked;
+	private boolean isBlocked;
 	private String country;
 	private int actualParticipantNumber;
 	private String badgeType;
@@ -101,21 +101,21 @@ public class Group {
 	 * @return
 	 * @uml.property  name="blocked"
 	 */
-	public boolean isBlocked() {
-		return blocked;
+	public boolean getIsBlocked() {
+		return isBlocked;
 	}
 	/**
 	 * @param blocked
 	 * @uml.property  name="blocked"
 	 */
-	public void setBlocked(boolean blocked) {
-		this.blocked = blocked;
+	public void setIsBlocked(boolean blocked) {
+		this.isBlocked = blocked;
 	}
 
 	@Override
     public String toString() {
         return "User [id=" + id + ", id_group_referent=" + groupReferentID 
-                + ", max_group_number=" + groupMaxNumber + ", blocked=" + blocked  +"]";
+                + ", max_group_number=" + groupMaxNumber + ", blocked=" + isBlocked  +"]";
     } 
 	
 	public void setCountry(String country){

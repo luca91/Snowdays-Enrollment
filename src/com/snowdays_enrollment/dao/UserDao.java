@@ -404,6 +404,8 @@ public class UserDao {
     public User getUserByUsername(String username){
     	log.trace("START");
     	User user = new User();
+    	if(connection == null)
+    		log.debug("connection is null");
     	try{
     		PreparedStatement userInfo = connection
     				.prepareStatement("SELECT * FROM users, roles WHERE users.user_username=? AND roles.user_username=?");
@@ -412,7 +414,6 @@ public class UserDao {
     		ResultSet rs = userInfo.executeQuery();
     		log.debug(userInfo.toString());
     		rs.beforeFirst();
-//    		System.out.println(rs.getString("user_username"));
     		if(rs.next()){
     			user.setId(rs.getInt("user_id"));
     			user.setFname(rs.getString("user_name"));

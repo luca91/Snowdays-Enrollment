@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <%
 int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 %>
 <html>
 <head>
@@ -95,9 +95,9 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 	             	                  
 	        <input type="submit" value="Submit" class="input" />
 	        <input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />
-        	<c:if test="${param.id eq null }">
+        	<!-- <c:if test="${param.id eq null }">
         		<input type="reset" value="Reset" class="input" />
-        	</c:if><br><br><br>
+        	</c:if> --><br><br><br>
 	    </form>
 	    </div>
 	<!-- BOTTOM --><c:import url="inc/bottom.jsp"/>

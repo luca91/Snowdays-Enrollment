@@ -93,7 +93,7 @@ public class GroupDao {
             preparedStatement.setString(2, aRecord.getName());
             preparedStatement.setInt(3, aRecord.getGroupReferentID());
             preparedStatement.setString(4, aRecord.getCountry());
-            preparedStatement.setBoolean(5, aRecord.isBlocked());
+            preparedStatement.setBoolean(5, aRecord.getIsBlocked());
             preparedStatement.setInt(6, aRecord.getActualParticipantNumber());
             preparedStatement.setString(7, aRecord.getBadgeType());
             preparedStatement.setString(8, aRecord.getSnowvolley());
@@ -166,7 +166,7 @@ public class GroupDao {
                     .prepareStatement("update snowdays_enrollment.groups set "
                     		+ "group_name=?, group_referent_id=?, "
                     		+ "group_max_participants=?, group_country=?, group_is_blocked=?, group_actual_participants_number=?, "
-                    		+ "group_first_participant_registered_id=?, group_badge_type=?, group_saturday=? " +
+                    		+ "group_first_participant_registered_id=?, group_badge_type=?, group_saturday=?, group_approved=? " +
                             "where group_id=?");
             
             preparedStatement.setInt(10, aRecord.getId());
@@ -174,11 +174,14 @@ public class GroupDao {
             preparedStatement.setInt(2, aRecord.getGroupReferentID());
             preparedStatement.setInt(3, aRecord.getGroupMaxNumber());
             preparedStatement.setString(4, aRecord.getCountry());
-            preparedStatement.setBoolean(5, aRecord.isBlocked());
+            preparedStatement.setBoolean(5, aRecord.getIsBlocked());
+            log.debug("blocked): "+aRecord.getIsBlocked());
             preparedStatement.setInt(6, aRecord.getActualParticipantNumber());
             preparedStatement.setInt(7, aRecord.getFirstParticipantRegistered());
             preparedStatement.setString(8, aRecord.getBadgeType());
             preparedStatement.setString(9, aRecord.getSnowvolley());
+            preparedStatement.setBoolean(11, aRecord.getIsApproved());
+            log.debug(preparedStatement);
         	log.debug("Update done");
         	preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -209,13 +212,14 @@ public class GroupDao {
                 aRecord.setGroupReferentID(rs.getInt("group_referent_id"));
                 aRecord.setGroupMaxNmber(rs.getInt("group_max_participants"));
                 aRecord.setCountry(rs.getString("group_country"));
-                aRecord.setBlocked(rs.getBoolean("group_is_blocked"));
+                aRecord.setIsBlocked(rs.getBoolean("group_is_blocked"));
                 aRecord.setActualParticipantNumber(rs.getInt("group_actual_participants_number"));
                 aRecord.setBadgeType(rs.getString("group_badge_type"));
                 aRecord.setSnowvolley(rs.getString("group_saturday"));
                 User u = uDao.getUserById(aRecord.getGroupReferentID());
                 aRecord.setGroupReferentData(u.getFname() + " " + u.getLname());
                 aRecord.setFirstParticipantRegisteredID(rs.getInt("group_first_participant_registered_id"));
+                aRecord.setIsApproved(rs.getBoolean("group_approved"));
                 list.add(aRecord);
             }
             rs.close();
@@ -247,7 +251,7 @@ public class GroupDao {
                 aRecord.setGroupReferentID(rs.getInt("group_referent_id"));
                 aRecord.setGroupMaxNmber(rs.getInt("group_max_participants"));
                 aRecord.setCountry(rs.getString("group_country"));
-                aRecord.setBlocked(rs.getBoolean("group_is_blocked"));
+                aRecord.setIsBlocked(rs.getBoolean("group_is_blocked"));
                 aRecord.setActualParticipantNumber(rs.getInt("group_actual_participants_number"));
                 aRecord.setBadgeType(rs.getString("group_badge_type"));
                 aRecord.setSnowvolley(rs.getString("group_saturday"));
@@ -283,10 +287,11 @@ public class GroupDao {
                  aRecord.setGroupReferentID(rs.getInt("group_referent_id"));
                  aRecord.setGroupMaxNmber(rs.getInt("group_max_participants"));
                  aRecord.setCountry(rs.getString("group_country"));
-                 aRecord.setBlocked(rs.getBoolean("group_is_blocked"));
+                 aRecord.setIsBlocked(rs.getBoolean("group_is_blocked"));
                  aRecord.setActualParticipantNumber(rs.getInt("group_actual_participants_number"));
                  aRecord.setBadgeType(rs.getString("group_badge_type"));
                  aRecord.setSnowvolley(rs.getString("group_saturday"));
+                 aRecord.setIsApproved(rs.getBoolean("group_approved"));
             }
             rs.close();
             preparedStatement.close();
@@ -391,6 +396,7 @@ public class GroupDao {
                     prepareStatement("update groups set group_approved=? where group_id=?");
             preparedStatement.setBoolean(1, b);
             preparedStatement.setInt(2, id);
+            log.debug(preparedStatement);
             preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException e) {
@@ -520,7 +526,7 @@ public class GroupDao {
                 aRecord.setGroupReferentID(rs.getInt("group_referent_id"));
                 aRecord.setGroupMaxNmber(rs.getInt("group_max_participants"));
                 aRecord.setCountry(rs.getString("group_country"));
-                aRecord.setBlocked(rs.getBoolean("group_is_blocked"));
+                aRecord.setIsBlocked(rs.getBoolean("group_is_blocked"));
                 aRecord.setActualParticipantNumber(rs.getInt("group_actual_participants_number"));
                 aRecord.setBadgeType(rs.getString("group_badge_type"));
                 aRecord.setSnowvolley(rs.getString("group_saturday"));

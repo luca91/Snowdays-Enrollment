@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,6 +77,7 @@ public class ParticipantController extends HttpServlet {
     private String action;
     private int id_group;
     HttpSession session;
+    private Connection c;
     
     /**
 	 * @uml.property  name="dao"
@@ -92,9 +94,9 @@ public class ParticipantController extends HttpServlet {
         super();
         log.debug("###################################");
     	log.trace("START");
-		dao = new ParticipantDao();
-		gDao = new GroupDao();
-		sDao =  new SettingsDao();
+		dao = new ParticipantDao(c);
+		gDao = new GroupDao(c);
+		sDao =  new SettingsDao(c);
         log.debug("Dao object instantiated");
         log.trace("END");
     }
@@ -107,11 +109,14 @@ public class ParticipantController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	log.trace("START");
-
-		UserDao ud = new UserDao();
+    	session = request.getSession(true);
+    	c = (Connection) session.getAttribute("DBConnection");
+    	gDao = new GroupDao(c);
+    	sDao = new SettingsDao(c);
+    	dao = new ParticipantDao(c);
+		UserDao ud = new UserDao(c);
 		systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		
-		session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
 		session.setMaxInactiveInterval(1200);
@@ -119,14 +124,16 @@ public class ParticipantController extends HttpServlet {
     	log.debug("id_group: " + request.getParameter("id_group"));
     	
     	request.setAttribute("groups", gDao.getAllRecords());
+    	Group g = null;
     		
     	
     	if (request.getParameter("id_group") != null){
     		log.debug("id_group is not null!");
     		id_group = Integer.parseInt(request.getParameter("id_group"));
     		log.debug("id_group: "+id_group);
-        	Group g = gDao.getRecordById(id_group);
+        	g = gDao.getRecordById(id_group);
         	request.setAttribute("group", g);
+        	request.setAttribute("groupName", gDao.getRecordById(id_group).getName());
         	request.setAttribute("nrEnrolledParticipant", gDao.getNrEnrolledParticipant(id_group));
     	}
     	
@@ -151,6 +158,12 @@ public class ParticipantController extends HttpServlet {
             log.debug("action: INSERT - " + action);
             insertParticipant(request, response);
         }
+        
+        else if (action.equals("conclude")){
+        	log.debug("action: CONCLUDE - " + action);
+        	g.setIsBlocked(true);
+        	gDao.updateRecord(g);
+        }
 
         //list record using a group_id
         else if (action.equalsIgnoreCase("listRecord")){
@@ -168,15 +181,16 @@ public class ParticipantController extends HttpServlet {
             }
             else if (systemUser.getRole().equals("group_manager")){
                 forward = LIST_USER;
-                GroupDao gDao = new GroupDao();
+                GroupDao gDao = new GroupDao(c);
                 id_group = gDao.getGroupByIDGroupReferent(systemUser.getId());
                 System.out.println(id_group);
                 request.setAttribute("id_group", id_group);
-                Group g = gDao.getRecordById(id_group);
+                g = gDao.getRecordById(id_group);
                 request.setAttribute("groupMaxNumber", g.getGroupMaxNumber());
                 request.setAttribute("nrEnrolledParticipant", g.getActualParticipantNumber());
                 request.setAttribute("records", dao.getAllRecordsById_group(id_group));
-                request.setAttribute("blocked", gDao.getRecordById(id_group).isBlocked());
+                request.setAttribute("blocked", gDao.getRecordById(id_group).getIsBlocked());
+                request.setAttribute("groupName", gDao.getRecordById(id_group).getName());
             }
         }
 // #########################################################################################     	
@@ -185,7 +199,7 @@ public class ParticipantController extends HttpServlet {
     	        
 		forward = "/private/jsp" + forward;
 
-		if(action.equals("delete"))
+		if(action.equals("delete") || action.equals("conclude"))
 			response.sendRedirect("participantList.html");
 		else{
 			try {
@@ -205,23 +219,27 @@ public class ParticipantController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	log.trace("START");
+    	session = request.getSession(true);
+    	c = (Connection) session.getAttribute("DBConnection");
     	Participant record = new Participant();
-    	ParticipantDao pDao = new ParticipantDao();
+    	ParticipantDao pDao = new ParticipantDao(c);
     	
-		UserDao ud = new UserDao();
-		GroupDao gDao = new GroupDao();
+		UserDao ud = new UserDao(c);
+		gDao = new GroupDao(c);
+    	sDao = new SettingsDao(c);
+    	dao = new ParticipantDao(c);
 		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		
-		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);	
+		session.setMaxInactiveInterval(1200);
 	  
         if (systemUser.getRole().equals("admin")){
-            GroupDao gd = new GroupDao();
+            GroupDao gd = new GroupDao(c);
             request.setAttribute("groups", gd.getAllRecords());
         }
         else if (systemUser.getRole().equals("group_manager")){
-            GroupDao gd = new GroupDao();
+            GroupDao gd = new GroupDao(c);
             request.setAttribute("groups", gd.getRecordsByGroupReferentID(systemUser.getId()));
         }
     	
@@ -252,6 +270,7 @@ public class ParticipantController extends HttpServlet {
 	    	record.setTShirtSize(request.getParameter("tshirt"));
 	    	record.setRentalOption(pDao.getRentalOptionID(request.getParameter("rental")));
 	    	String id = request.getParameter("id");
+	    	log.debug("id: "+id);
 	    	
 	    	 // gets absolute path of the web application
 	        String savePath = getServletConfig().getServletContext().getRealPath("/") + gDao.getRecordById(id_group).getName();	        
@@ -262,24 +281,118 @@ public class ParticipantController extends HttpServlet {
 	            fileSaveDir.mkdir();
 	        }
 	         
-	        for (Part part : request.getParts()) {
+	        for (Part part: request.getParts()) {
 	        	if(part.getName().equals("photo") || part.getName().equals("idphoto")){
 		            String fileName = extractFileName(part);
 		            log.debug("file name: "+fileName);
+		            File finalFile = null;
+		            //###################################################################################################
 		            if(!fileName.equals("")){
-			            String subfolder = "";
-			            log.debug("field name: "+part.getName());
-			            if(part.getName().equals("photo"))
-			            	subfolder = "profile";
-			            else if(part.getName().equals("idphoto"))
-			            	subfolder = "studentids";
-			            File finalFile = new File(savePath + File.separator + subfolder+ File.separator + fileName);
-			            part.write(finalFile.getAbsolutePath());
+		            	//the user select a (new) file
+		            	String subfolder = "";
+		            	//###############################################################################################
+		            	if(part.getName().equals("photo")){
+		            		//the user select a profile photo
+		            		subfolder = "profile";
+		            		if(!id.isEmpty()){
+			            		String url = dao.getRecordById(Integer.parseInt(id)).getPhoto();
+			            		log.debug("url: (file, photo) "+url);
+			            		//###########################################################################################
+			            		if(url != null){
+			            			//file name stored in DB --> EDITING
+			            			log.debug("case: file, DB (photo)");
+			            			File old = new File(savePath + File.separator + subfolder+ File.separator 
+				    	        			+ dao.getRecordById(Integer.parseInt(id)).getPhoto());
+			            			old.delete();
+			            			record.setPhoto(fileName);
+			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName); 
+			            		}
+			            		//###########################################################################################
+			            		else{
+			            			//no file name stored in DB --> ADDING
+			            			log.debug("case: file, no DB (photo)");
+			            			record.setPhoto(fileName);
+			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName);
+			            		}
+		            		}
+		            		else{
+		            			record.setPhoto(fileName);
+		            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName); 
+		            		}
+			            	part.write(finalFile.getAbsolutePath());
+		            	}
+		            	//###############################################################################################
+		            	else{
+		            		subfolder = "studentids";
+		            		//the user select the student ID photo
+		            		if(!id.isEmpty()){
+			            		String url = dao.getRecordById(Integer.parseInt(id)).getStudentID();
+			            		log.debug("url: (file, studentid)  "+url);
+			            		if(url != null){
+			            			//file name stored in DB --> EDITING
+			            			log.debug("case: file, DB (studentid)");
+			            			File old = new File(savePath + File.separator + subfolder+ File.separator 
+				    	        			+ dao.getRecordById(Integer.parseInt(id)).getStudentID());
+			            			old.delete();
+			            			record.setStudentID(fileName);
+			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName); 
+			            		}
+			            		//###########################################################################################
+			            		else{
+			            			//no file name stored in DB --> ADDING
+			            			log.debug("case: file, no DB (studentid)");
+			            			record.setStudentID(fileName);
+			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName);
+			            		}
+		            		}
+		            		else{
+		            			record.setStudentID(fileName);
+		            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName);
+		            		}
+			            	part.write(finalFile.getAbsolutePath());
+		            	}
 		            }
+		            //###################################################################################################
+	            	else{
+	            		//the user didn't select any file
+	            		String subfolder = "";
+	            		if(!id.isEmpty()){
+		            		//###############################################################################################
+		            		if(part.getName().equals("photo")){
+		            			//profile photo case
+		            			String url = dao.getRecordById(Integer.parseInt(id)).getPhoto();
+		            			log.debug("url: (no file, photo) "+url);
+		            			subfolder = "profile";
+		            			//###########################################################################################
+		            			if(url != null){
+		            				//DB contains already a file name
+		            				log.debug("case: no file, DB (photo)");
+		            				record.setPhoto(dao.getRecordById(Integer.parseInt(id)).getPhoto());
+		            			}
+		            		}
+		            		//###############################################################################################
+		            		else{
+		            			//student ID photo case
+		            			String url = dao.getRecordById(Integer.parseInt(id)).getStudentID();
+		            			log.debug("url: (no file, studentid) "+url);
+		            			subfolder = "studentids";
+		            			//###########################################################################################
+		            			if(url != null){
+		            				//DB contains already a file name
+		            				log.debug("case: no file, DB (studentid)");
+		            				record.setStudentID(dao.getRecordById(Integer.parseInt(id)).getStudentID());
+		            			}
+		            		}
+	            		}
+	            		//###############################################################################################
+	            	}
 	        	}
+	        	//#######################################################################################################
 	        	else
 	        		continue;
-	        }
+	        	}	
+	        //###########################################################################################################
+
 	        
 	    	log.debug("id: " + id);
 	    	
@@ -292,7 +405,7 @@ public class ParticipantController extends HttpServlet {
 	            r.setParticipantID(idPar);
 	            r.setGroupName(new GroupDao().getRecordById(id_group).getName());
 	            r.setTime(dao.getRecordById(idPar).getRegistrationTime());
-	            RegistrationExternalsDao reDao = new RegistrationExternalsDao();
+	            RegistrationExternalsDao reDao = new RegistrationExternalsDao(c);
 	            reDao.addRegistration(r);
 	        }
 	        else
@@ -308,79 +421,8 @@ public class ParticipantController extends HttpServlet {
 	        log.debug("forward: " + forward);
 
 	        response.sendRedirect(forward);
-			
-    	}
-    	else if (request.getParameter("action").equals("invite") ){
-    		//invite participant
-    		log.debug("Invite Participant");
-    		
-    		String[] result = request.getParameter("listTo").toString().split(";", -1);
-    		int count = 0;
-    		
-    		GroupDao gd = new GroupDao();
-    		Group g = gd.getRecordById(id_group);
-    		
-    		for (int i = 0; i < result.length; i++){
-    			try {
-					if (sendEmail(result[i], g, request.getServerName())){
-						count++;
-					}
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-    			log.debug(result[i]);
-    		}
-
-	        String forward = "participantList.html?action=listRecord&id_group=" + id_group + "&count=" + count + "&showCount=y";
-	        log.debug("forward: " + forward);
-	        
-	        response.sendRedirect(forward);
-    	}
-    	else if (request.getParameter("action").equals("approve") ){
-    		//approve enrollment
-    		log.debug("APPROVE");
-    		log.debug("action: " + request.getParameter("action"));
-	        
-	        ParticipantDao pd = new ParticipantDao();
-	        List<Participant>  list = pd.getAllRecordsById_group(id_group);
-	        Participant p = new Participant();
-	        
-	        for (int i = 0; i < list.size(); i++){
-	        	p = list.get(i);
-	        	if (!p.isApproved()){
-	        		pd.approve(p.getId(), true); 
-	        	}
 	        }
-	        
-	        String forward = "participantList.html?action=listRecord&id_group=" + id_group;
-	        log.debug("forward: " + forward);
-        
-	        response.sendRedirect(forward);
-    		
-    	}
-    	else if (request.getParameter("action").equals("disapprove") ){
-    		//approve enrollment
-    		log.debug("DISAPPROVE");
-    		log.debug("action: " + request.getParameter("action"));
-	        
-	        ParticipantDao pd = new ParticipantDao();
-	        List<Participant>  list = pd.getAllRecordsById_group(id_group);
-	        Participant p = new Participant();
-	        
-	        for (int i = 0; i < list.size(); i++){
-	        	p = list.get(i);
-	        	if (p.isApproved()){
-	        		pd.approve(p.getId(), false); 
-	        	}
-	        }
-	        
-	        String forward = "participantList.html?action=listRecord&id_group=" + id_group;
-	        log.debug("forward: " + forward);
-        
-	        response.sendRedirect(forward);
-    		
-    	}
+    	
     	log.trace("END");
 	}
 
@@ -425,7 +467,7 @@ public class ParticipantController extends HttpServlet {
         request.setAttribute("tshirts", new String[] {"", "Small", "Medium", "Large", "Extra Large"});
         request.setAttribute("rentals", new String[] {"none", "Only skis", "Only snowboard", "Skis and boots", "Snowboard and boots"});
         request.setAttribute("genders", new String[] {"", "Female", "Male"});
-        request.setAttribute("group", new GroupDao().getRecordById(Integer.parseInt(request.getParameter("id_group"))).getName());
+        request.setAttribute("group", new GroupDao(c).getRecordById(Integer.parseInt(request.getParameter("id_group"))).getName());
     }
     
     public void deleteParticipant(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, ServletException{
@@ -436,6 +478,14 @@ public class ParticipantController extends HttpServlet {
          if (listOfAuthorizedId.contains(systemUser.getId())){
         	log.debug("inside if");
         	log.debug("id: "+id);
+        	File profile = new File(getServletConfig().getServletContext().getRealPath("/") + 
+        			"profile" + File.separator + dao.getRecordById(id).getPhoto());
+        	log.debug(profile.getAbsoluteFile());
+        	File studentID = new File(getServletConfig().getServletContext().getRealPath("/") + 
+        			"studentids" + File.separator + dao.getRecordById(id).getStudentID());
+        	log.debug(studentID.getAbsoluteFile());
+        	profile.delete();
+        	studentID.delete();
          	dao.deleteRecord(id);
          	forward = LIST_USER;
          	request.setAttribute("records", dao.getAllRecords());  
@@ -491,7 +541,7 @@ public class ParticipantController extends HttpServlet {
           }
           else if (systemUser.getRole().equals("group_manager")){
               forward = LIST_USER;
-              GroupDao gDao = new GroupDao();
+              GroupDao gDao = new GroupDao(c);
               id_group = gDao.getGroupByIDGroupReferent(systemUser.getId());
               System.out.println(id_group);
               request.setAttribute("id_group", id_group);

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <%
 int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 %>
 <html>
 <head>
@@ -31,7 +31,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<h3 class="htabs">Participants</h3>
+		<c:if test="${groupName != null}"><h3 class="htabs">Participants - ${groupName}</c:if></h3>
+		<c:if test="${groupName == null}"><h3 class="htabs">All Participants</h3></c:if>
 		<c:if test="${fn:length(groups) != 0}">
 		<c:choose>
 			<c:when test="${systemUser.role == 'admin'}">
@@ -57,7 +58,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 			
 			<c:choose>
 				<c:when test="${id_group > 0}">
-						<h6>Max #${groupMaxNumber} participants</h6>		
+						<h6>Max ${groupMaxNumber} participants - Actual participants: ${group.actualParticipantNumber}</h6>		
 				</c:when>				
 			</c:choose>
 			<c:choose>				
@@ -109,7 +110,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		<c:if test="${!blocked}">
 			<c:choose>
 				<c:when test="${id_group > 0}">
-						<h6>Max #${groupMaxNumber} participants</h6>		
+						<h6>Max ${groupMaxNumber} participants - Actual participants: ${nrEnrolledParticipant}</h6>		
 				</c:when>				
 			</c:choose>
 			<c:choose>				
@@ -154,6 +155,9 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 				
 				<c:if test="${((nrEnrolledParticipant < groupMaxNumber) && (id_group > 0))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
+				</c:if>
+				<c:if test="${systemUser.role == 'group_manager' && !blocked}">
+					<a class="button-2" href="participant.jsp?action=conclude&id_group=${id_group}">Conclude</a>
 				</c:if>
 		</c:if>
 		</c:otherwise>

@@ -9,7 +9,7 @@
 	<body>
 	
 		<h1>Error Page - Error Code 401</h1>
-		<h3>You are not authorized to enter to the private site</h3>
-		<p>Click <a href="/snowdays-enrollment/index.html" >here</a> to open the public site </p>
+		<h3>You are not authorized to enter to the private site or you are already logged  in other browser.</h3>
+		<p>Click <a href="/snowdays-enrollment/" >here</a> to open the public site. </p>
 	</body>
 </html>

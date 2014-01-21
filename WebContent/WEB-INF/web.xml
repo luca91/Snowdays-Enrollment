@@ -33,7 +33,7 @@
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
   </security-constraint> 
-  <login-config>
+	<login-config>
     <auth-method>FORM</auth-method>
     <realm-name>Form Authentication</realm-name>
     <form-login-config>

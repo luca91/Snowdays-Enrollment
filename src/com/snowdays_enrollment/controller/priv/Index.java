@@ -1,6 +1,7 @@
 package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.User;
+import com.snowdays_enrollment.tools.DBConnection;
 
 /**
  * Servlet implementation class Index
@@ -25,6 +27,7 @@ public class Index extends HttpServlet {
 	static Logger log = Logger.getLogger(Index.class.getName());
 	
 	private static final long serialVersionUID = 1L;
+	private Connection c;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -44,14 +47,15 @@ public class Index extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		log.trace("START");
+		HttpSession session = request.getSession(true);
+		c = (Connection) session.getAttribute("DBConnection");
 		
 		User u = new User();
-		UserDao ud = new UserDao();
+		UserDao ud = new UserDao(c);
 		System.out.println("User: " + request.getUserPrincipal().getName());
 		u = ud.getUserByUsername(request.getUserPrincipal().getName());
 		System.out.println("User: " + u.getUsername());
 		
-		HttpSession session = request.getSession(true);
 		session.setAttribute("systemUser", u);
 		session.setMaxInactiveInterval(1200);
 		 
@@ -70,21 +74,6 @@ public class Index extends HttpServlet {
 	 * @param (HttpServletRequest request, HttpServletResponse response
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	log.trace("START");
-		
-		User u = new User();
-		UserDao ud = new UserDao();
-		u = ud.getUserByUsername((String)request.getAttribute("username"));
-		
-		HttpSession session = request.getSession(true);
-		session.setAttribute("systemUser", u);
-		 
-		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);
-			} 
-		catch (Exception ex) {
-				ex.printStackTrace();
-			}
 	}
 
 }

@@ -10,9 +10,13 @@ import javax.sql.DataSource;
 
 public class DBConnection {
 	
-	private static Connection connection;
+	private Connection connection;
 	
-	public static void openConnection(){
+	public DBConnection(){
+		openConnection();
+	}
+	
+	public void openConnection(){
 		 Context initialContext;
 			try {
 				initialContext = new InitialContext();
@@ -34,11 +38,11 @@ public class DBConnection {
 			}
 	}
 	
-	public static Connection getConnection(){
+	public Connection getConnection(){
 		return connection;
 	}
 	
-	public static void closeConnection() throws SQLException{
+	public void closeConnection() throws SQLException{
 		connection.close();
 	}
 

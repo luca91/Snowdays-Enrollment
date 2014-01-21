@@ -1,6 +1,7 @@
 package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +23,7 @@ public class Registrations extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	static Logger log = Logger.getLogger(Registrations.class.getName());
+	private Connection c;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -36,10 +38,12 @@ public class Registrations extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.trace("START");
-		UserDao uDao = new UserDao();
+		HttpSession session = request.getSession(true);
+		c = (Connection) session.getAttribute("DBConnection");
+		UserDao uDao = new UserDao(c);
 		User systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
 		
-		HttpSession session = request.getSession(true);
+		
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
 		session.setMaxInactiveInterval(1200);

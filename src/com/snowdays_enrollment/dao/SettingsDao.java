@@ -116,7 +116,7 @@ static Logger log = Logger.getLogger(SettingsDao.class.getName());
 			ResultSet rs = stmt.executeQuery();
 			rs.beforeFirst();
 			while(rs.next()){
-				if(!rs.getString("setting_name").equals("all_blocked"))
+				if(!(rs.getString("setting_name").equals("all_blocked")))
 					setAllSettings(rs.getString("setting_name"),Integer.parseInt(rs.getString("setting_value")), result);
 			}
 			rs.close();

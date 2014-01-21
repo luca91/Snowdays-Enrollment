@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <%
 int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 %>
 <html>
 <head>
@@ -34,18 +34,12 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		<h3 class="htabs">Groups</h3>
 		<!-- DROPDOWN BOX SELECTION -->
 		<!-- TABLE --><br><br>
-		<!-- <br><br>		
-		<div class="table-buttons">
-		<c:if test="${(param.id_event != 0) &&(systemUser.role != 'group_mng'  || systemUser.role != 'admin') }">
-				<a class="button-2" href="group.jsp?action=insert&id_event=${param.id_event}">Add Group</a>
+		<c:if test="${status == 'blocked' && systemUser.role == 'admin'}">
+			<input type="button" value="Unblock" name="blockButton" onClick="location.href='groupStatus?action=unblock'"/>
 		</c:if>
-		</div>	 -->	
-		<c:if test="${block == 'blocked'}">
-			<input type="button" value="Unblock" name="blockButton" onClick="location.href='groupStatus?status=unblock'"/>
-		</c:if>
-		<c:if test="${block == 'unblocked'}">
-			<input type="button" value="Block" name="blockButton" onClick="location.href='groupStatus?status=block'"/>
-		</c:if>
+		<c:if test="${status == 'unblocked' && systemUser.role == 'admin'}">
+			<input type="button" value="Block" name="blockButton" onClick="location.href='groupStatus?action=block'"/>
+		</c:if> 
 		<table id="box-table-a">
 		<c:if test="${fn:length(records) != 0}">
 			<thead>
@@ -56,8 +50,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 					<th scope="col">Actual participants</th>
 					<th scope="col">Country</th>
 					<th scope="col">Saturday</th>
-					<!-- <th scope="col">Blocked</th> -->
-					<th scope="col" colspan="4" style="text-align: center;">Action</th>
+					<th scope="col">Blocked</th>
+					<th scope="col" colspan="5" style="text-align: center;">Action</th>
 				</tr>
 			</thead>
 			</c:if>
@@ -71,7 +65,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 							<td>${record.actualParticipantNumber}
 							<td>${record.country}</td>
 							<td>${record.snowvolley}</td>
-							<!-- <td>${record.blocked}</td> -->					
+							<td>${record.isBlocked}</td>				
 							<td><c:if
 									test="${systemUser.role == 'admin' }">
 									<a
@@ -86,6 +80,9 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 							<td><a
 								href="<c:url value='/private/participantList.html?action=listRecord&id_group=${record.id}'/>">Participants</a></td>
 							<td><a href="<c:url value='/private/badge.jsp?action=listRecord&id_group=${record.id}'/>">Badges</a></td>
+							<c:if test="${record.isApproved}">
+								<td><a href="<c:url value='/private/group.jsp?action=disapprove&id_group=${record.id}'/>">Disapprove</a></td>
+							</c:if>
 						</tr>
 					</c:forEach>			
 				</c:if>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <%
 int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 %>
 <html>
 <head>

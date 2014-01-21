@@ -1,6 +1,7 @@
 package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,12 +30,14 @@ public class UserController extends HttpServlet {
 	
 	// commons logging references
 	static Logger log = Logger.getLogger(UserController.class.getName());
+	private Connection c;
 	
 	private static final long serialVersionUID = 1L;
     private static String INSERT_OR_EDIT = "/user.jsp";
     private static String LIST_USER = "/userList.jsp";
     private static String UNAUTHORIZED_PAGE = "/private/jsp/errors/unauthorized.jsp";
     private String forward;
+    private HttpSession session;
     
     /**
 	 * @uml.property  name="dao"
@@ -50,7 +53,7 @@ public class UserController extends HttpServlet {
         super();
         log.debug("UserController ###################################");
     	log.trace("START");
-		dao = new UserDao();
+		dao = new UserDao(c);
         log.debug("Dao object instantiated");
         log.trace("END");
     }
@@ -64,11 +67,12 @@ public class UserController extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	log.trace("START");
+    	session = request.getSession(true);
+    	c = (Connection) session.getAttribute("DBConnection");
         String action = request.getParameter("action");
-		UserDao ud = new UserDao();
-		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
+        dao = new UserDao(c);
+		User  systemUser = dao.getUserByUsername(request.getUserPrincipal().getName());
 		
-		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
 		session.setMaxInactiveInterval(1200);
@@ -141,13 +145,14 @@ public class UserController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	log.trace("START");
+    	session = request.getSession(true);
+    	c = (Connection) session.getAttribute("DBConnection");
     	User user = new User();
-    	UserDao uDao = new UserDao();
+    	dao = new UserDao(c);
     	
-    	User systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
+    	User systemUser = dao.getUserByUsername(request.getUserPrincipal().getName());
     	System.out.println(systemUser.getPassword());
     	
-    	HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
 		String forward;

@@ -167,7 +167,7 @@ public class ParticipantDao {
                     					+ "participant_rental_option_id=?,"
                     					+ "participant_photo=?,"
                     					+ "participant_t_shirt_size=?,"
-                    					+ "participant_student_card=?"+
+                    					+ "participant_student_card=? "+
                             			"where participant_id=?");
             log.debug(aRecord.getDate_of_birth()); 
             preparedStatement.setInt(1, aRecord.getId_group());
@@ -184,6 +184,7 @@ public class ParticipantDao {
             preparedStatement.setString(12, aRecord.getTShirtSize());
             preparedStatement.setString(13, aRecord.getStudentID());
             preparedStatement.setInt(14, aRecord.getId());
+            log.debug(preparedStatement);
             preparedStatement.executeUpdate();
             preparedStatement.close();
             
@@ -312,7 +313,7 @@ public class ParticipantDao {
                 record.setTShirtSize(rs.getString("participant_t_shirt_size"));
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
                 record.setPhoto(rs.getString("participant_photo"));
-                record.setPhoto(rs.getString("participant_student_card"));
+                record.setStudentID(rs.getString("participant_student_card"));
             }
             rs.close();
             preparedStatement.close();

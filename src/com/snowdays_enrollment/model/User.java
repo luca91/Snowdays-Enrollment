@@ -180,5 +180,4 @@ public class User implements Serializable {
 	public String getGroup(){
 		return this.group;
 	}
-	
 }

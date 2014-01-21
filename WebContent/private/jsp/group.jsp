@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <%
 int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 %>
 <html>
 <head>
@@ -82,7 +82,6 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		        </label>
 		         <select name="badge" required>
 		         	<option value="PARTICIPANT">PARTICIPANT</option>
-		         	<option value=""></option>
 		        	<option value="STAFF">STAFF</option>
 		        	<option value="PARTY/HOST">PARTY/HOST</option>
 		        </select> <br><br><br><br>
@@ -99,31 +98,30 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
            			</c:forEach>
            		</select> <br><br><br>
 		        
-		        <label>
+		      <!--   <label>
 		        	Approved
 		        </label>
 		        <select name="approved" required>
 		        <option value=""></option>
 		        	<option value="NO" <c:if test="${!record.isApproved}">selected</c:if>>NO</option>
 		        	<option value="YES" <c:if test="${record.isApproved}">selected</c:if>>YES</option>
-		        </select> <br><br><br><br>
+		        </select> <br><br><br><br>  -->
 		        
 		        <label>
 		        	Blocked:
 		        </label>
 		        <select name="blocked" required>
-		        	<option value="NO">NO</option>
-		        	<option value=""></option>
-		        	<option value="YES">YES</option>
+		        	<option value="NO" <c:if test="${!record.isBlocked}">selected</c:if>>NO</option>
+		        	<option value="YES" <c:if test="${record.isBlocked}">selected</c:if>>YES</option>
 		        </select> <br><br><br><br>
 		        
 		        
 		        <!-- BUTTONS -->
 		        <input type="submit" value="Submit" class="input" />
 		        <input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />
-		        <c:if test="${param.id eq null }">
+		       <!--  <c:if test="${param.id eq null }">
 	        		<input type="reset" value="Reset" class="input" />
-	       		</c:if><br><br><br>
+	       		</c:if> --><br><br><br>
 		    </form>
 	    </div>	        
 	<!-- BOTTOM --><c:import url="inc/bottom.jsp"/>

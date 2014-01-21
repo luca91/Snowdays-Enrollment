@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <%
 int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html");
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 %>
 <html>
 <head>
@@ -34,8 +34,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/login.html
 		<h3 class="htabs">Registrations Externals</h3> 
 			<br></br><br>		
 			
-			<h6>Total ${actualParticipants}/${totalParticipants}</h6>
-			<h6>Total registered ${totalRegistered}</h6>
+			<h6 style="font-family:Titillium">Total ${actualParticipants}/${totalParticipants}</h6>
+			<h6 style="font-family:Titillium">Total registered ${totalRegistered}</h6>
 			
 
 			<!-- TABLES -->

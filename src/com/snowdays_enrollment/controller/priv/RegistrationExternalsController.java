@@ -1,6 +1,7 @@
 package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class RegistrationExternalsController extends HttpServlet {
 	SettingsDao sDao;
 	RegistrationExternalsDao reDao; 
 	int actualTotal;
+	private Connection c;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -49,11 +51,9 @@ public class RegistrationExternalsController extends HttpServlet {
         super();
         log.debug("###################################");
     	log.trace("START");
-		dao = new RegistrationExternalsDao();
-		sDao = new SettingsDao();
+		dao = new RegistrationExternalsDao(c);
+		sDao = new SettingsDao(c);
 		s = new Settings();
-		s = sDao.getAllSettings();
-		s.setCountries(sDao.getAllCountries());
         log.debug("Dao object instantiated");
         log.trace("END");
     }
@@ -63,16 +63,19 @@ public class RegistrationExternalsController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.trace("START");
-		UserDao uDao = new UserDao();
+		session = request.getSession(true);
+		c = (Connection) session.getAttribute("DBConnection");
+		UserDao uDao = new UserDao(c);
 		systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
-		session = request.getSession();
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser", systemUser);
 		session.setMaxInactiveInterval(1200);
 		
-		dao = new RegistrationExternalsDao();
-		sDao = new SettingsDao();
-		reDao = new RegistrationExternalsDao();
+		dao = new RegistrationExternalsDao(c);
+		sDao = new SettingsDao(c);
+		reDao = new RegistrationExternalsDao(c);
+		s = sDao.getAllSettings();
+		s.setCountries(sDao.getAllCountries());
 		actualTotal = 0;
 		
 		s = new Settings();
@@ -85,7 +88,7 @@ public class RegistrationExternalsController extends HttpServlet {
 		
 		if(systemUser.getRole().equals("admin")){
 			log.debug("role: " + "admin");
-			RegistrationExternalsDao reDao = new RegistrationExternalsDao();
+			RegistrationExternalsDao reDao = new RegistrationExternalsDao(c);
 			request.setAttribute("records", getRegistrationFinalList(reDao.getAllRegistration()));
 			request.setAttribute("actualParticipants", actualTotal);
 		}
@@ -112,7 +115,7 @@ public class RegistrationExternalsController extends HttpServlet {
 	public List<Group> getRegistrationFinalList(List<RegistrationExternal> list){
 		List<Group> result = new ArrayList<Group>();
 		List<String> added = new ArrayList<String>();
-		GroupDao gd = new GroupDao();
+		GroupDao gd = new GroupDao(c);
 		List<String> names = gd.getAllGroupsNames();
 		int p = 1;
 		while(!list.isEmpty()){
@@ -122,7 +125,7 @@ public class RegistrationExternalsController extends HttpServlet {
 							gd.getGroupByName(list.get(0).getGroupName()).getActualParticipantNumber())
 							&& checkTotalPeople(gd.getGroupByName(list.get(0).getGroupName()).getActualParticipantNumber())){
 				Group g = gd.getGroupByName(list.get(0).getGroupName());
-				g.setTimeFirstRegistration(new RegistrationExternalsDao().getRegistrationByParticipantID(list.get(0).getParticipantID()).getTime());
+				g.setTimeFirstRegistration(new RegistrationExternalsDao(c).getRegistrationByParticipantID(list.get(0).getParticipantID()).getTime());
 				g.setPosition(p);
 				actualTotal += g.getActualParticipantNumber();
 				gd.updateRecord(g);

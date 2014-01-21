@@ -1,6 +1,7 @@
 package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,8 @@ public class SettingsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	static Logger log = Logger.getLogger(SettingsController.class.getName());
+	private Connection c;
+	private HttpSession session;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -46,16 +49,17 @@ public class SettingsController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.trace("START");
+		session = request.getSession();
+		c = (Connection) session.getAttribute("DBConnection");
 		
 		UserDao uDao = new UserDao();
 		User systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
 		
-		HttpSession session = request.getSession();
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser", systemUser);
 		session.setMaxInactiveInterval(1200);
 		
-		SettingsDao sDao = new SettingsDao();
+		SettingsDao sDao = new SettingsDao(c);
 		ArrayList<Country> countries = (ArrayList<Country>) sDao.getAllCountries();
 		for(int i = 0; i < countries.size(); i++){
 			System.out.println(countries.get(i).getName());
@@ -85,16 +89,18 @@ public class SettingsController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.trace("START");
-		SettingsDao sDao = new SettingsDao();
+		session = request.getSession(true);
+		c = (Connection) session.getAttribute("DBConnection");
+		SettingsDao sDao = new SettingsDao(c);
 		Settings s = new Settings();
-		GroupDao gDao = new GroupDao();
+		GroupDao gDao = new GroupDao(c);
 		
-		UserDao ud = new UserDao();
+		UserDao ud = new UserDao(c);
 		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		
-		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);	
+		session.setMaxInactiveInterval(1200);
 		
 		s.setMaxParticipantsPerGroup(Integer.parseInt(request.getParameter("maxpergroup")));
 		s.setMaxInternals(Integer.parseInt(request.getParameter("maxinternals")));
