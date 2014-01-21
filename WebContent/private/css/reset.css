@@ -31,3 +31,6 @@ img {
 embed {
 	vertical-align: top
 }
+* {
+	font-family: Arial,Helvetica,sans-serif !important;
+}

@@ -26,11 +26,13 @@
 <script type="text/javascript" src="private/js/jquery-1.6.min.js"></script>
 <script type="text/javascript" src="private/js/cufon-yui.js"></script>
 <script type="text/javascript" src="private/js/cufon-replace.js"></script>
+<!--  
 <script type="text/javascript" src="private/js/Open_Sans_400.font.js"></script>
 <script type="text/javascript"
 	src="private/js/Open_Sans_Light_300.font.js"></script>
 <script type="text/javascript"
 	src="private/js/Open_Sans_Semibold_600.font.js"></script>
+	-->
 <script type="text/javascript" src="private/js/FF-cash.js"></script>
 <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"
 	type="text/javascript"></script>
@@ -90,4 +92,5 @@
 
 
 			</div>
+		 </div>
 </html>
