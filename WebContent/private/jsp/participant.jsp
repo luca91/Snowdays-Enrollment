@@ -22,9 +22,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 <script type="text/javascript" src="js/jquery-1.6.min.js"></script>
 <script type="text/javascript" src="js/cufon-yui.js"></script>
 <script type="text/javascript" src="js/cufon-replace.js"></script>
-<script type="text/javascript" src="js/Open_Sans_400.font.js"></script>
-<script type="text/javascript" src="js/Open_Sans_Light_300.font.js"></script> 
-<script type="text/javascript" src="js/Open_Sans_Semibold_600.font.js"></script> 
+ 
 <script type="text/javascript" src="js/FF-cash.js"></script>  
 <script type="text/javascript" src="js/user_inter_act.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
