@@ -75,7 +75,8 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 							<th scope="col">First Name</th>
 							<th scope="col">Last Name</th>
 							<th scope="col">Group</th>
-							<th scope="col">Date of birth</th>
+							<th scope="col">Photo</th>
+							<th scope="col">ID Photo</th>
 							<th scope="col" colspan=3>Action</th>
 						</tr>
 					</thead>
@@ -86,7 +87,8 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 								<td>${record.fname}</td>
 								<td>${record.lname}</td>
 								<td>${record.groupName}</td>
-								<td>${record.date_of_birth}</td>
+								<td>${record.photo}</td>
+								<td>${record.studentID}</td>
 								<td><a
 									href="<c:url value='/private/participant.jsp?action=edit&id=${record.id}&id_group=${record.id_group}'/>">Update</a></td>
 								<td><a
@@ -126,7 +128,8 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 							<th scope="col">First Name</th>
 							<th scope="col">Last Name</th>
 							<th scope="col">Group</th>
-							<th scope="col">Date of birth</th>
+							<th scope="col">Photo</th>
+							<th scope="col">ID Photo</th>
 							<th scope="col" colspan=3>Action</th>
 						</tr>
 					</thead>
@@ -137,7 +140,8 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 								<td>${record.fname}</td>
 								<td>${record.lname}</td>
 								<td>${record.groupName}</td>
-								<td>${record.date_of_birth}</td>
+								<td>${record.photo}</td>
+								<td>${record.studentID}</td>
 								<td><a
 									href="<c:url value='/private/participant.jsp?action=edit&id=${record.id}&id_group=${record.id_group}'/>">Update</a></td>
 								<td><a

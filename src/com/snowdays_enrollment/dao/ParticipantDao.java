@@ -269,7 +269,8 @@ public class ParticipantDao {
 //                record.setIntolerances(strings);
                 record.setTShirtSize(rs.getString("participant_t_shirt_size"));
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
-//                record.setPhotoURL(rs.getString("participant_photo"));
+                record.setPhoto(rs.getString("participant_photo"));
+                record.setStudentID(rs.getString("participant_student_card"));
 //                record.setRegistrationTime(rs.getString("participant_registration_time"));
                 Group g = gDao.getRecordById(record.getId_group());
                 record.setGroupName(g.getName());

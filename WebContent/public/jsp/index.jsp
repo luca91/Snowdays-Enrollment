@@ -42,31 +42,6 @@
                                 <div class="row-3">
                                         <div class="slider-wrapper">
                                                 <div class="slider">
-                                                  <ul class="items">
-                                                        <li><img src="../images/slider-img1.jpg" alt="">
-                                                                <strong class="banner">
-                                                                        <strong class="b1">Save the date:</strong>
-                                                                        <strong class="b2">Snowdays 2014</strong>
-                                                                        <strong class="b3">Three days of sports, snow and fun!<br>Next March, 2014!</strong>
-                                                                </strong>
-                                                        </li>
-                                                        <li><img src="snowdays-enrollment/public/images/slider-img2.jpg" alt="">
-                                                                <strong class="banner">
-                                                                        <strong class="b1">Summer is close:</strong>
-                                                                        <strong class="b2">Big Concert!</strong>
-                                                                        <strong class="b3">Reserve you place for the big night<br>at Museion at mid June!</strong>
-                                                                </strong>
-                                                        </li>
-                                                        <li><img src="snowdays-enrollment/public/images/slider-img3.jpg" alt="">
-                                                                <strong class="banner">
-                                                                        <strong class="b1">Time has come:</strong>
-                                                                        <strong class="b2">Degree Ceremony</strong>
-                                                                        <strong class="b3">Enroll to the next graduation ceremony!</strong>
-                                                                </strong>
-                                                        </li>
-                                                  </ul>
-                                                  <a class="prev" href="#">prev</a>
-                                                  <a class="next" href="#">prev</a>
                                                 </div>
                                         </div>
                                 </div>
@@ -108,33 +83,5 @@
                 </div>
         </div>
         <script type="text/javascript"> Cufon.now(); </script>
-        <script type="text/javascript">
-                $(function(){
-                        $('.slider')._TMS({
-                                prevBu:'.prev',
-                                nextBu:'.next',
-                                playBu:'.play',
-                                duration:800,
-                                easing:'easeOutQuad',
-                                preset:'simpleFade',
-                                pagination:false,
-                                slideshow:3000,
-                                numStatus:false,
-                                pauseOnHover:true,
-                                banners:true,
-                                waitBannerAnimation:false,
-                                bannerShow:function(banner){
-                                        banner
-                                                .hide()
-                                                .fadeIn(500)
-                                },
-                                bannerHide:function(banner){
-                                        banner
-                                                .show()
-                                                .fadeOut(500)
-                                }
-                        });
-                })
-        </script>
 </body>
 </html>
