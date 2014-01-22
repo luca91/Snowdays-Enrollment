@@ -314,6 +314,7 @@ public class ParticipantDao {
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
                 record.setPhoto(rs.getString("participant_photo"));
                 record.setStudentID(rs.getString("participant_student_card"));
+                record.setIntolerances(rs.getString("participant_intolerance"));
             }
             rs.close();
             preparedStatement.close();

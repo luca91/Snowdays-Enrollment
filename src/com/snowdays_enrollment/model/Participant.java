@@ -39,7 +39,7 @@ public class Participant {
 	 */
 	private boolean approved;
 	private int fridayProgram;
-	private ArrayList<String> intolerances = new ArrayList<String>();
+	private String intolerances;
 	private String tShirtSize;
 	private int rentalOption;
 	private String birthday;
@@ -161,15 +161,12 @@ public class Participant {
 		return this.fridayProgram;
 	}
 	
-	public void setIntolerances(ArrayList<String> intol){
+	public void setIntolerances(String intol){
 		intolerances = intol;
 	}
 	
-	public ArrayList<String> getIntolerances(){
-		if(intolerances.size() > 0)
-			return this.intolerances;
-		else
-			return null;
+	public String getIntolerances(){
+		return this.intolerances;
 	}
 	
 	public void setTShirtSize(String c){

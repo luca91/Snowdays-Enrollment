@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <%
 int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
+response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowdays-enrollment/");
 %>
 <html>
 <head>
@@ -47,7 +47,10 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 	    	<h3>Participant form</h3>
 	        
 	        <input type="hidden" name="id_group" value="${id_group}"/> 
-	        <input type="hidden" name="id" value="${id}"/> <br><br><br>
+	        <input type="hidden" name="id" value="${id}"/> 
+	        <c:if test="${image}">
+	        	<h5 class="alert">Image bigger than 2MB. Choose another one.</h5>
+	        </c:if><br><br><br>
 	        <label>Name*</label> 
 	        <input type="text" name="fname" value="${record.fname}" required/> <br><br><br>
 	        <label>Surname*</label>
