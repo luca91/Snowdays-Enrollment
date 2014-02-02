@@ -2,6 +2,7 @@ package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.Country;
 import com.snowdays_enrollment.model.Settings;
 import com.snowdays_enrollment.model.User;
+import com.snowdays_enrollment.tools.DBConnection;
 
 /**
  * Servlet implementation class SettingsController
@@ -51,13 +53,18 @@ public class SettingsController extends HttpServlet {
 		log.trace("START");
 		session = request.getSession();
 		c = (Connection) session.getAttribute("DBConnection");
-		
+		try {
+			if(c.isClosed())
+				c = new DBConnection().getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		UserDao uDao = new UserDao();
 		User systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
 		
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser", systemUser);
-		session.setMaxInactiveInterval(1200);
 		
 		SettingsDao sDao = new SettingsDao(c);
 		ArrayList<Country> countries = (ArrayList<Country>) sDao.getAllCountries();
@@ -91,6 +98,13 @@ public class SettingsController extends HttpServlet {
 		log.trace("START");
 		session = request.getSession(true);
 		c = (Connection) session.getAttribute("DBConnection");
+		try {
+			if(c.isClosed())
+				c = new DBConnection().getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		SettingsDao sDao = new SettingsDao(c);
 		Settings s = new Settings();
 		GroupDao gDao = new GroupDao(c);
@@ -100,7 +114,6 @@ public class SettingsController extends HttpServlet {
 		
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);	
-		session.setMaxInactiveInterval(1200);
 		
 		s.setMaxParticipantsPerGroup(Integer.parseInt(request.getParameter("maxpergroup")));
 		s.setMaxInternals(Integer.parseInt(request.getParameter("maxinternals")));
@@ -117,6 +130,12 @@ public class SettingsController extends HttpServlet {
 		sDao.addSettings("maxinternals", request.getParameter("maxinternals"));
 		System.out.println(request.getParameter("maxinternals")+ "doPost");
 		sDao.addSettings("maxexternals", request.getParameter("maxexternals"));
+		 try {
+				c.commit();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		response.sendRedirect("/snowdays-enrollment/private/index.html");
 	}
 

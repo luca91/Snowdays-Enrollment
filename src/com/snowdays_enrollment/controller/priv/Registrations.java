@@ -2,6 +2,7 @@ package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.User;
+import com.snowdays_enrollment.tools.DBConnection;
 
 /**
  * Servlet implementation class Registrations
@@ -40,13 +42,19 @@ public class Registrations extends HttpServlet {
 		log.trace("START");
 		HttpSession session = request.getSession(true);
 		c = (Connection) session.getAttribute("DBConnection");
+		try {
+			if(c.isClosed())
+				c = new DBConnection().getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		UserDao uDao = new UserDao(c);
 		User systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
 		
 		
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
-		session.setMaxInactiveInterval(1200);
 		
 		String forward = null;
 		String action = request.getParameter("action");

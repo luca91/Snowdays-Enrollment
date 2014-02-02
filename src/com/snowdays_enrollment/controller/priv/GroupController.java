@@ -3,6 +3,7 @@ package com.snowdays_enrollment.controller.priv;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.Settings;
 import com.snowdays_enrollment.model.User;
+import com.snowdays_enrollment.tools.DBConnection;
 
 
 /**
@@ -36,7 +38,7 @@ import com.snowdays_enrollment.model.User;
 public class GroupController extends HttpServlet {
 	
 	// commons logging references
-	static Logger log = Logger.getLogger(GroupController.class.getName());
+
 	
 	private static final long serialVersionUID = 1L;
     private static String INSERT_OR_EDIT = "/group.jsp";
@@ -56,11 +58,11 @@ public class GroupController extends HttpServlet {
      */
     public GroupController() {
         super();
-        log.debug("###################################");
-    	log.trace("START");
+       
+    	
 		dao = new GroupDao();
-        log.debug("Dao object instantiated");
-        log.trace("END");
+        
+        
     }
 
 	/**
@@ -70,9 +72,16 @@ public class GroupController extends HttpServlet {
 	 * @param HttpServletRequest request, HttpServletResponse response
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	log.trace("START");
+    	
     	session  = request.getSession(true);
     	c = (Connection) session.getAttribute("DBConnection");
+    	try {
+			if(c.isClosed())
+				c = new DBConnection().getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		UserDao ud = new UserDao(c);
 		User systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		SettingsDao sDao = new SettingsDao(c);
@@ -81,23 +90,22 @@ public class GroupController extends HttpServlet {
 		
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
-		log.debug("user role: "+systemUser.getRole());
-		session.setMaxInactiveInterval(1200);
+		
 		
 		String status = sDao.getSetting("all_blocked");
-		log.debug("status: "+status);
+		
 		request.setAttribute("status", status);
     	
     	String forward="";
         String action = request.getParameter("action");
         if (action == null){
-        	log.debug("action is NULL");
+        
         	action="";
         }
 
 // #########################################################################################        
         if (action.equalsIgnoreCase("delete")){
-            log.debug("action: DELETE - " + action);
+            
             int id = Integer.parseInt(request.getParameter("id"));
             File groupFolder = new File(getServletConfig().getServletContext().getRealPath("/") 
             		+ File.separator + dao.getRecordById(id).getName());
@@ -107,7 +115,7 @@ public class GroupController extends HttpServlet {
         }
 // #########################################################################################        
         else if (action.equalsIgnoreCase("edit")){
-            log.debug("action: EDIT - " + action);
+            
             forward = INSERT_OR_EDIT;
             int id = Integer.parseInt(request.getParameter("id"));
             Group record = dao.getRecordById(id);
@@ -120,33 +128,13 @@ public class GroupController extends HttpServlet {
         }
 // #########################################################################################        
         else if (action.equalsIgnoreCase("insert")){
-            log.debug("action: INSERT - " + action);
+          
             request.removeAttribute("record");
             forward = INSERT_OR_EDIT;
             List<User> listOfGroup_mng = ud.getAllRecordWithRole("group_manager");
             request.setAttribute("listOfGroup_mng", listOfGroup_mng);
             request.setAttribute("countries", dao.getCountries());
             request.setAttribute("satProgs", new String[] {"none", "snowvolley", "dodgeball"});
-        }
-// ########################################################################################
-        else if (action.equalsIgnoreCase("approve")) {
-        	log.debug("action: APPROVE - " + action);
-        	request.removeAttribute("record");
-        	int groupID = Integer.parseInt(request.getParameter("id_group"));
-        	dao.approve(groupID, true);
-        	Group g = dao.getRecordById(groupID);
-        	g.setIsApproved(true);
-        	request.setAttribute("record", g);
-        }
-// ########################################################################################
-        else if (action.equalsIgnoreCase("disapprove")) {
-        	log.debug("action: DISAPPROVE - " + action);
-        	request.removeAttribute("record");
-        	int groupID = Integer.parseInt(request.getParameter("id_group"));
-        	dao.approve(groupID, false);
-        	Group g = dao.getRecordById(groupID);
-        	g.setIsApproved(false);
-        	request.setAttribute("record", g);
         }
 // #########################################################################################
         else if(action.equals("block")){
@@ -166,18 +154,18 @@ public class GroupController extends HttpServlet {
         }
 // #########################################################################################        
         else if (action.equalsIgnoreCase("listRecord")){
-            log.debug("action: " + action);
+          
             if (systemUser.getRole().equals("admin")){
-                log.debug("admin");
+                
                 forward = LIST_USER;
             }
             else if (systemUser.getRole().equals("group_manager")){
                 forward = LIST_USER;
             }
         } else {
-            log.debug("action: ELSE - " + action);
+            
             if (systemUser.getRole().equals("admin")){
-                log.debug("admin");
+                
                 forward = LIST_USER;
                 request.setAttribute("records", dao.getAllRecords());
             }
@@ -185,12 +173,7 @@ public class GroupController extends HttpServlet {
                 forward = LIST_USER;
             }
         }
-    	
-        log.debug("forward: " + forward);
-        log.debug("action: " + action);
-        
-        log.debug("######################");
-        log.debug("systemUser.getRole(): " + systemUser.getRole().toString());
+    
         
         if(action.equals("delete") || action.equals("approve") || action.equals("disapprove") 
         		|| action.equals("unblock") || action.equals("block")){
@@ -199,7 +182,7 @@ public class GroupController extends HttpServlet {
         else{
 			if (systemUser.getRole().equals("admin") 
 					|| systemUser.getRole().equals("group_manager")){
-		        log.debug("systemUser is an admin");
+		       
 			    forward = "/private/jsp" + forward;
 			}
 			else {
@@ -222,10 +205,16 @@ public class GroupController extends HttpServlet {
 	 * @param (HttpServletRequest request, HttpServletResponse response
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	log.trace("START");
+    
     	session = request.getSession(true);
     	c = (Connection) session.getAttribute("DBConnection");
-    	
+    	try {
+			if(c.isClosed())
+				c = new DBConnection().getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	Group record = new Group();
 		UserDao ud = new UserDao(c);
 		User systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
@@ -233,40 +222,32 @@ public class GroupController extends HttpServlet {
 		
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
-		session.setMaxInactiveInterval(1200);
 		String forward;
-
 		
 		System.out.println(request.getParameter("max_group_number"));
     	record.setGroupReferentID(Integer.parseInt(request.getParameter("id_group_referent")));
     	record.setName(request.getParameter("name"));
-    	log.debug("name: "+record.getName());
+    	
     	record.setFirstParticipantRegisteredID(-1);
     	record.setCountry(request.getParameter("country"));
     	record.setBadgeType(request.getParameter("badge"));
     	record.setActualParticipantNumber(0);
-    	record.setGroupMaxNmber(Integer.parseInt(new SettingsDao().getSetting("maxpergroup")));
+    	if(record.getName().equals("UNIBZ")){
+    		record.setGroupMaxNmber(Integer.parseInt(new SettingsDao(c).getSetting("maxinternals")));
+    	}
+    	else
+    		record.setGroupMaxNmber(Integer.parseInt(new SettingsDao(c).getSetting("maxpergroup")));
     	record.setSnowvolley(request.getParameter("saturday"));
     	System.out.println(record.getSnowvolley());
     	record.setIsBlocked(Boolean.parseBoolean(request.getParameter("blocked")));
-    	log.debug("blocked: "+record.getIsBlocked());
+    	
     	record.setFirstParticipantRegisteredID(-1);
     	
-//    	if(request.getParameter("approved").equals("NO"))
-//    		record.setIsApproved(false);
-//    	else
-//    		record.setIsApproved(true);
-//    	if(request.getParameter("blocked").equals("NO"))
-//    		record.setIsBlocked(false);
-//    	else
-//    		record.setIsBlocked(true);
-    	
     	String id = request.getParameter("id");
-        
-    	log.debug("id: " + id);
+      
     	
         if(id == null || id.isEmpty()) {
-        	log.debug("INSERT");
+        	
         	record.setIsBlocked(true);
             dao.addRecord(record);
             String realPath = getServletConfig().getServletContext().getRealPath("/");
@@ -282,14 +263,14 @@ public class GroupController extends HttpServlet {
         }
         else
         {
-        	log.debug("UPDATE");
+        	
         	record.setId(Integer.parseInt(id));
             dao.updateRecord(record);
         }
         
 		//Load event list available for user
         if (systemUser.getRole().equals("admin")){
-            log.debug("admin");
+            
             request.setAttribute("records", dao.getAllRecords());
         }
         else if (systemUser.getRole().equals("group_manager")){
@@ -297,9 +278,7 @@ public class GroupController extends HttpServlet {
         }
         
         forward =  "groupList.html";
-        log.debug("forward: " + forward);
-
-    	log.trace("END");
+        
 		response.sendRedirect("/snowdays-enrollment/private/"+forward);
 	}
 	

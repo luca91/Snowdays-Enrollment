@@ -84,11 +84,26 @@ public class ParticipantDao {
         	
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into participants(participant_name,"
-                    		+ "participant_surname, participant_group_id, participant_gender, participant_friday_program,"
-                    		+ "participant_intolerance, participant_t_shirt_size, participant_rental_option_id, "
-                    		+ "participant_birthday, participant_id, participant_approved, participant_photo, participant_student_card) " +
-                    					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)");
-            preparedStatement.setInt(10, aRecord.getId());
+                    		+ "participant_surname, "
+                    		+ "participant_group_id, "
+                    		+ "participant_gender, "
+                    		+ "participant_friday_program,"
+                    		+ "participant_intolerance, "
+                    		+ "participant_t_shirt_size, "
+                    		+ "participant_rental_option_id, "
+                    		+ "participant_birthday, "
+                    		+ "participant_id, "
+                    		+ "participant_approved, "
+                    		+ "participant_photo, "
+                    		+ "participant_document, "
+                    		+ "participant_email, "
+                    		+ "participant_address, "
+                    		+ "participant_birthplace, "
+                    		+ "participant_birth_country,"
+                    		+ "participant_city,"
+                    		+ "participant_country,"
+                    		+ "participant_zip,"
+                    		+ "participant_phone) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             preparedStatement.setString(1, aRecord.getFname());
             preparedStatement.setString(2, aRecord.getLname());
             preparedStatement.setInt(3, aRecord.getId_group());
@@ -98,9 +113,18 @@ public class ParticipantDao {
             preparedStatement.setString(7, aRecord.getTShirtSize());
             preparedStatement.setInt(8, aRecord.getRentalOption());         
             preparedStatement.setString(9, aRecord.getDate_of_birth());
+            preparedStatement.setInt(10, aRecord.getId());
             preparedStatement.setBoolean(11, aRecord.isApproved());
             preparedStatement.setString(12, aRecord.getPhoto());
-            preparedStatement.setString(13, aRecord.getStudentID());
+            preparedStatement.setString(13, aRecord.getDocument());
+            preparedStatement.setString(14, aRecord.getEmail());
+            preparedStatement.setString(15, aRecord.getAddress());
+            preparedStatement.setString(16, aRecord.getBirthPlace());
+            preparedStatement.setString(17, aRecord.getBirthCountry());
+            preparedStatement.setString(18, aRecord.getCity());
+            preparedStatement.setString(19, aRecord.getCountry());
+            preparedStatement.setInt(20, aRecord.getZip());
+            preparedStatement.setString(21, aRecord.getPhone());
             log.debug(preparedStatement.toString());
         	log.debug("addRecord Execute Update");
             preparedStatement.executeUpdate();
@@ -167,8 +191,15 @@ public class ParticipantDao {
                     					+ "participant_rental_option_id=?,"
                     					+ "participant_photo=?,"
                     					+ "participant_t_shirt_size=?,"
-                    					+ "participant_student_card=? "+
-                            			"where participant_id=?");
+                    					+ "participant_document=?, "
+                    					+ "participant_address=?,"
+                    					+ "participant_birthplace=?,"
+                    					+ "participant_birth_country=?,"
+                                		+ "participant_city=?,"
+                                		+ "participant_country=?,"
+                                		+ "participant_zip=?,"
+                                		+ "participant_phone=?"
+                            			+ "where participant_id=?");
             log.debug(aRecord.getDate_of_birth()); 
             preparedStatement.setInt(1, aRecord.getId_group());
             preparedStatement.setString(2, aRecord.getFname());
@@ -182,8 +213,14 @@ public class ParticipantDao {
             preparedStatement.setInt(10, aRecord.getRentalOption());
             preparedStatement.setString(11, aRecord.getPhoto());
             preparedStatement.setString(12, aRecord.getTShirtSize());
-            preparedStatement.setString(13, aRecord.getStudentID());
-            preparedStatement.setInt(14, aRecord.getId());
+            preparedStatement.setString(13, aRecord.getDocument());
+            preparedStatement.setString(14, aRecord.getAddress());
+            preparedStatement.setString(15, aRecord.getBirthPlace());
+            preparedStatement.setString(16, aRecord.getBirthCountry());
+            preparedStatement.setString(17, aRecord.getCity());
+            preparedStatement.setString(18, aRecord.getCountry());
+            preparedStatement.setInt(19, aRecord.getZip());
+            preparedStatement.setInt(20, aRecord.getId());
             log.debug(preparedStatement);
             preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -217,12 +254,12 @@ public class ParticipantDao {
                 record.setApproved(rs.getBoolean("participant_approved"));
                 record.setGender(rs.getString("participant_gender"));
                 record.setFridayProgram(rs.getInt("participant_friday_program"));
-//                record.setIntolerances(strings);
                 record.setTShirtSize(rs.getString("participant_t_shirt_size"));
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
                 record.setPhoto(rs.getString("participant_photo"));
                 record.setRegistrationTime(rs.getString("participant_registration_time"));
-                record.setStudentID(rs.getString("participant_student_card"));
+                record.setDocument(rs.getString("participant_document"));
+                record.setPhone(rs.getString("participant_phone"));
                 Group g = gDao.getRecordById(record.getId_group());
                 record.setGroupName(g.getName());
                 records.add(record);
@@ -261,17 +298,13 @@ public class ParticipantDao {
                 record.setId_group(rs.getInt("participant_group_id"));
                 record.setFname(rs.getString("participant_name"));
                 record.setLname(rs.getString("participant_surname"));
-//                record.setEmail(rs.getString("participant_email"));
                 record.setDate_of_birth(rs.getString("participant_birthday"));
-//                record.setApproved(rs.getBoolean("participant_approved"));
                 record.setGender(rs.getString("participant_gender"));
                 record.setFridayProgram(rs.getInt("participant_friday_program"));
-//                record.setIntolerances(strings);
                 record.setTShirtSize(rs.getString("participant_t_shirt_size"));
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
                 record.setPhoto(rs.getString("participant_photo"));
-                record.setStudentID(rs.getString("participant_student_card"));
-//                record.setRegistrationTime(rs.getString("participant_registration_time"));
+                record.setDocument(rs.getString("participant_document"));
                 Group g = gDao.getRecordById(record.getId_group());
                 record.setGroupName(g.getName());
                 records.add(record);
@@ -303,7 +336,6 @@ public class ParticipantDao {
             if (rs.next()) {
                 record.setId(rs.getInt("participant_id"));
                 record.setId_group(rs.getInt("participant_group_id"));
-                log.debug("id group: "+record.getId_group());
                 record.setFname(rs.getString("participant_name"));
                 record.setLname(rs.getString("participant_surname"));   
                 record.setDate_of_birth(rs.getString("participant_birthday"));
@@ -314,8 +346,16 @@ public class ParticipantDao {
                 record.setTShirtSize(rs.getString("participant_t_shirt_size"));
                 record.setRentalOption(rs.getInt("participant_rental_option_id"));
                 record.setPhoto(rs.getString("participant_photo"));
-                record.setStudentID(rs.getString("participant_student_card"));
+                record.setDocument(rs.getString("participant_document"));
                 record.setIntolerances(rs.getString("participant_intolerance"));
+                record.setBirthPlace(rs.getString("participant_birthplace"));
+                record.setCity(rs.getString("participant_city"));
+                record.setZip(rs.getInt("participant_zip"));
+                record.setBirthCountry(rs.getString("participant_birth_country"));
+                record.setCountry(rs.getString("participant_country"));
+                record.setAddress(rs.getString("participant_address"));
+                record.setPhone(rs.getString("participant_phone"));
+                record.setEmail(rs.getString("participant_email"));
             }
             rs.close();
             preparedStatement.close();
@@ -512,6 +552,59 @@ public class ParticipantDao {
     	}
     	log.trace("END");
     	return result;
+    }
+    
+    public Participant getParticipantByEmail(String email){
+    	Participant record = new Participant();
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("select * from participants where participant_email=?");
+    		stmt.setString(1, email);
+    		ResultSet rs = stmt.executeQuery();
+    		if(rs.next()){
+    			  record.setId(rs.getInt("participant_id"));
+                  record.setId_group(rs.getInt("participant_group_id"));
+                  record.setFname(rs.getString("participant_name"));
+                  record.setLname(rs.getString("participant_surname"));   
+                  record.setDate_of_birth(rs.getString("participant_birthday"));
+                  record.setApproved(rs.getBoolean("participant_approved"));
+                  record.setRegistrationTime(rs.getString("participant_registration_time"));
+                  record.setGender(rs.getString("participant_gender"));
+                  record.setFridayProgram(rs.getInt("participant_friday_program"));
+                  record.setTShirtSize(rs.getString("participant_t_shirt_size"));
+                  record.setRentalOption(rs.getInt("participant_rental_option_id"));
+                  record.setPhoto(rs.getString("participant_photo"));
+                  record.setDocument(rs.getString("participant_document"));
+                  record.setIntolerances(rs.getString("participant_intolerance"));
+                  record.setBirthPlace(rs.getString("participant_birthplace"));
+                  record.setCity(rs.getString("participant_city"));
+                  record.setZip(rs.getInt("participant_zip"));
+                  record.setBirthCountry(rs.getString("participant_birth_country"));
+                  record.setCountry(rs.getString("participant_country"));
+                  record.setAddress(rs.getString("participant_address"));
+                  record.setPhone(rs.getString("participant_phone"));
+                  record.setEmail(rs.getString("participant_email"));
+    		}
+    		rs.close();
+    		stmt.close();
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
+    	return record;
+    }
+    
+    public void deleteRecordByEmail(String email){
+    	try{
+    		PreparedStatement stmt = connection
+    				.prepareStatement("delete from participants where participant_email=?");
+    		stmt.setString(1, email);
+    		stmt.executeUpdate();
+    		stmt.close();
+    	}
+    	catch(SQLException e){
+    		e.printStackTrace();
+    	}
     }
     
 }

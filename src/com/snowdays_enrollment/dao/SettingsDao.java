@@ -222,5 +222,17 @@ static Logger log = Logger.getLogger(SettingsDao.class.getName());
 			break;
 		}
 	}
+	
+	public void setDefaultPeopleCountry(){
+		log.trace("START");
+		try{
+			PreparedStatement stmt = connection
+					.prepareStatement("update settings set country_actual_people='0'");
+			stmt.executeUpdate();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
 
 }

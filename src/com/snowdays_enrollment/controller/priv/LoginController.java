@@ -35,7 +35,11 @@ public class LoginController extends HttpServlet {
 		log.debug("START");
 		HttpSession session = request.getSession();
 		session.setAttribute("DBConnection", new DBConnection().getConnection());
-		session.setMaxInactiveInterval(1200);
+		UserDao uDao = new UserDao((Connection) session.getAttribute("DBConnection")); 
+		if(session.getAttribute("systemUser") != null)
+			session.removeAttribute("systemUser");
+		session.setAttribute("systemUser", uDao.getUserByUsername(request.getUserPrincipal().getName()));
+		session.setMaxInactiveInterval(600);
 		try {
 //			getServletConfig().getServletContext().getRequestDispatcher("/private/index.html").forward(request, response);
 			response.sendRedirect("/snowdays-enrollment/private/index.html");

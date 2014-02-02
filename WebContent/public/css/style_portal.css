@@ -3,6 +3,9 @@ article,aside,audio,canvas,command,datalist,details,embed,figcaption,figure,foot
 	{
 	display: block
 }
+section{
+	margin-top: -70px	
+}
 
 mark,rp,rt,ruby,summary,time {
 	display: inline

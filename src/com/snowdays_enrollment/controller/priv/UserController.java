@@ -74,10 +74,7 @@ public class UserController extends HttpServlet {
 		User  systemUser = dao.getUserByUsername(request.getUserPrincipal().getName());
 		
 		session.removeAttribute("systemUser");
-		session.setAttribute("systemUser",systemUser);
-		session.setMaxInactiveInterval(1200);
-        
-        
+		session.setAttribute("systemUser",systemUser);        
         
         if (action == null){
         	log.debug("action is NULL");

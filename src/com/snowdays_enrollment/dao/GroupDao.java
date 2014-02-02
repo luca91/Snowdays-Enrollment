@@ -513,7 +513,7 @@ public class GroupDao {
     public Group getGroupByName(String name){
     	log.trace("START");
     	UserDao uDao = new UserDao();
-    	Group aRecord = new Group();
+    	Group aRecord = null;
     	try {
     		PreparedStatement stmt = connection
     				.prepareStatement("select * from groups where group_name=?");
@@ -521,6 +521,7 @@ public class GroupDao {
     		ResultSet rs = stmt.executeQuery();
     		rs.beforeFirst();
     		if(rs.next()){
+    			aRecord = new Group();
                 aRecord.setId(rs.getInt("group_id"));
                 aRecord.setName(rs.getString("group_name"));    
                 aRecord.setGroupReferentID(rs.getInt("group_referent_id"));

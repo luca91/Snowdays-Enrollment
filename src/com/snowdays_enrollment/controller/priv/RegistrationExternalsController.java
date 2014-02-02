@@ -2,6 +2,7 @@ package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +70,6 @@ public class RegistrationExternalsController extends HttpServlet {
 		systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser", systemUser);
-		session.setMaxInactiveInterval(1200);
 		
 		dao = new RegistrationExternalsDao(c);
 		sDao = new SettingsDao(c);
@@ -77,6 +77,7 @@ public class RegistrationExternalsController extends HttpServlet {
 		s = sDao.getAllSettings();
 		s.setCountries(sDao.getAllCountries());
 		actualTotal = 0;
+		sDao.setDefaultPeopleCountry();
 		
 		s = new Settings();
 		s = sDao.getAllSettings();
@@ -128,6 +129,7 @@ public class RegistrationExternalsController extends HttpServlet {
 				g.setTimeFirstRegistration(new RegistrationExternalsDao(c).getRegistrationByParticipantID(list.get(0).getParticipantID()).getTime());
 				g.setPosition(p);
 				actualTotal += g.getActualParticipantNumber();
+				
 				gd.updateRecord(g);
 				result.add(g);
 				added.add(list.get(0).getGroupName());

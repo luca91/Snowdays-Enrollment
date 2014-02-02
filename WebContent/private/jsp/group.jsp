@@ -4,7 +4,8 @@
 <!DOCTYPE html>
 <%
 int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowdays-enrollment/");
+response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowdays-enrollment/logout.html");
+//response.setHeader("Refresh", timeout + "; URL = http://localhost:8080/snowdays-enrollment/logout.html");
 %>
 <html>
 <head>
@@ -115,8 +116,8 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 		        
 		        
 		        <!-- BUTTONS -->
-		        <input type="submit" value="Submit" class="input" />
 		        <input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />
+		        <input type="submit" value="Submit" class="input" />
 		       <!--  <c:if test="${param.id eq null }">
 	        		<input type="reset" value="Reset" class="input" />
 	       		</c:if> --><br><br><br>

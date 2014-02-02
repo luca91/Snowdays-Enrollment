@@ -41,8 +41,6 @@ import com.itextpdf.text.DocumentException;
 public class BadgeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	static Logger log = Logger.getLogger(BadgeController.class.getName());
-	
 	private static String OUTPUT = "/output";
 	private static String DOWNLOAD_LIST = "/badgeList.jsp";
 	private static String UNAUTHORIZED_PAGE = "/private/jsp/errors/unauthorized.jsp";
@@ -60,18 +58,16 @@ public class BadgeController extends HttpServlet {
      */
     public BadgeController() {
         super();
-        log.debug("###################################");
-        log.trace("START");
+  
         dao = new BadgeDao();
-        log.debug("Dao object instantiated");
-        log.trace("END");
+        
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.trace("START");
+		
 
 		UserDao ud = new UserDao();
 		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
@@ -87,32 +83,30 @@ public class BadgeController extends HttpServlet {
     	System.out.println(gdao.getAllRecords().size());
 		
 
-    	log.debug("id_group (first): " + request.getParameter("id_group"));	
+   
 
     	if (request.getParameter("id_group") != null){
-    		log.debug("id_group is not null!");
+    	
     		id_group = Integer.parseInt(request.getParameter("id_group").toString());
-    		log.debug("id_group: "+id_group);
+    		
         	GroupDao gd = new GroupDao();
         	request.setAttribute("group_name", gd.getRecordById(id_group).getName());
     	}
-    	log.debug("id_group (second): "+request.getParameter("id_group"));
+    
     	request.setAttribute("id_group", request.getParameter("id_group"));
     	
     	
     	String forward="";
         String action = request.getParameter("action");
         if (action == null){
-        	log.debug("action is NULL");
         	action="";
         }         
         
 // #########################################################################################
         //list record using a group_id
         if (action.equalsIgnoreCase("listRecord")){
-            log.debug("action: listRecord - " + action);
             if (systemUser.getRole().equals("admin")){
-                log.debug("admin");
+      
                 forward = DOWNLOAD_LIST;
                 request.setAttribute("records", pDao.getAllRecordsById_group(id_group));
                 GroupDao gd = new GroupDao();
@@ -122,7 +116,7 @@ public class BadgeController extends HttpServlet {
         
         //generate the badge and open the file just created
         else if(action.equalsIgnoreCase("download")) {
-        	log.debug(systemUser.getRole());
+        
         	int id = Integer.parseInt(request.getParameter("id"));
         	String id_event = request.getParameter("event_id");
         	Participant aPar = pDao.getRecordById(id);
@@ -134,7 +128,7 @@ public class BadgeController extends HttpServlet {
 				badge = new PDFGenerator(aPar.getFname(), aPar.getLname(), aPar.getId(), gd.getRecordById(aPar.getId_group()).getName(), id_event, outputFolder.getAbsolutePath());
 				badge.setImagePath(getServletContext().getRealPath("/private/images/logo_unibz.jpg"));
 				badge.createDocument();
-				log.debug("badge folder: "+badge.getFilePath());
+				
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -143,7 +137,7 @@ public class BadgeController extends HttpServlet {
 				e.printStackTrace();
 			}
         	
-        	log.debug("file path: "+badge.getFilePath());
+        	
         	
         	forward = badge.getFilePath();
         	
@@ -151,7 +145,7 @@ public class BadgeController extends HttpServlet {
         
         else {
             if (systemUser.getRole().equals("admin")){
-                log.debug("admin");
+                
                 forward = DOWNLOAD_LIST;
                 request.setAttribute("records", pDao.getAllRecords());
                 GroupDao gd = new GroupDao();
@@ -159,8 +153,7 @@ public class BadgeController extends HttpServlet {
             }
         }
 // #########################################################################################     	
-        log.debug("forward: " + forward);
-        log.debug("action: " + action);
+  
     	        
         if(!action.equalsIgnoreCase("download"))
         		forward = "/private/jsp" + forward;
@@ -178,7 +171,7 @@ public class BadgeController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.trace("START");
+	
 		Badge record = new Badge();
 		
 		UserDao ud = new UserDao();
@@ -199,11 +192,10 @@ public class BadgeController extends HttpServlet {
 		
 		int id_group = 0;
 			
-		log.debug("id_group: " + request.getParameter("id_group"));
-    	log.debug("action: " + request.getParameter("action"));
+		
 		
     	if (request.getParameter("id_group") != null){
-    		log.debug("id_group is not null!");
+    	
     		id_group = Integer.parseInt(request.getParameter("id_group").toString());
     	}
     	
@@ -211,7 +203,7 @@ public class BadgeController extends HttpServlet {
     		//form for the download
     		
 	    	
-	    	log.debug("----------------> id_group: " + request.getParameter("id_group"));
+	    
 	    	
 	    	record.setFirstName(request.getParameter("fname"));
 	    	record.setLastName(request.getParameter("lname"));

@@ -2,6 +2,7 @@ package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,7 +50,13 @@ public class Index extends HttpServlet {
 		log.trace("START");
 		HttpSession session = request.getSession(true);
 		c = (Connection) session.getAttribute("DBConnection");
-		
+//		try {
+//			if(c.isClosed())
+//				c = new DBConnection().getConnection();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		User u = new User();
 		UserDao ud = new UserDao(c);
 		System.out.println("User: " + request.getUserPrincipal().getName());
@@ -57,7 +64,6 @@ public class Index extends HttpServlet {
 		System.out.println("User: " + u.getUsername());
 		
 		session.setAttribute("systemUser", u);
-		session.setMaxInactiveInterval(1200);
 		 
 		try {
 			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);

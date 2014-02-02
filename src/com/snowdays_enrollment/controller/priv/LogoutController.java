@@ -45,12 +45,15 @@ public class LogoutController extends HttpServlet {
 		HttpSession session;
     	session = request.getSession();
     	c = (Connection) session.getAttribute("DBConnection");
+    	session.removeAttribute("systemUser");
     	try {
-			c.close();
+    		if(c != null && !c.isClosed())
+    			c.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	session.removeAttribute("DBConnection");
         session.invalidate();
         log.debug("session invalidated");
         

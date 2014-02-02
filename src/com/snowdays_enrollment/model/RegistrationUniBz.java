@@ -2,32 +2,59 @@ package com.snowdays_enrollment.model;
 
 public class RegistrationUniBz {
 	
-	private String time;
-	private Participant p;
-	private boolean insertionComplete;
+	private String email;
+	private String name;
+	private String surname;
+	private String status;
+	private String group;
+	private String link;
 	
-	private void setTime(String time){
-		this.time = time;
+	public void setEmail(String email){
+		this.email = email;
 	}
 	
-	private String getTime(){
-		return this.time;
+	public String getEmail(){
+		return this.email;
 	}
 	
-	private void setParticipant(Participant p){
-		this.p = p;
+	public void setName(String name){
+		this.name = name;
 	}
 	
-	private Participant getPartcipant(){
-		return this.p;
+	public String getName(){
+		return this.name;
 	}
 	
-	private void setInsertionComplete(boolean b){
-		insertionComplete = b;
+	public void setSurname(String surname){
+		this.surname = surname;
 	}
 	
-	public boolean getInsertionComplete(){
-		return this.insertionComplete;
+	public String getSurname(){
+		return this.surname;
+	}
+	
+	public void setStatus(String s){
+		status = s;
+	}
+	
+	public String getStatus(){
+		return this.status;
+	}
+	
+	public void setGroup(String id){
+		group = id;
+	}
+	
+	public String getGroup(){
+		return this.group;
+	}
+	
+	public void setLink(String l){
+		link = l;
+	}
+	
+	public String getLink(){
+		return this.link;
 	}
 
 }

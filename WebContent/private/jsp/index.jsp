@@ -8,7 +8,7 @@
 %>
 <%
 	int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowdays-enrollment/");
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.html");
 %>
 <html lang="en">
 <head>

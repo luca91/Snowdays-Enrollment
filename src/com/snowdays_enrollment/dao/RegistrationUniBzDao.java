@@ -49,29 +49,90 @@ static Logger log = Logger.getLogger(RegistrationExternalsDao.class.getName());
     }
 	
 	public void addRecord(RegistrationUniBz ru){
-		
-	}
-	
-	public List<String> getFacultiyServerByName(String name){
-		log.trace("START");
-		List<String> result = new ArrayList<String>();
 		try{
 			PreparedStatement stmt = connection
-					.prepareStatement("select faculty_server from faculties where faculty_name=?");
-			stmt.setString(1, name);
-			ResultSet rs = stmt.executeQuery();
-			rs.beforeFirst();
-			if(rs.next()){
-				result.add(rs.getString("faculty_server"));
-			}
-			rs.close();
+					.prepareStatement("insert into emails_internals values(?,?,?,?,?,?)");
+			stmt.setString(1, ru.getEmail());
+			stmt.setString(2, ru.getName());
+			stmt.setString(3, ru.getSurname());
+			stmt.setString(4, ru.getStatus());
+			stmt.setString(5, ru.getGroup());
+			stmt.setString(6, ru.getLink());
+			stmt.executeUpdate();
 			stmt.close();
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		log.trace("END");
+	}
+	
+	public RegistrationUniBz getRegistrationByEmail(String email){
+		RegistrationUniBz ru = new RegistrationUniBz();
+		try{
+			PreparedStatement stmt = connection
+					.prepareStatement("select * from emails_internals where email=?");
+			stmt.setString(1, email);
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()){
+				ru.setEmail(rs.getString("email"));
+				ru.setName(rs.getString("name"));
+				ru.setSurname(rs.getString("surname"));
+				ru.setStatus(rs.getString("status"));
+				ru.setGroup(rs.getString("group"));
+			}
+			stmt.close();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return ru;
+	}
+	
+	public List<RegistrationUniBz> getAllRegistration(){
+		List<RegistrationUniBz> result = new ArrayList<RegistrationUniBz>();
+		try{
+			PreparedStatement stmt = connection
+					.prepareStatement("select * from emails_internals");
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				RegistrationUniBz ru = new RegistrationUniBz();
+				ru.setEmail(rs.getString("email"));
+				ru.setName(rs.getString("name"));
+				ru.setSurname(rs.getString("surname"));
+				ru.setStatus(rs.getString("status"));
+				ru.setGroup(rs.getString("group"));
+				result.add(ru);
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 		return result;
+	}
+	
+	public void deleteRecord(String email){
+		try{
+			PreparedStatement stmt = connection
+					.prepareStatement("delete from emails_internals where email=?");
+			stmt.setString(1, email);
+			stmt.executeUpdate();
+			stmt.close();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void submit(String email){
+		try{
+			PreparedStatement stmt = connection
+					.prepareStatement("update emails_internals set status='submit'");
+			stmt.executeUpdate();
+			stmt.close();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 }

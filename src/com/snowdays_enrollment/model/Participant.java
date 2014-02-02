@@ -47,8 +47,14 @@ public class Participant {
 	private String registrationTime;
 	private String gender;
 	private String groupName;
-	private String studentID;
-	
+	private String document;
+	private String birthPlace;
+	private String address;
+	private int zip;
+	private String city;
+	private String country;
+	private String birthCountry;
+	private String phone;
 	
 	
 	//Getters and Setters
@@ -229,11 +235,67 @@ public class Participant {
 		return this.groupName;
 	}
 	
-	public void setStudentID(String id){
-		studentID = id;
+	public void setDocument(String id){
+		document = id;
 	}
 	
-	public String getStudentID(){
-		return this.studentID;
+	public String getDocument(){
+		return this.document;
+	}
+	
+	public void setBirthPlace(String place){
+		birthPlace = place;
+	}
+	
+	public String getBirthPlace(){
+		return this.birthPlace;
+	}
+	
+	public void setAddress(String ad){
+		address = ad;
+	}
+	
+	public String getAddress(){
+		return this.address;
+	}
+	
+	public void setZip(int z){
+		zip = z;
+	}
+	
+	public int getZip(){
+		return this.zip;	
+	}
+	
+	public void setCity(String c){
+		city = c;
+	}
+	
+	public String getCity(){
+		return this.city;
+	}
+	
+	public void setCountry(String c){
+		country = c;
+	}
+	
+	public String getCountry(){
+		return this.country;
+	}
+	
+	public void setBirthCountry(String bc){
+		birthCountry = bc;
+	}
+	
+	public String getBirthCountry(){
+		return this.birthCountry;
+	}
+	
+	public void setPhone(String p){
+		phone = p;
+	}
+	
+	public String getPhone(){
+		return this.phone;
 	}
 }

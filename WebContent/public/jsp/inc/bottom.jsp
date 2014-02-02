@@ -9,5 +9,5 @@
 		</section>	
 	</div>
 </div>
-<script type="text/javascript"> Cufon.now(); </script>
+<!-- <script type="text/javascript"> Cufon.now(); </script>  -->
 </body>

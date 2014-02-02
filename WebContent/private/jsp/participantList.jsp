@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <%
 int timeout = session.getMaxInactiveInterval();
-response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowdays-enrollment/");
+response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.html");
 %>
 <html>
 <head>
@@ -88,7 +88,7 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 								<td>${record.lname}</td>
 								<td>${record.groupName}</td>
 								<td>${record.photo}</td>
-								<td>${record.studentID}</td>
+								<td>${record.document}</td>
 								<td><a
 									href="<c:url value='/private/participant.jsp?action=edit&id=${record.id}&id_group=${record.id_group}'/>">Update</a></td>
 								<td><a
@@ -165,26 +165,6 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 			
 		</c:choose>
 		</c:if>
-				
-				<!--  <form method="POST" action="${act}" name="frmApproveParticipan">
-				<c:if test="${id_group != 0 && (nrEnrolledParticipant < group.groupMaxNumber)}">
-					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
-					<c:set var="act">
-						<c:url value="/private/participantInvite?action=invite&id_group=${id_group}" />
-					</c:set>					
-				</c:if>
-				<c:set var="act">
-					<c:url value="/private/participantApprove?action=approve&id_group=${id_group}" />
-				</c:set>				
-					<c:if test="${not empty records}">
-						<input type="submit" value="Approve All" class="input" />											
-					</c:if>				
-				<c:set var="act"><c:url value="/private/participantApprove?action=disapprove&id_group=${id_group}" /></c:set>				
-								
-					<c:if test="${not empty records}">
-						<input type="submit" value="Disapprove All" class="input" />
-					</c:if>
-					</form> --> 
 			</div>						
 	<!-- BOTTOM --><c:import url="inc/bottom.jsp"/>
 </html>

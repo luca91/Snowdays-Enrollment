@@ -64,7 +64,7 @@ public class RegistrationExternalsDao {
            stmt.setInt(2, g.getId());
            stmt.setString(3, r.getGroupName());
            stmt.setString(4, r.getTime());
-           stmt.execute();
+           stmt.executeUpdate();
            if(g.getFirstParticipantRegistered() != 0)
         	   gDao.setFirstRegistered(r.getParticipantID(), g.getId());
            stmt.close();
