@@ -1,7 +1,5 @@
 package com.snowdays_enrollment.pdf;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -11,34 +9,23 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.UUID;
 
-import javafx.scene.control.Cell;
+import org.apache.log4j.Logger;
 
-import com.itextpdf.text.Anchor;
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chapter;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.List;
-import com.itextpdf.text.ListItem;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Section;
-
-import org.apache.log4j.Logger;
-
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.HyphenationEvent;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.snowdays_enrollment.dao.GroupDao;
+import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.Participant;
 
 /**
@@ -141,7 +128,10 @@ public class DOCSGenerator {
 	    log.trace("START");
 	    this.record = record;
 		this.path = path;
-		log.debug("Constructor instantiated");
+		int id = record.getId_group();
+		GroupDao gd = new GroupDao();
+		Group g = gd.getRecordById(id);
+				log.debug("Constructor instantiated");
 	}
 	
 	
@@ -223,7 +213,7 @@ public class DOCSGenerator {
 		body.setAlignment(Paragraph.ALIGN_LEFT);
 		Scanner scan = new Scanner(agreementBodyText);
 		String line;
-		String rex = "[A-Z]";
+		String rex = "[0-9].[A-Z]";
 		while (scan.hasNext()){
 			 line = scan.nextLine();
 			 
@@ -284,18 +274,18 @@ public class DOCSGenerator {
 		
 		
 		Paragraph born = new Paragraph ();
-		if (record.getBirthPlace() != null && record.getBirthCountry() != null) {
-			Chunk born3 = new Chunk (record.getDate_of_birth()+ ", "+record.getBirthCountry(), formFont );
-			born.add(born3);
-			Chunk born5 = new Chunk (record.getDate_of_birth(), formFont );
-			born.add(born5);
-		}
 		Chunk born2 = new Chunk ("born in    ", bodyFont );
 		Chunk born4 = new Chunk ("   on the    ", bodyFont );
-		
 		born.add(born2);
-		born.add(born4);
 		
+		if (record.getBirthPlace() != null && record.getBirthCountry() != null) {
+			Chunk born3 = new Chunk (record.getBirthPlace()+ ", "+record.getBirthCountry(), formFont );
+			born.add(born3);
+			Chunk born5 = new Chunk (record.getDate_of_birth(), formFont );
+			born.add(born4);
+			born.add(born5);
+		}
+	
 		
 		Paragraph resident = new Paragraph();
 		Chunk res1 = new Chunk ("resident in    ", bodyFont );
