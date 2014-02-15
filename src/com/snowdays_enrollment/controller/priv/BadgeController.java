@@ -31,7 +31,8 @@ import com.itextpdf.text.DocumentException;
 		"/private/downloadBadge",
 		"/private/badge",
 		"/private/badgeList.html",
-		"/private/badgeList.jsp"
+		"/private/badgeList.jsp",
+		"/private/documents.html"
 })
 /**
  * This servlet take care of the badge creation and listing on the webpage.
@@ -76,7 +77,6 @@ public class BadgeController extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
-		session.setMaxInactiveInterval(1200);
 		
 		GroupDao gdao = new GroupDao();
     	request.setAttribute("groups", gdao.getAllRecords());

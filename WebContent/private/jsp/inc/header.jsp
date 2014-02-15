@@ -8,7 +8,7 @@
 		<li><a href='userList.html' id="listusers">Users</a></li>
 		<li><a href='groupList.html' id="listgroups">Groups</a></li>
 		<li><a href='participantList.html' id="listparticip">Participants</a></li>
-		<li><a href='badgeList.html' id="listbadges">Badges</a></li>
+		<li><a href='badgeList.html' id="listbadges">Documents</a></li>
 		<li><a href='registrations.html' id="registrations">Registrations</a></li>
 		<li><a href='settings.html' id="settings">Settings</a></li>
 	</c:when>
