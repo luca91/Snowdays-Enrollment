@@ -203,6 +203,7 @@ static Logger log = Logger.getLogger(SettingsDao.class.getName());
 			stmt.setString(1, value);
 			stmt.setString(2, name);
 			stmt.executeUpdate();
+			stmt.close();
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -227,8 +228,21 @@ static Logger log = Logger.getLogger(SettingsDao.class.getName());
 		log.trace("START");
 		try{
 			PreparedStatement stmt = connection
-					.prepareStatement("update settings set country_actual_people='0'");
+					.prepareStatement("update countries set country_actual_people='15'");
 			stmt.executeUpdate();
+			stmt.close();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateActualCountryPeople(String country, int nr){
+		try{
+			PreparedStatement stmt = connection
+					.prepareStatement("update countries set country_actual_people=? where country_name=?");
+			stmt.setInt(1, nr);
+			stmt.setString(2, country);
 		}
 		catch(SQLException e){
 			e.printStackTrace();

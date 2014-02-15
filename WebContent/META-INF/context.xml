@@ -3,10 +3,10 @@
     <!-- Specify a JDBC datasource -->
      <Resource
         name="jdbc/snowdays_enrollment" type="javax.sql.DataSource"
-        maxActive="1000" maxIdle="3000" maxWait="1000"
+        maxActive="10000" maxIdle="3000" maxWait="10000"
         url="jdbc:mysql://localhost:3306/snowdays_enrollment"
         driverClassName="com.mysql.jdbc.Driver"
-        username="root" password="scub20132014"
+        username="root" password="root" autoReconnect="true"
     />
  
 </Context>

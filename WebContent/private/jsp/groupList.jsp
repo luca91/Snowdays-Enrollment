@@ -29,15 +29,20 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<h3 class="htabs">Groups</h3>
+		<h3 class="htabs" style="margin-left: 20px">Groups</h3>
 		<!-- DROPDOWN BOX SELECTION -->
 		<!-- TABLE --><br><br>
 		<c:if test="${status == 'blocked' && systemUser.role == 'admin'}">
-			<input type="button" value="Unblock" name="blockButton" onClick="location.href='groupStatus?action=unblock'"/>
+			<!-- <input type="button" value="Unblock" name="blockButton" onClick="location.href='groupStatus?action=unblock'"/>  -->
+			<a class="button-2" href="groupStatus?action=unblock" style="margin-left: 20px">Unblock</a>
 		</c:if>
 		<c:if test="${status == 'unblocked' && systemUser.role == 'admin'}">
-			<input type="button" value="Block" name="blockButton" onClick="location.href='groupStatus?action=block'"/>
+			<!-- <input type="button" value="Block" name="blockButton" onClick="location.href='groupStatus?action=block'"/>  -->
+			<a class="button-2" href="groupStatus?action=block" style="margin-left: 20px">Block</a>
 		</c:if> 
+		<c:if test="${systemUser.role == 'admin' }">
+				<a class="button-2" href="group.jsp?action=insert">Add Group</a>
+		</c:if>
 		<table id="box-table-a">
 		<c:if test="${fn:length(records) != 0}">
 			<thead>
@@ -87,9 +92,6 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 			</tbody>
 		</table>
 		<div class="table-buttons">
-		<c:if test="${systemUser.role == 'admin' }">
-				<a class="button-2" href="group.jsp?action=insert">Add Group</a>
-		</c:if>
 		</div>
 	<!-- BOTTOM --><c:import url="inc/bottom.jsp"/>
 </html>

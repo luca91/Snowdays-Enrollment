@@ -63,7 +63,8 @@ public class Index extends HttpServlet {
 		u = ud.getUserByUsername(request.getUserPrincipal().getName());
 		System.out.println("User: " + u.getUsername());
 		
-		session.setAttribute("systemUser", u);
+		if(session.getAttribute("systemUser") == null)
+			session.setAttribute("systemUser", u);
 		 
 		try {
 			getServletConfig().getServletContext().getRequestDispatcher("/private/jsp/index.jsp").forward(request, response);

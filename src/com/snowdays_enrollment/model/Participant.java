@@ -50,7 +50,7 @@ public class Participant {
 	private String document;
 	private String birthPlace;
 	private String address;
-	private int zip;
+	private String zip;
 	private String city;
 	private String country;
 	private String birthCountry;
@@ -259,11 +259,11 @@ public class Participant {
 		return this.address;
 	}
 	
-	public void setZip(int z){
+	public void setZip(String z){
 		zip = z;
 	}
 	
-	public int getZip(){
+	public String getZip(){
 		return this.zip;	
 	}
 	

@@ -57,8 +57,8 @@
                                                                 <dl class="address">
                                                                         <dt><span>Country:</span>Italy</dt>
                                                                         <dd><span>City:</span>Bolzano</dd>
-                                                                        <dd><span>Address:</span>Universitaetzplatz 1</dd>
-                                                                        <dd><span>Email:</span><a href="#">info@ems.unibz.it</a></dd>
+                                                                        <dd><span>Address:</span>Universitaetzpl. 1</dd>
+                                                                        <dd><span>Email:</span><a href="#">snowdays@unibz.it</a></dd>
                                                                 </dl>
                                                         </div>
                                                         <div class="col-2">

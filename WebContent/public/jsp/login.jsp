@@ -30,7 +30,7 @@
 			
 			<!-- BUTTONS -->			
 		    <input type="submit" value="Login" class="input" />
-		    <input type="button" value="Cancel" onClick="window.location='../index.html'" class="input" /><br><br><br>
+		    <input type="button" value="Cancel" onClick="window.location='http://scub.unibz.it:8080/snowdays-enrollment/'" class="input" /><br><br><br>
 	
 		</form>
 	</div>						

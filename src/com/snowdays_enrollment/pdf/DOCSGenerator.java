@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.UUID;
 
-import javafx.scene.control.Cell;
+
 
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
@@ -249,9 +249,9 @@ public class DOCSGenerator {
 	 * @throws IOException
 	 */
 	public Paragraph createBusParagraph() throws IOException {
-		busBodyText = "participant at the “Bolzano SNOWDAYS 2014” from 20th to 22th of March 2014 "
+		busBodyText = "participant at the ���Bolzano SNOWDAYS 2014��� from 20th to 22th of March 2014 "
 				+ "declares that if he/she causes any damage to the busses, "
-				+ "he/she will pay a fee of 100 € as agreed with the bus company."
+				+ "he/she will pay a fee of 100 ��� as agreed with the bus company."
 				+ "\nFor the accuracy of statement,";
 		
 		Paragraph body = new Paragraph(busBodyText, bodyFont); 

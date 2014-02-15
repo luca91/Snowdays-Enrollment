@@ -14,8 +14,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import com.snowdays_enrollment.dao.GroupDao;
@@ -29,6 +31,7 @@ import com.snowdays_enrollment.model.Participant;
 import com.snowdays_enrollment.model.RegistrationExternal;
 import com.snowdays_enrollment.model.RegistrationUniBz;
 import com.snowdays_enrollment.model.User;
+import com.snowdays_enrollment.tools.BackupPhoto;
 import com.snowdays_enrollment.tools.DBConnection;
 import com.snowdays_enrollment.tools.Email;
 
@@ -60,6 +63,8 @@ public class ParticipantController extends HttpServlet {
     private ParticipantDao dao;   
     private GroupDao gDao;
     private SettingsDao sDao;
+    private HttpSession session;
+    private BackupPhoto backup;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -83,6 +88,8 @@ public class ParticipantController extends HttpServlet {
 		c = new DBConnection().getConnection();
 		String email = request.getParameter("email");
 		request.setAttribute("email", email);
+		session = request.getSession(true);
+		
 		int group = Integer.parseInt(request.getParameter("id_group"));
 		System.out.println(group);
 		RegistrationUniBzDao ruDao = new RegistrationUniBzDao();
@@ -93,8 +100,9 @@ public class ParticipantController extends HttpServlet {
 			p.setFname(ru.getName());
 			p.setLname(ru.getSurname());
 			p.setEmail(ru.getEmail());
+			request.setAttribute("record", p);
 		}
-		else{
+		else{ 
 			p = pDao.getParticipantByEmail(email);
 			request.setAttribute("record", p);
     		request.setAttribute("selGen", p.getGender());
@@ -105,7 +113,7 @@ public class ParticipantController extends HttpServlet {
 		}
 		if(p.getId() != 0)
 			request.setAttribute("id", p.getId());
-		request.setAttribute("record", p);
+//		request.setAttribute("record", p);
 		request.setAttribute("id_group", group);
 		request.setAttribute("programs", new String[] {"", "Ski Race", "Snowboard Race", "Snowshoe Hike", "Relax"});
 	    request.setAttribute("tshirts", new String[] {"", "Small", "Medium", "Large", "Extra Large"});
@@ -185,7 +193,7 @@ public class ParticipantController extends HttpServlet {
 	    	record.setCity(request.getParameter("city"));
 	    	record.setCountry(request.getParameter("country"));
 	    	record.setBirthCountry(request.getParameter("birthcountry"));
-	    	record.setZip(Integer.parseInt(request.getParameter("zip")));
+	    	record.setZip(request.getParameter("zip"));
 	    	record.setPhone(request.getParameter("phone"));
 	    	String id = request.getParameter("id");
 	    	log.debug("id: "+id);
@@ -226,6 +234,7 @@ public class ParticipantController extends HttpServlet {
 			            			old.delete();
 			            			record.setPhoto(fileName);
 			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName); 
+			            			
 			            		}
 			            		//###########################################################################################
 			            		else{
@@ -316,26 +325,46 @@ public class ParticipantController extends HttpServlet {
 	        //###########################################################################################################
 
 	    	log.debug("id: " + id);
-	    	if(!image){
+	    	int added = 0;
+	    	if(!image){  
 		        if(id == null || id.isEmpty()) {
 		        	log.debug("INSERT");
-		            dao.addRecord(id_group, record);
+		            added = dao.addRecord(id_group, record);
 		            request.setAttribute("id_group", id_group);
-		            ruDao.submit(request.getParameter("email"));
+		            if(added == 1)
+		            	ruDao.submit(request.getParameter("email"));
 		        }
-		        else
-		        {
-		        	log.debug("UPDATE");
+		        else{
 		        	record.setId(Integer.parseInt(id));
 		            dao.updateRecord(record);
 		            request.setAttribute("id_group", id_group);
 		            
 		        }
-//	        	session.setAttribute("record", record);
-//	        	session.setAttribute("image", image);
+		        forward = "/public/jsp/registrationConfirmed.jsp";
+		        log.debug("forward: " + forward);
+		        try{
+		        	getServletConfig().getServletContext().getRequestDispatcher(forward).forward(request, response);
+		        }
+		        catch(Exception e){
+					e.printStackTrace();
+				}
 	    	}
-	        log.debug("forward: " + forward);
-	        response.sendRedirect("../");
+	    	else{
+	    		if(added == 0){
+		    		forward = "participantInt.jsp?id_group="+id_group+"&email="+record.getEmail();
+	    			session.setAttribute("image", image);
+	    			response.sendRedirect(forward);
+	    		}
+	    		else{
+	    			forward = "/public/jsp/registrationConfirmed.jsp";
+	    			 try{
+	 		        	getServletConfig().getServletContext().getRequestDispatcher(forward).forward(request, response);
+	 		        }
+	 		        catch(Exception e){
+	 					e.printStackTrace();
+	 				}
+	    		}
+	    	}
 	    }
 	}   
 	
@@ -349,5 +378,18 @@ public class ParticipantController extends HttpServlet {
 	        }
 	        return "";
 	    }
+	 
+//	 public void backupPhoto(String group) throws IOException{
+//		 File backup = new File(getServletConfig().getServletContext().getRealPath("/")+"../../backup_photo");
+//		 if(!backup.exists())
+//			 backup.mkdir();
+//		 File dirToCopy = new File(getServletConfig().getServletContext().getRealPath("/") + group);
+//		 File profiles = new File(dirToCopy.getPath() + "profile");
+//		 File badges = new File(dirToCopy.getPath() + "badges");
+//		 File ids = new File(dirToCopy.getPath() + "studentids");
+//		 FileUtils.copyDirectoryToDirectory(profiles, backup);
+//		 FileUtils.copyDirectoryToDirectory(badges, backup);
+//		 FileUtils.copyDirectoryToDirectory(ids, backup);
+//	 }
 	
 }

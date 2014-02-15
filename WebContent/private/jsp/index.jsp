@@ -84,7 +84,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 							1. Click on the link “Update” on the corresponding row<br>
 							2. Modify the field(s) as you need<br>
 							3. Click on “Submit”<br><br></li>
-						<li><h4>Update profile/student ID photo</h4>
+						<li><h4>Update profile/ID photo</h4>
 							1. Be sure that the file to upload is not larger than 2MB<br>
 							2. Click on “Browse”<br>
 							3. Select the file<br><br></li>

@@ -80,6 +80,7 @@ static Logger log = Logger.getLogger(RegistrationExternalsDao.class.getName());
 				ru.setStatus(rs.getString("status"));
 				ru.setGroup(rs.getString("group"));
 			}
+			rs.close();
 			stmt.close();
 		}
 		catch(SQLException e){
@@ -94,6 +95,7 @@ static Logger log = Logger.getLogger(RegistrationExternalsDao.class.getName());
 			PreparedStatement stmt = connection
 					.prepareStatement("select * from emails_internals");
 			ResultSet rs = stmt.executeQuery();
+			int position = 1;
 			while(rs.next()){
 				RegistrationUniBz ru = new RegistrationUniBz();
 				ru.setEmail(rs.getString("email"));
@@ -101,8 +103,12 @@ static Logger log = Logger.getLogger(RegistrationExternalsDao.class.getName());
 				ru.setSurname(rs.getString("surname"));
 				ru.setStatus(rs.getString("status"));
 				ru.setGroup(rs.getString("group"));
+				ru.setPosition(position);
+				position++;
 				result.add(ru);
 			}
+			rs.close();
+			stmt.close();
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -126,7 +132,8 @@ static Logger log = Logger.getLogger(RegistrationExternalsDao.class.getName());
 	public void submit(String email){
 		try{
 			PreparedStatement stmt = connection
-					.prepareStatement("update emails_internals set status='submit'");
+					.prepareStatement("update emails_internals set status='submit' where email=?");
+			stmt.setString(1, email);
 			stmt.executeUpdate();
 			stmt.close();
 		}

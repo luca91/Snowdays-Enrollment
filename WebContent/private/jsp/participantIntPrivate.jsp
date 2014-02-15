@@ -98,7 +98,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 		        </c:forEach>
 	        </select>       <br><br><br> 
 	       <label>Photo</label>
-	        <input type="file" name="photo"/> <input type="text" readonly="readonly" value="${record.photo}"/> <br><br><br><br>	        
+	        <input type="file" name="photo"/> <input type="text" readonly="readonly" value="${record.photo}"
+	        <c:if test="${record.photo == null}"> required</c:if>/> <br><br><br><br>	        
 	             	                  
 	         <input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />
 	            <input type="submit" value="Submit" class="input" />

@@ -8,6 +8,7 @@ public class RegistrationUniBz {
 	private String status;
 	private String group;
 	private String link;
+	private int position;
 	
 	public void setEmail(String email){
 		this.email = email;
@@ -55,6 +56,14 @@ public class RegistrationUniBz {
 	
 	public String getLink(){
 		return this.link;
+	}
+	
+	public void setPosition(int p){
+		position = p;
+	}
+	
+	public int getPosition(){
+		return this.position;
 	}
 
 }

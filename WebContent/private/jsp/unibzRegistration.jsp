@@ -94,9 +94,9 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 				<input type="hidden" name="host" id="host" value="${host}"/>
 				<input type="hidden" name="link" id="link" value="${link}"/><br><br><br>
 				
-				<input type="text" name="name" id="name" value="${record.name}" placeholder="Name"/>
+				<input type="text" name="name" id="name" value="${record.name}" placeholder="Name" style="margin-left: 20px"/>
 				<input type="text" name="surname" id="surname" value="${record.surname}" placeholder="Surname"/> <br><br>    
-					    <select name="faculty" id="server">
+					    <select name="faculty" id="server" style="margin-left: 20px">
 					    	<option value=""></option>
 					    	<option value="computerscience">Computer Science</option>
 					    	<option value="design">Design</option>
@@ -105,16 +105,17 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 					    	<option value="education">Education</option>
 						</select>
 					 <br><br><br>
-					<select name="group" id="group">
+					<select name="group" id="group" style="margin-left: 20px">
 					<c:forEach items="${groups}" var="g">
 	        			<option value="${g}" <c:if test="${selGroup == g}">selected</c:if>>${g}		        	
 		       		 </c:forEach>
 					</select><br><br><br>
-				<input type="text" name="email" id="email" value="${email}" placeholder="Email" style="width:350px"/> <br><br><br>
-				<textarea name="messages" id="message" style="width:700px; height:200px" readonly></textarea>  <br><br><br>
-				<input type="button" value="Generate" class="input" onClick="javascript:updateEmail();return false;"/>
+				<input type="text" name="email" id="email" value="${email}" placeholder="Email" style="width:350px; margin-left: 20px""/> <br><br><br>
+				<textarea name="messages" id="message" style="width:700px; height:200px; margin-left: 20px" readonly></textarea>  <br><br><br>
+				<input type="button" value="Generate" class="input" onClick="javascript:updateEmail();return false;" style="margin-left: 20px"/>
 				<input type="button" value="Message" class="input" onClick="javascript:generateMessage();return false;"/>
 				<input type="submit" value="Add" class="input" />
+				<a class="button-2" href="unibzRegistrations.html">Reset</a>
 				<!-- <input type="submit" value="Send" class="input" />  -->
 					</form> 
 					<!-- TABLES -->
@@ -122,6 +123,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 				<c:if test="${fn:length(records) != 0}">
 					<thead>
 						<tr>
+							<th scope="col">Position</th>
 							<th scope="col">Name</th>
 							<th scope="col">Surname</th>
 							<th scope="col">Email</th>
@@ -134,13 +136,14 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 					<tbody>
 						<c:forEach items="${records}" var="record">
 							<tr>
+								<td>${record.position}</td>
 								<td>${record.name}</td>
 								<td>${record.surname}</td>
 								<td>${record.email}</td>
 								<td>${record.status}</td>
 								<td>${record.group}</td>
 								<td>
-								<!-- <a href="<c:url value='/private/show?action=show&email=${record.email}&group=${record.group}'/>">Show</a></td>  -->
+								<a href="<c:url value='/private/show?action=show&email=${record.email}'/>">Show</a></td>
 								<td><a href="<c:url value='/private/unibzRegistrations.html?action=delete&email=${record.email}'/>"onclick="return confirmDelete();">Delete</a></td>
 							</tr>
 						</c:forEach>

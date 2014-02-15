@@ -37,8 +37,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<h3 class="htabs">Users</h3>
-		<br><br>
+		<h3 class="htabs" style="margin-left: 20px">Users</h3>
+		<br>
 		<!-- <div class="table-buttons">
 			<a class="button-2" href="user.jsp?action=insert" id="addevent">Add User</a>
 		</div> -->

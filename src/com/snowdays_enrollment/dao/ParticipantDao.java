@@ -78,8 +78,9 @@ public class ParticipantDao {
      * @param anId_group A group id
      * @param aRecord A participant
      */
-    public void addRecord(int anId_group, Participant aRecord) {
+    public int addRecord(int anId_group, Participant aRecord) {
     	log.trace("START");
+    	int result = 0;
         try {
         	
             PreparedStatement preparedStatement = connection
@@ -123,11 +124,11 @@ public class ParticipantDao {
             preparedStatement.setString(17, aRecord.getBirthCountry());
             preparedStatement.setString(18, aRecord.getCity());
             preparedStatement.setString(19, aRecord.getCountry());
-            preparedStatement.setInt(20, aRecord.getZip());
+            preparedStatement.setString(20, aRecord.getZip());
             preparedStatement.setString(21, aRecord.getPhone());
             log.debug(preparedStatement.toString());
         	log.debug("addRecord Execute Update");
-            preparedStatement.executeUpdate();
+            result = preparedStatement.executeUpdate();
             preparedStatement.close();
             GroupDao gDao = new GroupDao();
             gDao.updateActualParticipantNr(anId_group, 1);
@@ -136,6 +137,7 @@ public class ParticipantDao {
             e.printStackTrace();
         }
     	log.trace("END");
+    	return result;
     }
 
     /**
@@ -198,7 +200,7 @@ public class ParticipantDao {
                                 		+ "participant_city=?,"
                                 		+ "participant_country=?,"
                                 		+ "participant_zip=?,"
-                                		+ "participant_phone=?"
+                                		+ "participant_phone=? "
                             			+ "where participant_id=?");
             log.debug(aRecord.getDate_of_birth()); 
             preparedStatement.setInt(1, aRecord.getId_group());
@@ -219,8 +221,9 @@ public class ParticipantDao {
             preparedStatement.setString(16, aRecord.getBirthCountry());
             preparedStatement.setString(17, aRecord.getCity());
             preparedStatement.setString(18, aRecord.getCountry());
-            preparedStatement.setInt(19, aRecord.getZip());
-            preparedStatement.setInt(20, aRecord.getId());
+            preparedStatement.setString(19, aRecord.getZip());
+            preparedStatement.setString(20, aRecord.getPhone());
+            preparedStatement.setInt(21, aRecord.getId());
             log.debug(preparedStatement);
             preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -242,7 +245,7 @@ public class ParticipantDao {
     	GroupDao gDao = new GroupDao();
         try {
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select * from participants");
+            ResultSet rs = statement.executeQuery("select * from participants order by participant_surname");
             while (rs.next()) {
                 Participant record = new Participant();
                 record.setId(rs.getInt("participant_id"));
@@ -288,7 +291,7 @@ public class ParticipantDao {
     	GroupDao gDao = new GroupDao();
         try {
             PreparedStatement preparedStatement = connection.
-                    prepareStatement("select * from participants where participant_group_id=?");
+                    prepareStatement("select * from participants where participant_group_id=? order by participant_surname");
             preparedStatement.setInt(1, anId_group);
             ResultSet rs = preparedStatement.executeQuery();
             
@@ -350,7 +353,7 @@ public class ParticipantDao {
                 record.setIntolerances(rs.getString("participant_intolerance"));
                 record.setBirthPlace(rs.getString("participant_birthplace"));
                 record.setCity(rs.getString("participant_city"));
-                record.setZip(rs.getInt("participant_zip"));
+                record.setZip(rs.getString("participant_zip"));
                 record.setBirthCountry(rs.getString("participant_birth_country"));
                 record.setCountry(rs.getString("participant_country"));
                 record.setAddress(rs.getString("participant_address"));
@@ -526,6 +529,8 @@ public class ParticipantDao {
     		if(rs.next()){
     			result = rs.getString("program_description");
     		}
+    		rs.close();
+    		stmt.close();
     	}
     	catch(SQLException e){
     		e.printStackTrace();
@@ -546,6 +551,8 @@ public class ParticipantDao {
     		if(rs.next()){
     			result = rs.getString("rent_option_description");
     		}
+    		rs.close();
+    		stmt.close();
     	}
     	catch(SQLException e){
     		e.printStackTrace();
@@ -578,7 +585,7 @@ public class ParticipantDao {
                   record.setIntolerances(rs.getString("participant_intolerance"));
                   record.setBirthPlace(rs.getString("participant_birthplace"));
                   record.setCity(rs.getString("participant_city"));
-                  record.setZip(rs.getInt("participant_zip"));
+                  record.setZip(rs.getString("participant_zip"));
                   record.setBirthCountry(rs.getString("participant_birth_country"));
                   record.setCountry(rs.getString("participant_country"));
                   record.setAddress(rs.getString("participant_address"));

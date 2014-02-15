@@ -51,7 +51,7 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 
 		        <label>Name: 
 		        </label>
-		        <input type="text" name="name" value="${record.name}" placeholder="Group Name" required/><br><br><br>
+		        <input type="text" name="name" value="${record.name}" placeholder="Group Name" style="width: 300px" required/><br><br><br>
 		        
 		        <label>Referent: 
 		        </label>

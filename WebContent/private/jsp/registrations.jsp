@@ -29,8 +29,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<h3 class="htabs"><a href='registrations.html?action=externals' id="registrationsexternals">Registrations Externals</a></h3>
-		<h3 class="htabs"><a href='registrations.html?action=unibz' id="registrationsunibz">Registrations UNIBZ</a></h3> 
+		<h3 class="htabs"><a href='registrations.html?action=externals' id="registrationsexternals" style="margin-left: 20px">Registrations Externals</a></h3>
+		<h3 class="htabs"><a href='registrations.html?action=unibz' id="registrationsunibz" style="margin-left: 20px">Registrations UNIBZ</a></h3> 
 			<br></br>
 	<!-- BOTTOM --><c:import url="inc/bottom.jsp"/>
 </html>

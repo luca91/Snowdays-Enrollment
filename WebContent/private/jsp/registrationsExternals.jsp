@@ -29,11 +29,10 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<h3 class="htabs">Registrations Externals</h3> 
-			<br></br><br>		
-			
-			<h6 style="font-family:Titillium">Total ${actualParticipants}/${totalParticipants}</h6>
-			<h6 style="font-family:Titillium">Total registered ${totalRegistered}</h6>
+		<h3 class="htabs" style="margin-left: 20px">Registrations Externals</h3> 
+			<br></br>
+			<h6 style="font-family:Titillium; margin-left: 20px">Total ${actualParticipants}/${totalParticipants}</h6>
+			<h6 style="font-family:Titillium; margin-left: 20px">Total registered ${totalRegistered}</h6>
 			
 
 			<!-- TABLES -->

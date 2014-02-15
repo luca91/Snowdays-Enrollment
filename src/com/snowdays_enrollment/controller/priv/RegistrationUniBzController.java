@@ -62,6 +62,9 @@ public class RegistrationUniBzController extends HttpServlet {
 		}
 		UserDao uDao = new UserDao(c);
 		User systemUser = uDao.getUserByUsername(request.getUserPrincipal().getName());
+		session = request.getSession(true);
+		session.removeAttribute("systemUser");
+		session.setAttribute("systemUser",systemUser);
 		ParticipantDao pDao = new ParticipantDao(c);
 		GroupDao gDao = new GroupDao(c);
 		RegistrationUniBzDao ruDao = new RegistrationUniBzDao(c);
@@ -69,8 +72,8 @@ public class RegistrationUniBzController extends HttpServlet {
 		String email = "";
 		createInternalsGroups(gDao);
 		setGroupID(request, gDao);
-		request.setAttribute("groups", new String []{"", "UNIBZ", "ALumni", "Host"});
 		request.setAttribute("selGroup", "");
+		request.setAttribute("groups", new String []{"", "UNIBZ", "Alumni", "Host"});
 		
 		if(action != null && action.equals("delete")){
 			email = request.getParameter("email");
@@ -80,14 +83,20 @@ public class RegistrationUniBzController extends HttpServlet {
 		}
 		else if(action != null && action.equals("show")){
 			RegistrationUniBz ru = ruDao.getRegistrationByEmail(request.getParameter("email"));
+			
 			request.setAttribute("record", ru);
 			request.setAttribute("email", ru.getEmail());
 			request.setAttribute("selGroup", ru.getGroup());
+			request.setAttribute("records", ruDao.getAllRegistration());
+			String forward = "/private/jsp/unibzRegistration.jsp";
+			try {
+				getServletConfig().getServletContext().getRequestDispatcher(forward).forward(request, response);
+				} 
+			catch (Exception ex) {
+					ex.printStackTrace();
+			}
 		}
 		else{
-			session = request.getSession(true);
-			session.removeAttribute("systemUser");
-			session.setAttribute("systemUser",systemUser);
 			request.setAttribute("records", ruDao.getAllRegistration());
 			
 			String forward = "/private/jsp/unibzRegistration.jsp";

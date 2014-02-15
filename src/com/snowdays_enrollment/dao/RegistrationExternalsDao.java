@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 
 import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.RegistrationExternal;
-import com.snowdays_enrollment.model.User;
 
 public class RegistrationExternalsDao {
 	
@@ -141,6 +140,28 @@ public class RegistrationExternalsDao {
 			e.printStackTrace();
 		}
 		log.trace("END");
+		return result;
+	}
+	
+	public int[] getGroupsList(){
+		int[] result = null;
+		try{
+			PreparedStatement stmt = connection
+					.prepareStatement("select count(*) from (select distinct registration_participant_group_id from registrations) as res;");
+			ResultSet rs = stmt.executeQuery();
+			rs.first();
+			result = new int[rs.getInt("count(*)")];
+			stmt = connection
+					.prepareStatement("select distinct registration_participant_group_id from "
+							+ "(select * from registrations order by registration_participant_registration_time) as regs");
+			rs = stmt.executeQuery();
+			rs.beforeFirst();
+			for(int i = 0; rs.next(); i++)
+				result[i] = rs.getInt("registration_participant_group_id");
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 		return result;
 	}
 

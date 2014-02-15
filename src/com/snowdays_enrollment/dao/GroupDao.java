@@ -431,6 +431,8 @@ public class GroupDao {
     		rs.beforeFirst();
     		if(rs.next())
     			res = rs.getInt("group_actual_participants_number");
+    		rs.close();
+    		stmt.close();
     	}
     	catch(SQLException e){
     		e.printStackTrace();
@@ -479,9 +481,9 @@ public class GroupDao {
     		rs.beforeFirst();
     		if(rs.next()){
     			res = rs.getInt("group_id");
-    			rs.close();
-    			stmt.close();
     		}
+    		rs.close();
+			stmt.close();
     	}
     	
     	catch(SQLException e){
@@ -589,6 +591,7 @@ public class GroupDao {
     				.prepareStatement("update groups set group_is_blocked=?");
     		stmt.setBoolean(1, block);
     		stmt.executeUpdate();
+    		stmt.close();
     	}
     	catch(SQLException e){
     		e.printStackTrace();
@@ -603,6 +606,7 @@ public class GroupDao {
     				.prepareStatement("update groups set group_max_participants=?");
     		stmt.setInt(1, nr);
     		stmt.executeUpdate();
+    		stmt.close();
     	}
     	catch(SQLException e){
     		e.printStackTrace();

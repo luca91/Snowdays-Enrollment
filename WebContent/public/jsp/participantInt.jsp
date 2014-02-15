@@ -59,7 +59,7 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 	        <label>Email*</label>
 	        <input type="text" name="email" value="${record.email}" readonly/> <br><br><br>
 	        <label>Phone*</label>
-	        <input type="text" name="phone" value="${record.phone}"/> <br><br><br>
+	        <input type="text" name="phone" value="${record.phone}" required/> <br><br><br>
 	        <label>Gender*</label>
 	        <select name="gender" required>
 	       		<c:forEach items="${genders}" var="gender">
@@ -71,7 +71,7 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 	        <input type="text" placeholder="City" name="birthplace" value="${record.birthPlace}" style="width:150px" required/> 
 	        <input type="text" placeholder="Country" name="birthcountry" value="${record.birthCountry}" style="width:150px" required/> <br><br><br>
 	        <label>Friday activity*</label>
-	        <select name="friday"required>
+	        <select name="friday" required>
 	        	<c:forEach items="${programs}" var="program">
 	        		<option value="${program}" <c:if test="${selPro == program }">selected</c:if>>${program}		        	
 		        </c:forEach>
@@ -99,7 +99,7 @@ response.setHeader("Refresh", timeout + "; URL = http://scub.unibz.it:8080/snowd
 		        </c:forEach>
 	        </select>       <br><br><br> 
 	       <label>Photo</label>
-	       <input type="file" name="photo"/> <input type="text" readonly="readonly" value="${record.photo}"/> <br><br><br><br>	        
+	       <input type="file" name="photo" <c:if test="${record.photo == null}"> required</c:if>/> <input type="text" readonly="readonly" value="${record.photo}"/> <br><br><br><br>	        
 	             	                  
 	        <input type="submit" value="Submit" class="input" />
         	<!-- <c:if test="${param.id eq null }">

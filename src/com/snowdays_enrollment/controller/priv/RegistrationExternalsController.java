@@ -2,7 +2,6 @@ package com.snowdays_enrollment.controller.priv;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ import com.snowdays_enrollment.dao.SettingsDao;
 import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.Country;
 import com.snowdays_enrollment.model.Group;
-import com.snowdays_enrollment.model.RegistrationExternal;
+import com.snowdays_enrollment.model.Participant;
 import com.snowdays_enrollment.model.Settings;
 import com.snowdays_enrollment.model.User;
 
@@ -35,7 +34,6 @@ public class RegistrationExternalsController extends HttpServlet {
 	
 	static Logger log = Logger.getLogger(RegistrationExternalsController.class.getName());
 	
-	private RegistrationExternalsDao dao;
 	private String forward="";
 	private User systemUser;
 	HttpSession session;
@@ -52,7 +50,6 @@ public class RegistrationExternalsController extends HttpServlet {
         super();
         log.debug("###################################");
     	log.trace("START");
-		dao = new RegistrationExternalsDao(c);
 		sDao = new SettingsDao(c);
 		s = new Settings();
         log.debug("Dao object instantiated");
@@ -71,7 +68,6 @@ public class RegistrationExternalsController extends HttpServlet {
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser", systemUser);
 		
-		dao = new RegistrationExternalsDao(c);
 		sDao = new SettingsDao(c);
 		reDao = new RegistrationExternalsDao(c);
 		s = sDao.getAllSettings();
@@ -90,7 +86,7 @@ public class RegistrationExternalsController extends HttpServlet {
 		if(systemUser.getRole().equals("admin")){
 			log.debug("role: " + "admin");
 			RegistrationExternalsDao reDao = new RegistrationExternalsDao(c);
-			request.setAttribute("records", getRegistrationFinalList(reDao.getAllRegistration()));
+			request.setAttribute("records", getRegistrationFinalList(reDao.getGroupsList()));
 			request.setAttribute("actualParticipants", actualTotal);
 		}
 		
@@ -113,29 +109,21 @@ public class RegistrationExternalsController extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 	
-	public List<Group> getRegistrationFinalList(List<RegistrationExternal> list){
+	public List<Group> getRegistrationFinalList(int[] groupsList){
 		List<Group> result = new ArrayList<Group>();
-		List<String> added = new ArrayList<String>();
-		GroupDao gd = new GroupDao(c);
-		List<String> names = gd.getAllGroupsNames();
-		int p = 1;
-		while(!list.isEmpty()){
-			if(!added.contains(list.get(0).getGroupName()) 
-					&& names.contains(list.get(0).getGroupName()) 
-					&& checkGroupPeoplePerCountry(gd.getGroupByName(list.get(0).getGroupName()).getCountry(),
-							gd.getGroupByName(list.get(0).getGroupName()).getActualParticipantNumber())
-							&& checkTotalPeople(gd.getGroupByName(list.get(0).getGroupName()).getActualParticipantNumber())){
-				Group g = gd.getGroupByName(list.get(0).getGroupName());
-				g.setTimeFirstRegistration(new RegistrationExternalsDao(c).getRegistrationByParticipantID(list.get(0).getParticipantID()).getTime());
-				g.setPosition(p);
-				actualTotal += g.getActualParticipantNumber();
-				
-				gd.updateRecord(g);
+		Group g = null;
+		GroupDao gDao = new GroupDao(c);
+		Participant p = null;
+		int actualPeopleAcceptedPeople = 0;
+		for(int i = 0; i < groupsList.length -1; i++){
+			g = gDao.getRecordById(groupsList[i]);
+			if(checkGroupPeoplePerCountry(g.getCountry(), g.getActualParticipantNumber()) && checkTotalPeople(g.getActualParticipantNumber(), actualPeopleAcceptedPeople)){
+				sDao.updateActualCountryPeople(g.getCountry(), g.getActualParticipantNumber());
+				actualPeopleAcceptedPeople += g.getActualParticipantNumber();
+				p = new ParticipantDao(c).getRecordById(g.getFirstParticipantRegistered());
+				g.setTimeFirstRegistration(p.getRegistrationTime());
 				result.add(g);
-				added.add(list.get(0).getGroupName());
-				p++;
 			}
-			list.remove(0);
 		}
 		return result;
 	}
@@ -143,8 +131,8 @@ public class RegistrationExternalsController extends HttpServlet {
 	public boolean checkGroupPeoplePerCountry(String country, int groupActualNr){
 		int[] countryNR = new int[2];
 		Country c = s.getCountry(country);
-		if(c == null)
-			log.debug("country: null");
+		System.out.println(country);
+		System.out.println(c.getName());
 		countryNR[0] = c.getMaxPeople();
 		countryNR[1] = c.getActualPeople();
 		int placesLeft = countryNR[0] - countryNR[1];
@@ -156,9 +144,8 @@ public class RegistrationExternalsController extends HttpServlet {
 		return false;
 	}
 	
-	public boolean checkTotalPeople(int groupActualNr){
+	public boolean checkTotalPeople(int groupActualNr, int actualPeople){
 		int totalMaxPeople = Integer.parseInt(sDao.getSetting("maxexternals"));
-		int actualPeople = reDao.getRegistrationsCount();
 		int actualUpdate = actualPeople+groupActualNr;
 		int placesLeft = totalMaxPeople-actualPeople;
 		int maxExceed = placesLeft*2;
@@ -169,4 +156,31 @@ public class RegistrationExternalsController extends HttpServlet {
 				return true;
 		return false;
 	}
+	
+//	public List<Group> getRegistrationFinalList(List<RegistrationExternal> list){
+//		List<Group> result = new ArrayList<Group>();
+//		List<String> added = new ArrayList<String>();
+//		GroupDao gd = new GroupDao(c);
+//		List<String> names = gd.getAllGroupsNames();
+//		int p = 1;
+//		while(!list.isEmpty()){
+//			if(!added.contains(list.get(0).getGroupName()) 
+//					&& names.contains(list.get(0).getGroupName()) 
+//					&& checkGroupPeoplePerCountry(gd.getGroupByName(list.get(0).getGroupName()).getCountry(),
+//							gd.getGroupByName(list.get(0).getGroupName()).getActualParticipantNumber())
+//							&& checkTotalPeople(gd.getGroupByName(list.get(0).getGroupName()).getActualParticipantNumber())){
+//				Group g = gd.getGroupByName(list.get(0).getGroupName());
+//				g.setTimeFirstRegistration(new RegistrationExternalsDao(c).getRegistrationByParticipantID(list.get(0).getParticipantID()).getTime());
+//				g.setPosition(p);
+//				actualTotal += g.getActualParticipantNumber();
+//				
+//				gd.updateRecord(g);
+//				result.add(g);
+//				added.add(list.get(0).getGroupName());
+//				p++;
+//			}
+//			list.remove(0);
+//		}
+//		return result;
+//	}
 }

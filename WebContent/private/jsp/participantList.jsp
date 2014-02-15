@@ -29,13 +29,13 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<c:if test="${groupName != null}"><h3 class="htabs">Participants - ${groupName}</c:if></h3>
-		<c:if test="${groupName == null}"><h3 class="htabs">All Participants</h3></c:if>
+		<c:if test="${groupName != null}"><h3 class="htabs" style="margin-left: 20px">Participants - ${groupName}</c:if></h3>
+		<c:if test="${groupName == null}"><h3 class="htabs" style="margin-left: 20px">All Participants</h3></c:if>
 		<c:if test="${fn:length(groups) != 0}">
 		<c:choose>
 			<c:when test="${systemUser.role == 'admin'}">
 			<c:if test="${groups != null}">			    
-			    <select>
+			    <select style="margin-left: 20px">
 			    	<c:url value="/private/participantList.html" var="url_gen"></c:url>
 					<option value="empty" onClick="window.location.href='${url_gen}'"></option>
 						<c:if test="${id_group == null}">selected</c:if>
@@ -44,7 +44,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 						<c:url
 							value="/private/participantList.html?action=listRecord&id_group=${group.id}"
 							var="url" />
-						<option value="${group.name}" onClick="window.location.href='${url}'" 
+						<option value="${group.name}" onChange="window.location.href='${url}'" 
 						<c:if test="${group.id == id_group}">selected</c:if>>${group.name}</option>
 					</c:forEach>
 				</select>
@@ -56,24 +56,26 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 			
 			<c:choose>
 				<c:when test="${id_group > 0}">
-						<h6>Max ${groupMaxNumber} participants - Actual participants: ${group.actualParticipantNumber}</h6>		
+						<h6 style="margin-left: 20px">Max ${groupMaxNumber} participants - Actual participants: ${group.actualParticipantNumber}</h6>		
 				</c:when>				
 			</c:choose>
 			<c:choose>				
 				<c:when test="${id_group != null && (nrEnrolledParticipant >= groupMaxNumber)}">
-				<h5 class="alert">ATTENTION: Max nr. of enrolled people reached for this group!</h5>
+				<h5 class="alert" style="margin-left: 20px">ATTENTION: Max nr. of enrolled people reached for this group!</h5>
 				</c:when>				
 			</c:choose>
 				
-		
+			<c:if test="${((fn:length(groups) != 0) && (id_group != null))}">
+					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}" style="margin-left: 20px">Add Participant</a>
+				</c:if>
 
 			<!-- TABLES -->
 				<table id="box-table-a">
 				<c:if test="${fn:length(records) != 0}">
 					<thead>
 						<tr>
-							<th scope="col">First Name</th>
 							<th scope="col">Last Name</th>
+							<th scope="col">First Name</th>
 							<th scope="col">Group</th>
 							<th scope="col">Photo</th>
 							<th scope="col">ID Photo</th>
@@ -84,8 +86,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 					<tbody>
 						<c:forEach items="${records}" var="record">
 							<tr>
-								<td>${record.fname}</td>
 								<td>${record.lname}</td>
+								<td>${record.fname}</td>
 								<td>${record.groupName}</td>
 								<td>${record.photo}</td>
 								<td>${record.document}</td>
@@ -101,10 +103,6 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
 			<div class="table-buttons">
 				
-				<c:if test="${((fn:length(groups) != 0) && (id_group != null))}">
-					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
-				</c:if>
-				
 		</c:when>
 		<c:otherwise>
 			<c:choose>
@@ -118,15 +116,22 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 				</c:when>				
 			</c:choose>
 				
-		
+		<c:if test="${!blocked}">	
+				<c:if test="${((nrEnrolledParticipant < groupMaxNumber) && (id_group > 0))}">
+					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
+				</c:if>
+				<!-- <c:if test="${systemUser.role == 'group_manager' && !blocked}">
+					<a class="button-2" href="participant.jsp?action=conclude&id_group=${id_group}">Conclude</a>
+				</c:if> -->
+		</c:if>
 
 			<!-- TABLES -->
 				<table id="box-table-a">
 				<c:if test="${fn:length(records) != 0}">
 					<thead>
 						<tr>
-							<th scope="col">First Name</th>
 							<th scope="col">Last Name</th>
+							<th scope="col">First Name</th>
 							<th scope="col">Group</th>
 							<th scope="col">Photo</th>
 							<th scope="col">ID Photo</th>
@@ -137,11 +142,11 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 					<tbody>
 						<c:forEach items="${records}" var="record">
 							<tr>
-								<td>${record.fname}</td>
 								<td>${record.lname}</td>
+								<td>${record.fname}</td>
 								<td>${record.groupName}</td>
 								<td>${record.photo}</td>
-								<td>${record.studentID}</td>
+								<td>${record.document}</td>
 								<td><a
 									href="<c:url value='/private/participant.jsp?action=edit&id=${record.id}&id_group=${record.id_group}'/>">Update</a></td>
 								<td><a
@@ -153,14 +158,6 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 				</table>
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
 			<div class="table-buttons">
-		<c:if test="${!blocked}">	
-				<c:if test="${((nrEnrolledParticipant < groupMaxNumber) && (id_group > 0))}">
-					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
-				</c:if>
-				<c:if test="${systemUser.role == 'group_manager' && !blocked}">
-					<a class="button-2" href="participant.jsp?action=conclude&id_group=${id_group}">Conclude</a>
-				</c:if>
-		</c:if>
 		</c:otherwise>
 			
 		</c:choose>
