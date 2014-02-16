@@ -23,6 +23,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="js/user_inter_act.js"></script>
+
 </head>
 <body id="page5">
 <div class="bg">
@@ -44,7 +45,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 						<c:url
 							value="/private/participantList.html?action=listRecord&id_group=${group.id}"
 							var="url" />
-						<option value="${group.name}" onChange="window.location.href='${url}'" 
+						<option value="${group.name}" onClick="window.location.href='${url}'" 
 						<c:if test="${group.id == id_group}">selected</c:if>>${group.name}</option>
 					</c:forEach>
 				</select>

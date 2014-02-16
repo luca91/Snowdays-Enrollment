@@ -245,7 +245,7 @@ public class ParticipantDao {
     	GroupDao gDao = new GroupDao();
         try {
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select * from participants order by participant_surname");
+            ResultSet rs = statement.executeQuery("select * from participants group by participant_group_id order by participant_surname");
             while (rs.next()) {
                 Participant record = new Participant();
                 record.setId(rs.getInt("participant_id"));

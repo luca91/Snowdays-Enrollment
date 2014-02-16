@@ -10,11 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-<<<<<<< HEAD
-
-=======
 import org.apache.log4j.Logger;
->>>>>>> 5d651911149226931a0a5ba615c53b38f4e48e45
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;

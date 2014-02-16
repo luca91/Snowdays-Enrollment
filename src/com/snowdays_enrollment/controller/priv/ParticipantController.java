@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import javax.sound.midi.SysexMessage;
 
+import org.apache.catalina.ha.session.BackupManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -49,6 +50,7 @@ import com.snowdays_enrollment.model.Participant;
 import com.snowdays_enrollment.model.RegistrationExternal;
 import com.snowdays_enrollment.model.RegistrationUniBz;
 import com.snowdays_enrollment.model.User;
+import com.snowdays_enrollment.tools.BackupPhoto;
 import com.snowdays_enrollment.tools.DBConnection;
 import com.snowdays_enrollment.tools.Email;
 import com.snowdays_enrollment.tools.FileUpload;
@@ -377,6 +379,10 @@ public class ParticipantController extends HttpServlet {
 		            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName); 
 		            		}
 			            	part.write(finalFile.getAbsolutePath());
+			            	BackupPhoto bu = new BackupPhoto(gDao.getRecordById(id_group).getName(), getServletConfig().getServletContext().getRealPath("/"), finalFile, "profile");
+			            	bu.createBackUpFolder();
+			            	bu.createGroupBackUpFolders();
+			            	bu.backupSinglePhoto();
 		            	}
 		            	//###############################################################################################
 		            	else{
@@ -407,6 +413,10 @@ public class ParticipantController extends HttpServlet {
 		            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName);
 		            		}
 			            	part.write(finalFile.getAbsolutePath());
+			            	BackupPhoto bu = new BackupPhoto(gDao.getRecordById(id_group).getName(), getServletConfig().getServletContext().getRealPath("/"), finalFile, "studentids");
+			            	bu.createBackUpFolder();
+			            	bu.createGroupBackUpFolders();
+			            	bu.backupSinglePhoto();
 		            	}
 		            }
 		            //###################################################################################################

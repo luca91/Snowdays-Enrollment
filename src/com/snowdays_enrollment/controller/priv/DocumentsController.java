@@ -39,7 +39,7 @@ import com.itextpdf.text.DocumentException;
  * @author Luca Bellettati
  *
  */
-public class BadgeController extends HttpServlet {
+public class DocumentsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private static String OUTPUT = "/output";
@@ -57,7 +57,7 @@ public class BadgeController extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BadgeController() {
+    public DocumentsController() {
         super();
   
         dao = new BadgeDao();
@@ -82,9 +82,6 @@ public class BadgeController extends HttpServlet {
     	request.setAttribute("groups", gdao.getAllRecords());
     	System.out.println(gdao.getAllRecords().size());
 		
-
-   
-
     	if (request.getParameter("id_group") != null){
     	
     		id_group = Integer.parseInt(request.getParameter("id_group").toString());

@@ -12,11 +12,15 @@ public class BackupPhoto {
 	private List<String> groups;
 	private String serverPath;
 	private String backUpFolderPath;
+	private File file;
+	private String subfolder;
 	
-	public BackupPhoto(String group, String server){
+	public BackupPhoto(String group, String server, File file, String subfolder){
 		groups = new ArrayList<String>(1);
 		groups.add(group);
 		serverPath = server;
+		this.file = file;
+		this.subfolder = subfolder;
 	}
 	
 	public BackupPhoto(String server, String...strings){
@@ -32,18 +36,25 @@ public class BackupPhoto {
 		backUpFolderPath = backUpFolder.getPath();
 	}
 	
-	public void backupSingleGroup() throws IOException{
-		File groupFolder = new File(serverPath + groups.get(0));
-		File profile = new File(groupFolder + File.separator + "profile");
-		File badges = new File(groupFolder + File.separator + "badges");
-		File ids = new File(groupFolder + File.separator + "studentids");
-		File destination = new File(backUpFolderPath + File.separator + groups.get(0));
-		File destProfile = new File(destination + File.separator + "profile");
-		File destBadges = new File(destination + File.separator + "badges");
-		File desIds = new File(destination + File.separator + "studentids");
-		FileUtils.copyDirectory(profile, destProfile);
-		FileUtils.copyDirectory(badges, destBadges);
-		FileUtils.copyDirectory(ids, desIds);
+	public void createGroupBackUpFolders(){
+		File groupBackUpFolders = new File(backUpFolderPath + File.separator + groups.get(0));
+		if(!groupBackUpFolders.exists()){
+			groupBackUpFolders.mkdir();
+			File destProfile = new File(groupBackUpFolders + File.separator + "profile");
+			File destBadges = new File(groupBackUpFolders + File.separator + "badges");
+			File desIds = new File(groupBackUpFolders + File.separator + "studentids");
+			destProfile.mkdir();
+			destBadges.mkdir();
+			desIds.mkdir();
+		}
+		
+	}
+	
+	public void backupSinglePhoto() throws IOException{
+		File destination = new File(backUpFolderPath + File.separator + groups.get(0) + File.separator + subfolder + File.separator + file.getName());
+		System.out.println("Source: " + file.getAbsolutePath());
+		System.out.println("Destination: " + destination);
+		FileUtils.copyFile(file.getAbsoluteFile(), destination);
 	}
 
 }

@@ -203,7 +203,7 @@ public class GroupDao {
     	UserDao uDao = new UserDao();
         try {
             PreparedStatement preparedStatement = connection.
-                    prepareStatement("select * from snowdays_enrollment.groups");
+                    prepareStatement("select * from snowdays_enrollment.groups order by group_name");
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 Group aRecord = new Group();
