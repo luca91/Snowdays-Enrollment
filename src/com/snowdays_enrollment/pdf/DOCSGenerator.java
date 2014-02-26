@@ -152,7 +152,7 @@ public class DOCSGenerator {
         addCentTitle("RESPONSABILITIES FOR BUS DAMAGES");
         document.add(form);
         document.add(bus);
-        log.debug("Output set");
+        log.debug(record.getFname()+" written");
 	} catch (Exception e) {
 	      e.printStackTrace();
 	    }
@@ -372,6 +372,14 @@ public class DOCSGenerator {
 		this.agreementBodyText = Paths.get(agreementBodyText);
 	}
 	
+	public String getGroupid() {
+		return groupid;
+	}
+
+	public void setGroupid(String groupid) {
+		this.groupid = groupid;
+	}
+
 	public String getBusBodyText() {
 		return busBodyText;
 	}
@@ -381,7 +389,8 @@ public class DOCSGenerator {
 	}
 
 	public void closePdf(){
-		document.close(); 	
+		document.close(); 
+		log.debug("Pdf closed in "+ getFilePath() );
 	}
 	
 	public void openPdf() {
@@ -437,7 +446,7 @@ public class DOCSGenerator {
 	 * @return String
 	 */
 	public String getAbsoluteFilePath(){
-		return path+"/Agreement"+record.getId_group()+".pdf";
+		return path+"/"+"Agreement"+record.getId_group()+".pdf";
 	}
 	
 	public Participant getRecord() {

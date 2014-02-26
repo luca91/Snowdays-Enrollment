@@ -83,6 +83,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 							<td><a
 								href="<c:url value='/private/participantList.html?action=listRecord&id_group=${record.id}'/>">Participants</a></td>
 							<td><a href="<c:url value='/private/badge.jsp?action=listRecord&id_group=${record.id}'/>">Badges</a></td>
+							<td><a href="<c:url value='/private/badge.jsp?action=docDownload&id_group=${record.id}'/>">Document</a></td>
 							<c:if test="${record.isApproved}">
 								<td><a href="<c:url value='/private/group.jsp?action=disapprove&id_group=${record.id}'/>">Disapprove</a></td>
 							</c:if>

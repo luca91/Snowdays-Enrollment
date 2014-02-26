@@ -2,6 +2,7 @@ package com.snowdays_enrollment.controller.priv;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +20,7 @@ import com.snowdays_enrollment.dao.UserDao;
 import com.snowdays_enrollment.model.Badge;
 import com.snowdays_enrollment.model.Participant;
 import com.snowdays_enrollment.model.User;
+import com.snowdays_enrollment.pdf.DOCSGenerator;
 import com.snowdays_enrollment.pdf.PDFGenerator;
 import com.itextpdf.text.DocumentException;
 
@@ -152,10 +154,51 @@ public class BadgeController extends HttpServlet {
                 request.setAttribute("groups", gd.getAllRecords());
             }
         }
+        
 // #########################################################################################     	
-  
-    	        
-        if(!action.equalsIgnoreCase("download"))
+        // Generate and allow download for group document
+        if (action.equalsIgnoreCase("docDownload")){       	
+        	List<Participant> records  = pDao.getAllRecordsById_group(id_group);
+        	forward = DOWNLOAD_LIST;
+            request.setAttribute("records", pDao.getAllRecordsById_group(id_group));
+            GroupDao gd = new GroupDao();
+            request.setAttribute("groups", gd.getAllRecords());
+     
+        	DOCSGenerator docg = null;
+        	try {
+        		File outputFolder = new File(getServletContext().getRealPath("/")+"/private/pdf/");
+        		outputFolder.mkdir();
+        		docg = new DOCSGenerator (gdao.getRecordById(id_group).getName(), pDao.getRecordById(id_group), outputFolder.getAbsolutePath() );
+        		docg.setImagePath(getServletContext().getRealPath("/private/images/Logo_orizzontale_2014.png"));
+        		docg.setHeaderText(getServletContext().getRealPath("/private/docsblueprints/header"));
+        		docg.setAgreementBodyText(getServletContext().getRealPath("/private/docsblueprints/agreement_body"));
+        		docg.setDocument();
+        		String uniname;
+        		
+        		for (Participant record : records){
+        			uniname = gdao.getRecordById(id_group).getName();
+        			docg.setGroupid(uniname);
+        			docg.setRecord(record);
+        			docg.writeDocument();
+        		}
+        		
+        		docg.closePdf();
+				
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}       	
+        	
+        	forward = docg.getFilePath();
+        }
+    	   
+        
+        
+// #########################################################################################       
+        if(!action.equalsIgnoreCase("download") && !action.equalsIgnoreCase("docDownload"))
         		forward = "/private/jsp" + forward;
 
         
