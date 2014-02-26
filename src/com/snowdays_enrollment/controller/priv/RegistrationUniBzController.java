@@ -217,6 +217,7 @@ public class RegistrationUniBzController extends HttpServlet {
 			g = new Group();
 			g.setName("Host");
 			g.setGroupReferentID(ud.getUserByUsername("murbani").getId());
+			g.setGroupMaxNmber(20);
 			g.setCountry("ITALY");
 			g.setBadgeType("PARTICIPANT");
 			g.setActualParticipantNumber(0);

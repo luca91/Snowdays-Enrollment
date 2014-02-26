@@ -122,6 +122,9 @@ static Logger log = Logger.getLogger(RegistrationExternalsDao.class.getName());
 					.prepareStatement("delete from emails_internals where email=?");
 			stmt.setString(1, email);
 			stmt.executeUpdate();
+			stmt = connection.prepareStatement("delete from participants where participant_email=?");
+			stmt.setString(1, email);
+			stmt.executeUpdate();
 			stmt.close();
 		}
 		catch(SQLException e){

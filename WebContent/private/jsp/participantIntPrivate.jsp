@@ -44,7 +44,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 		</c:set>
 	<div id="stylized" class="myform">
 	    <form method="POST" action="${act}" name="frmAddParticipan" enctype="multipart/form-data">
-	    	<h3>Participant form</h3>
+	    	<h3>Participant form - Internal</h3>
 	        
 	        <input type="hidden" name="id_group" value="${id_group}"/> 
 	        <input type="hidden" name="id" value="${id}"/>
@@ -98,8 +98,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 		        </c:forEach>
 	        </select>       <br><br><br> 
 	       <label>Photo</label>
-	        <input type="file" name="photo"/> <input type="text" readonly="readonly" value="${record.photo}"
-	        <c:if test="${record.photo == null}"> required</c:if>/> <br><br><br><br>	        
+	        <input type="file" name="photo" <c:if test="${record.photo == null}"> required</c:if>/> <input type="text" readonly="readonly" value="${record.photo}"
+	        /> <br><br><br><br>	        
 	             	                  
 	         <input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />
 	            <input type="submit" value="Submit" class="input" />

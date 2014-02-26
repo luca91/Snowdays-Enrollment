@@ -40,6 +40,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 			<!-- <input type="button" value="Block" name="blockButton" onClick="location.href='groupStatus?action=block'"/>  -->
 			<a class="button-2" href="groupStatus?action=block" style="margin-left: 20px">Block</a>
 		</c:if> 
+		<a class="button-2" href="downloadAllBadges" style="margin-left: 20px">Donwload All Badges</a>
 		<c:if test="${systemUser.role == 'admin' }">
 				<a class="button-2" href="group.jsp?action=insert">Add Group</a>
 		</c:if>
@@ -82,8 +83,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 								</c:if></td>
 							<td><a
 								href="<c:url value='/private/participantList.html?action=listRecord&id_group=${record.id}'/>">Participants</a></td>
-							<td><a href="<c:url value='/private/badge.jsp?action=listRecord&id_group=${record.id}'/>">Badges</a></td>
-							<td><a href="<c:url value='/private/docsDownload?action=&id_group=${record.id}'/>">Docs</a></td>
+							<td><a href="<c:url value='/private/downloadAllBadges?id_group=${record.id}'/>">Badges</a></td>
+							<td><a href="<c:url value='/private/downloadAllDocs?id_group=${record.id}'/>">Docs</a></td>
 						</tr>
 					</c:forEach>			
 				</c:if>

@@ -30,14 +30,19 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-		<c:if test="${groupName != null}"><h3 class="htabs" style="margin-left: 20px">Participants - ${groupName}</c:if></h3>
-		<c:if test="${groupName == null}"><h3 class="htabs" style="margin-left: 20px">All Participants</h3></c:if>
+		<c:if test="${groupName != null}"><h3 class="htabs" style="margin-left: 20px">Participants - ${groupName}</h3></c:if>
+		<c:if test="${groupName == null}"><h3 class="htabs" style="margin-left: 20px">All Participants</h3>
+		<div style="margin-left: 350px">
+		<c:forEach items="${pages}" var="page" >
+			<a href='participantList.html?page=${page}'>${page}</a>
+		</c:forEach>
+		</div></c:if>
 		<c:if test="${fn:length(groups) != 0}">
-		<c:choose>
+			<c:choose>
 			<c:when test="${systemUser.role == 'admin'}">
 			<c:if test="${groups != null}">			    
 			    <select style="margin-left: 20px">
-			    	<c:url value="/private/participantList.html" var="url_gen"></c:url>
+			    	<c:url value="/private/participantList.html?page=1" var="url_gen"></c:url>
 					<option value="empty" onClick="window.location.href='${url_gen}'"></option>
 						<c:if test="${id_group == null}">selected</c:if>
 					
@@ -68,6 +73,9 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 				
 			<c:if test="${((fn:length(groups) != 0) && (id_group != null))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}" style="margin-left: 20px">Add Participant</a>
+				</c:if>
+				<c:if test="${((fn:length(groups) != 0) && (id_group != null))}">
+					<a class="button-2" href="downloadAllBadges style="margin-left: 20px">Badges</a>
 				</c:if>
 
 			<!-- TABLES -->
@@ -102,7 +110,6 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 					</tbody>					
 				</table>
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
-			<div class="table-buttons">
 				
 		</c:when>
 		<c:otherwise>
@@ -118,12 +125,13 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 			</c:choose>
 				
 		<c:if test="${!blocked}">	
-				<c:if test="${((nrEnrolledParticipant < groupMaxNumber) && (id_group > 0))}">
+			<!-- 	<c:if test="${((nrEnrolledParticipant < groupMaxNumber) && (id_group > 0))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
-				</c:if>
-				<!-- <c:if test="${systemUser.role == 'group_manager' && !blocked}">
+				</c:if> 
+				 <c:if test="${systemUser.role == 'group_manager' && !blocked}">
 					<a class="button-2" href="participant.jsp?action=conclude&id_group=${id_group}">Conclude</a>
-				</c:if> -->
+				</c:if> --> 
+				<a class="button-2" href="downloadDocs?id_group=${id_group}">Download all docs</a>
 		</c:if>
 
 			<!-- TABLES -->
@@ -158,9 +166,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 					</tbody>					
 				</table>
 				<!-- APPROVE ALL / DISAPPROVE ALL -->
-			<div class="table-buttons">
 		</c:otherwise>
-			
 		</c:choose>
 		</c:if>
 			</div>						

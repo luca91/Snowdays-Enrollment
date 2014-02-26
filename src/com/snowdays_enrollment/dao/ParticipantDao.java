@@ -110,7 +110,7 @@ public class ParticipantDao {
             preparedStatement.setInt(3, aRecord.getId_group());
             preparedStatement.setString(4, aRecord.getGender());
             preparedStatement.setInt(5, aRecord.getFridayProgram());
-            preparedStatement.setString(6, aRecord.intolerancesToString());
+            preparedStatement.setString(6, aRecord.getIntolerances());
             preparedStatement.setString(7, aRecord.getTShirtSize());
             preparedStatement.setInt(8, aRecord.getRentalOption());         
             preparedStatement.setString(9, aRecord.getDate_of_birth());
@@ -211,7 +211,7 @@ public class ParticipantDao {
             preparedStatement.setBoolean(6, aRecord.isApproved());
             preparedStatement.setInt(7, aRecord.getFridayProgram());
             preparedStatement.setString(8, aRecord.getGender());
-            preparedStatement.setString(9, aRecord.intolerancesToString());
+            preparedStatement.setString(9, aRecord.getIntolerances());
             preparedStatement.setInt(10, aRecord.getRentalOption());
             preparedStatement.setString(11, aRecord.getPhoto());
             preparedStatement.setString(12, aRecord.getTShirtSize());

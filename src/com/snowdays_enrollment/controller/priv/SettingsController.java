@@ -130,12 +130,6 @@ public class SettingsController extends HttpServlet {
 		sDao.addSettings("maxinternals", request.getParameter("maxinternals"));
 		System.out.println(request.getParameter("maxinternals")+ "doPost");
 		sDao.addSettings("maxexternals", request.getParameter("maxexternals"));
-		 try {
-				c.commit();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		response.sendRedirect("/snowdays-enrollment/private/index.html");
 	}
 

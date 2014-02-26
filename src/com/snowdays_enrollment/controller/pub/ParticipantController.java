@@ -89,6 +89,7 @@ public class ParticipantController extends HttpServlet {
 		String email = request.getParameter("email");
 		request.setAttribute("email", email);
 		session = request.getSession(true);
+		gDao = new GroupDao(c);
 		
 		int group = Integer.parseInt(request.getParameter("id_group"));
 		System.out.println(group);
@@ -121,7 +122,10 @@ public class ParticipantController extends HttpServlet {
 	    request.setAttribute("genders", new String[] {"", "Female", "Male"});
 	    request.setAttribute("group", new GroupDao(c).getRecordById(Integer.parseInt(request.getParameter("id_group"))).getName());
 		try{
-			getServletConfig().getServletContext().getRequestDispatcher("/public/jsp/participantInt.jsp").forward(request, response);
+			if(gDao.getRecordById(group).getName().equals("Host"))
+				getServletConfig().getServletContext().getRequestDispatcher("/public/jsp/host.jsp").forward(request, response);
+			else
+				getServletConfig().getServletContext().getRequestDispatcher("/public/jsp/participantInt.jsp").forward(request, response);
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -177,28 +181,45 @@ public class ParticipantController extends HttpServlet {
 	    	log.debug("----------------> id_group: " + request.getParameter("id_group"));
 	    	
 	    	String intolerances = request.getParameter("intolerances");
-	    	if(intolerances != null)
-	    		record.setIntolerances(intolerances);
-			record.setId_group(id_group);
-	    	record.setFname(request.getParameter("fname"));
-	    	record.setLname(request.getParameter("lname"));
-	    	record.setEmail(request.getParameter("email"));
-	    	record.setGender(request.getParameter("gender"));
-	    	record.setFridayProgram(pDao.getProgramID(request.getParameter("friday")));
-	    	record.setDate_of_birth(request.getParameter("date_of_birth"));
-	    	record.setAddress(request.getParameter("address"));
-	    	record.setBirthPlace(request.getParameter("birthplace"));
-	    	record.setTShirtSize(request.getParameter("tshirt"));
-	    	record.setRentalOption(pDao.getRentalOptionID(request.getParameter("rental")));
-	    	record.setCity(request.getParameter("city"));
-	    	record.setCountry(request.getParameter("country"));
-	    	record.setBirthCountry(request.getParameter("birthcountry"));
-	    	record.setZip(request.getParameter("zip"));
-	    	record.setPhone(request.getParameter("phone"));
-	    	String id = request.getParameter("id");
-	    	log.debug("id: "+id);
-//	    	if(!id.equals(""))
-//	    		record.setId(Integer.parseInt(id));
+	    	String id = "";
+	    	if(gDao.getRecordById(id_group).getName().equals("Host")){
+	    		record.setId_group(id_group);
+		    	record.setFname(request.getParameter("fname"));
+		    	record.setLname(request.getParameter("lname"));
+		    	record.setAddress(request.getParameter("address"));
+		    	record.setZip(request.getParameter("zip"));
+		    	record.setDocument(request.getParameter("photo"));
+		    	record.setCity(request.getParameter("city"));
+		    	record.setCountry(request.getParameter("country"));
+		    	record.setEmail(request.getParameter("email"));
+		    	record.setGender(request.getParameter("gender"));
+		    	record.setTShirtSize("none");
+		    	record.setFridayProgram(3);
+		    	record.setRentalOption(5);
+		    	id = request.getParameter("id");
+	    	}
+	    	else{
+		    	if(intolerances != null)
+		    		record.setIntolerances(intolerances);
+				record.setId_group(id_group);
+		    	record.setFname(request.getParameter("fname"));
+		    	record.setLname(request.getParameter("lname"));
+		    	record.setEmail(request.getParameter("email"));
+		    	record.setGender(request.getParameter("gender"));
+		    	record.setFridayProgram(pDao.getProgramID(request.getParameter("friday")));
+		    	record.setDate_of_birth(request.getParameter("date_of_birth"));
+		    	record.setAddress(request.getParameter("address"));
+		    	record.setBirthPlace(request.getParameter("birthplace"));
+		    	record.setTShirtSize(request.getParameter("tshirt"));
+		    	record.setRentalOption(pDao.getRentalOptionID(request.getParameter("rental")));
+		    	record.setCity(request.getParameter("city"));
+		    	record.setCountry(request.getParameter("country"));
+		    	record.setBirthCountry(request.getParameter("birthcountry"));
+		    	record.setZip(request.getParameter("zip"));
+		    	record.setPhone(request.getParameter("phone"));
+		    	id = request.getParameter("id");
+		    	log.debug("id: "+id);
+	    	}
 	    	
 	    	 // gets absolute path of the web application
 	        String savePath = getServletConfig().getServletContext().getRealPath("/") + gDao.getRecordById(id_group).getName();	        
@@ -232,54 +253,54 @@ public class ParticipantController extends HttpServlet {
 			            			File old = new File(savePath + File.separator + subfolder+ File.separator 
 				    	        			+ dao.getRecordById(Integer.parseInt(id)).getPhoto());
 			            			old.delete();
-			            			record.setPhoto(fileName);
-			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName); 
+			            			record.setPhoto(record.getFname().toUpperCase() + "_" + record.getLname().toUpperCase() + "_" + fileName);
+			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + record.getFname().toUpperCase() + "_" + record.getLname().toUpperCase() + "_" + fileName); 
 			            			
 			            		}
 			            		//###########################################################################################
 			            		else{
 			            			//no file name stored in DB --> ADDING
 			            			log.debug("case: file, no DB (photo)");
-			            			record.setPhoto(fileName);
-			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName);
+			            			record.setPhoto(record.getFname().toUpperCase() + "_" + record.getLname().toUpperCase() + "_" + fileName);
+			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + record.getFname().toUpperCase() + "_" + record.getLname().toUpperCase() + "_" + fileName);
 			            		}
 		            		}
 		            		else{
-		            			record.setPhoto(fileName);
-		            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName); 
+		            			record.setPhoto(record.getFname().toUpperCase() + "_" + record.getLname().toUpperCase() + "_" + fileName);
+		            			finalFile = new File(savePath + File.separator + subfolder + File.separator + record.getFname().toUpperCase() + "_" + record.getLname().toUpperCase() + "_" + fileName); 
 		            		}
 			            	part.write(finalFile.getAbsolutePath());
 		            	}
 		            	//###############################################################################################
-		            	else{
-		            		subfolder = "studentids";
-		            		//the user select the student ID photo
-		            		if(!id.isEmpty()){
-			            		String url = dao.getRecordById(Integer.parseInt(id)).getDocument();
-			            		log.debug("url: (file, studentid)  "+url);
-			            		if(url != null){
-			            			//file name stored in DB --> EDITING
-			            			log.debug("case: file, DB (studentid)");
-			            			File old = new File(savePath + File.separator + subfolder+ File.separator 
-				    	        			+ dao.getRecordById(Integer.parseInt(id)).getDocument());
-			            			old.delete();
-			            			record.setDocument(fileName);
-			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName); 
-			            		}
-			            		//###########################################################################################
-			            		else{
-			            			//no file name stored in DB --> ADDING
-			            			log.debug("case: file, no DB (studentid)");
-			            			record.setDocument(fileName);
-			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName);
-			            		}
-		            		}
-		            		else{
-		            			record.setDocument(fileName);
-		            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName);
-		            		}
-			            	part.write(finalFile.getAbsolutePath());
-		            	}
+//		            	else{
+//		            		subfolder = "studentids";
+//		            		//the user select the student ID photo
+//		            		if(!id.isEmpty()){
+//			            		String url = dao.getRecordById(Integer.parseInt(id)).getDocument();
+//			            		log.debug("url: (file, studentid)  "+url);
+//			            		if(url != null){
+//			            			//file name stored in DB --> EDITING
+//			            			log.debug("case: file, DB (studentid)");
+//			            			File old = new File(savePath + File.separator + subfolder+ File.separator 
+//				    	        			+ dao.getRecordById(Integer.parseInt(id)).getDocument());
+//			            			old.delete();
+//			            			record.setDocument(fileName);
+//			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName); 
+//			            		}
+//			            		//###########################################################################################
+//			            		else{
+//			            			//no file name stored in DB --> ADDING
+//			            			log.debug("case: file, no DB (studentid)");
+//			            			record.setDocument(fileName);
+//			            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName);
+//			            		}
+//		            		}
+//		            		else{
+//		            			record.setDocument(fileName);
+//		            			finalFile = new File(savePath + File.separator + subfolder + File.separator + fileName);
+//		            		}
+//			            	part.write(finalFile.getAbsolutePath());
+//		            	}
 		            }
 		            //###################################################################################################
 	            	else{

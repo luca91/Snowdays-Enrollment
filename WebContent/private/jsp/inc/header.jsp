@@ -7,8 +7,8 @@
 		<li><a href='<c:url value="/private/index.html"/>'>Home</a></li>
 		<li><a href='userList.html' id="listusers">Users</a></li>
 		<li><a href='groupList.html' id="listgroups">Groups</a></li>
-		<li><a href='participantList.html' id="listparticip">Participants</a></li>
-		<li><a href='badgeList.html' id="listbadges">Documents</a></li>
+		<li><a href='participantList.html?page=1' id="listparticip">Participants</a></li>
+		<li><a href='docsList.html' id="docs">Documents</a></li>
 		<li><a href='registrations.html' id="registrations">Registrations</a></li>
 		<li><a href='settings.html' id="settings">Settings</a></li>
 	</c:when>

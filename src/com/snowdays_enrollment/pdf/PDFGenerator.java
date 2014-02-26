@@ -5,18 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import net.glxn.qrgen.image.ImageType;
-
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.Rectangle;
+import com.snowdays_enrollment.model.Participant;
 
 /**
  * This class create a badge for a participant.
@@ -39,24 +41,13 @@ public class PDFGenerator {
 	 * @uml.property  name="id"
 	 */
 	private String group;
-	/**
-	 * @uml.property  name="eventName"
-	 */
-	private String eventName;
-	/**
-	 * @uml.property  name="path"
-	 */
-	private String path;
-	/**
-	 * @uml.property  name="aDocument"
-	 * @uml.associationEnd  
-	 */
-	private int id;
-	private String imagePath;
+	private String profile;
 	private Document aDocument;
-	private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
-	private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,Font.BOLD);
-	private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
+	private ArrayList<Participant> participants;
+	private String badgeType;
+	private String groupFolder;
+	private String fileName;
+	
 	
 	/**
 	 * Empty constructor.
@@ -74,149 +65,134 @@ public class PDFGenerator {
 	 * @throws DocumentException
 	 * @throws IOException
 	 */
-	public PDFGenerator(String fname, String lname, int id, String group, String eventName, String path) throws MalformedURLException, DocumentException, IOException{
-		log.debug("###################################");
-	    log.trace("START");
+	public PDFGenerator(String fname, String lname, String group, String profile, String badge) throws MalformedURLException, DocumentException, IOException{
 		name = fname;
 		surname = lname;
-		this.id = id;
 		this.group = group;
-		this.eventName = eventName;
-		this.path = path;
-		log.debug("PDF generator istantiated");
-	    log.trace("END");
-	}
-	
-	/**
-	 * It creates the final pdf and stores it in the given path.
-	 * @return boolean
-	 * @throws DocumentException
-	 * @throws MalformedURLException
-	 * @throws IOException
-	 */
-	public boolean createDocument() throws DocumentException, MalformedURLException, IOException{
-		log.trace("START");
+		this.profile = profile;
+		badgeType = badge;
 		setDocument();
-		boolean check = false;
-	    aDocument.open();
-	    addData();
-	    addQR();
-	    addImage();
-	    log.debug("Output set");
-	    aDocument.close();
-	    return check;
+		fileName = fname + "_" + lname + "_" + group + ".pdf";
 	}
 	
-	/**
-	 * It adds the text part to the badge.
-	 * @return boolean
-	 * @throws DocumentException
-	 */
-	public boolean addData() throws DocumentException{
-		log.trace("START");
-		Paragraph container = new Paragraph();
-		Paragraph event = new Paragraph(eventName, subFont);
-		Paragraph data = new Paragraph(name+" "+surname+" (#"+id+")", catFont);
-		Paragraph group = new Paragraph(this.group, smallBold);
-		container.add(event);
-		container.add(data);
-		container.add(group);
-		container.setAlignment(Paragraph.ALIGN_RIGHT);
-		boolean added = aDocument.add(container);
-		log.debug("Container set");
-		log.trace("END");
-		return added;
+	public PDFGenerator(String group, ArrayList<Participant> groupParticipants, String badge, String groupFolder) throws FileNotFoundException, DocumentException{
+		this.group = group;
+		participants = groupParticipants;
+		badgeType = badge;
+		this.groupFolder = groupFolder;
 	}
 	
-	/**
-	 * It adds the qr image to the badge. 
-	 * @return boolean
-	 * @throws MalformedURLException
-	 * @throws IOException
-	 * @throws DocumentException
-	 */
-	public boolean addQR() throws MalformedURLException, IOException, DocumentException{
-		log.trace("START");
-		 QRGenerator aQR = QRGenerator.from(name+" "+surname+" "+this.group);
-		 aQR.to(ImageType.PNG);
-//		 File qrFile = aQR.file();
-		 log.debug("QR location: "+aQR.file().getPath());
-		 Image qrImage = Image.getInstance(aQR.file().getPath());
-		 qrImage.scaleAbsolute(80f, 80f);
-		 qrImage.setAbsolutePosition(200f, 280f);
-		 boolean added = aDocument.add(qrImage);
-		 log.debug("QR added");
-		 log.trace("END");
-		 return added;
+	public File createGroupBadges() throws MalformedURLException, IOException, DocumentException{
+		File result = null;
+		Image badgeFront = Image.getInstance(chooseBadgeFront().getAbsolutePath());
+		for (int i=0; i<participants.size();i++){
+			System.out.println(participants.size()-i);
+
+			aDocument.newPage();
+
+			Paragraph p1 = new Paragraph(capitalizeString(participants.get(i).getFname()), new Font(FontFamily.HELVETICA, 10));
+			p1.setAlignment(Element.ALIGN_CENTER); aDocument.add(p1);
+
+			Paragraph p2 = new Paragraph(capitalizeString(participants.get(i).getLname()), new Font(FontFamily.HELVETICA, 10));
+			p2.setAlignment(Element.ALIGN_CENTER); p2.setSpacingBefore(0); aDocument.add(p2);
+
+			Paragraph p3 = new Paragraph(participants.get(i).getId()+" - "+group, new Font(FontFamily.HELVETICA, 10));
+			p3.setAlignment(Element.ALIGN_CENTER); p3.setSpacingBefore(-1); aDocument.add(p3);
+
+			badgeFront.setAbsolutePosition(0,0);
+			badgeFront.scaleAbsolute(281, 367);
+			aDocument.add(badgeFront);
+
+			Image photo = Image.getInstance(groupFolder+ File.separator + "profile" + File.separator + participants.get(i).getPhoto());
+			photo.setAlignment(Element.ALIGN_CENTER);
+			photo.scaleAbsolute(96,120);
+			photo.setAbsolutePosition(92,145);
+			
+			aDocument.add(photo);
+		}
+		
+		aDocument.close();
+		System.out.println("FINISH!!!");
+		return result;
 	}
 	
-	/**
-	 * It returns the absoliute path of the final file.
-	 * @return String
-	 */
-	public String getAbsoluteFilePath(){
-		return path+"/"+name+surname+this.group+".pdf";
+	public File createSingleBadge() throws MalformedURLException, IOException, DocumentException{
+		File result = null;
+		Image badgeFront = Image.getInstance(chooseBadgeFront().getAbsolutePath());
+		Paragraph p1 = new Paragraph(capitalizeString(name), new Font(FontFamily.HELVETICA, 10));
+		p1.setAlignment(Element.ALIGN_CENTER); aDocument.add(p1);
+
+		Paragraph p2 = new Paragraph(capitalizeString(surname), new Font(FontFamily.HELVETICA, 10));
+		p2.setAlignment(Element.ALIGN_CENTER); p2.setSpacingBefore(0); aDocument.add(p2);
+
+		Paragraph p3 = new Paragraph(group, new Font(FontFamily.HELVETICA, 10));
+		p3.setAlignment(Element.ALIGN_CENTER); p3.setSpacingBefore(-1); aDocument.add(p3);
+
+		badgeFront.setAbsolutePosition(0,0);
+		badgeFront.scaleAbsolute(281, 367);
+		aDocument.add(badgeFront);
+
+		Image photo = Image.getInstance(groupFolder+ File.separator + "profile" + File.separator + profile);
+		photo.setAlignment(Element.ALIGN_CENTER);
+		photo.scaleAbsolute(96,120);
+		photo.setAbsolutePosition(92,145);
+		
+		aDocument.add(photo);
+		aDocument.close();
+		return result;
 	}
 	
-	/**
-	 * It returns the path of the file in the server.
-	 * @return String
-	 */
-	public String getFilePath(){
-		return "/private/pdf/"+name+surname+this.group+".pdf";
+	public File chooseBadgeFront(){
+		File result = null;
+		switch(badgeType){
+		case "PARTICIPANT":
+			break;
+		case "STAFF":
+			break;
+		case "PARTY/HOST":
+			break;
+		}
+		return result;
 	}
 	
-	/**
-	 * It sets the image/logo for the event.
-	 * @return boolean
-	 * @throws MalformedURLException
-	 * @throws IOException
-	 * @throws DocumentException
-	 */
-	public boolean addImage() throws MalformedURLException, IOException, DocumentException{
-		log.trace("START");
-		Image anImage = Image.getInstance(imagePath);
-		anImage.scaleAbsolute(100f, 70f);
-		anImage.setAbsolutePosition(20f, 270f);
-		boolean added = aDocument.add(anImage);
-		log.debug("Image added");
-		log.trace("END");
-		return added;
+	public File chooseBadgeBack(){
+		File result = null;
+		switch(badgeType){
+		case "PARTICIPANT":
+			break;
+		case "STAFF":
+			break;
+		case "PARTY/HOST":
+			break;
+		}
+		return result;
 	}
 	
-	/**
-	 * It returns this document.
-	 * @return Document
-	 */
-	public Document getDocument(){
-		return this.aDocument;
+	private static String capitalizeString(String string) {
+		char[] chars = string.toLowerCase().toCharArray();
+		boolean found = false;
+		for (int i = 0; i < chars.length; i++) {
+			if (!found && Character.isLetter(chars[i])) {
+				chars[i] = Character.toUpperCase(chars[i]);
+				found = true;
+			} else if (Character.isWhitespace(chars[i]) || chars[i]=='.' || chars[i]=='\'') { // You can add other chars here
+				found = false;
+			}
+		}
+		return String.valueOf(chars);
 	}
 	
-	/**
-	 * It set the path of the image.
-	 * @param path - String
-	 */
-	public void setImagePath(String path){
-		this.imagePath = path;
-	}
-	
-	/**
-	 * It gets the filepath of the image.
-	 * @return String
-	 */
-	public String getImagePath(){
-		return this.imagePath;
-	}
-	
-	/**
-	 * It sets the size and the output for the document.
-	 * @throws FileNotFoundException
-	 * @throws DocumentException
-	 */
 	public void setDocument() throws FileNotFoundException, DocumentException{
 		Rectangle page = new Rectangle(280f, 360f);
 		aDocument = new Document(page, 0f, 0f, 221f, 0f);
 		PdfWriter.getInstance(aDocument, new FileOutputStream(getAbsoluteFilePath()));
 	}
 
+	public String getAbsoluteFilePath(){
+		return groupFolder + File.separator + "badges" + fileName;
+	}
+	
+	public void setFileName(String name){
+		fileName = name;
+	}
 }

@@ -40,15 +40,14 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
 		<c:set var="act">
-			<c:url value="/private/participantAdd?action=edit" /> 
+			<c:url value="/public/participantAdd" /> 
 		</c:set>
 	<div id="stylized" class="myform">
 	    <form method="POST" action="${act}" name="frmAddParticipan" enctype="multipart/form-data">
-	    	<h3>Participant form - External</h3>
+	    	<h3>Participant form - Host</h3>
 	        
 	        <input type="hidden" name="id_group" value="${id_group}"/> 
 	        <input type="hidden" name="id" value="${id}"/> 
-	        <input type="hidden" name="email" value="${email}" readonly/> <br><br><br>
 	        <c:if test="${image}">
 	        	<h5 class="alert">Image bigger than 2MB. Choose another one.</h5>
 	        </c:if><br><br><br>
@@ -56,22 +55,14 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	        <input type="text" name="fname" value="${record.fname}" placeholder="Name"required/> <br><br><br>
 	        <label>Surname*</label>
 	        <input type="text" name="lname" value="${record.lname}" placeholder="surname" required/> <br><br><br>
+	         <label>Email*</label>
+	        <input type="text" name="email" value="${record.email}" required/> <br><br><br>
 	        <label>Gender*</label>
 	        <select name="gender" required>
 	       		<c:forEach items="${genders}" var="gender">
 	        		<option value="${gender}" <c:if test="${selGen == gender}">selected</c:if>>${gender}		        	
 		        </c:forEach>
 	        </select> <br><br><br> 
-	       <label>Birthday*</label>
-	        <input type="text" name="date_of_birth" id="datepicker" value="${record.date_of_birth}" placeholder="Birthday" style="width:100px" required/>
-	        <input type="text" placeholder="City" name="birthplace" value="${record.birthPlace}" style="width:150px" required/> 
-	        <input type="text" placeholder="Country" name="birthcountry" value="${record.birthCountry}" style="width:150px" required/> <br><br><br>
-	        <label>Friday activity*</label>
-	        <select name="friday"required>
-	        	<c:forEach items="${programs}" var="program">
-	        		<option value="${program}" <c:if test="${selPro == program }">selected</c:if>>${program}		        	
-		        </c:forEach>
-	        </select> <br><br><br>
 	        
 	        <label>Address*</label>
 	        <input name="address" type="text"  value="${record.address}" placeholder="Address" style="width:100px" required/>
@@ -80,24 +71,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	        <input name="country" type="text"  value="${record.country}" placeholder="Country" style="width:150px" required/>
 	        <br><br><br> 	  	            	            
 	        
-	        <label>Intolerances</label>
-	        <input type="text" name="intolerances" value="${record.intolerances}" placeholder="Intolerances"/> <br><br><br>
-	        <label>T-Shirt size*</label>
-	        <select name="tshirt"required>
-	        	<c:forEach items="${tshirts}" var="tshirt">
-	        		<option value="${tshirt}" <c:if test="${selTS == tshirt }">selected</c:if>>${tshirt}		        	
-		        </c:forEach>
-	        </select>    <br><br><br>
-	        <label>Rental*</label>
-	        <select name="rental" required>
-	        	<c:forEach items="${rentals}" var="rental">
-	        		<option value="${rental}" <c:if test="${selRen == rental}">selected</c:if>>${rental}		        	
-		        </c:forEach>
-	        </select>       <br><br><br> 
 	       <label>Photo</label>
-	        <input type="file" name="photo"  <c:if test="${record.photo == null}"> required</c:if>/> <input type="text" readonly="readonly" value="${record.photo}"/> <br><br><br><br>
-	        <label>ID File</label>
-	        <input type="file" name="idphoto" <c:if test="${record.document == null}"> required</c:if>/><input type="text" readonly="readonly" value="${record.document}"/> <br><br><br><br>
+	        <input type="file" name="photo" <c:if test="${record.photo == null}"> required</c:if>/> <input type="text" readonly="readonly" value="${record.photo}"/> <br><br><br><br>
 	        
 	        <input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />
 	        <input type="submit" value="Submit" class="input" />

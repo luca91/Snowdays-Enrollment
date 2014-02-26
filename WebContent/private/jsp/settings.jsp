@@ -50,7 +50,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 		        <label>Max Participants per group</label>
 		        <div class="indent6"><input type="text" name="maxpergroup" value="${maxPerGroup}" required/></div><br><br><br>
 		        
-		        <label>Badge files</label> <br>
+		       <!--  <label>Badge files</label> <br>
 		        <c:if test="${fn:length(countries) != 0 }">
 			        <c:choose>
 							<c:when test="${systemUser.role == 'admin'}">
@@ -60,7 +60,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 							</c:when>
 					</c:choose>
 				</c:if>
-		        <br><br>
+		        <br><br> -->
 
 		        <label>Max people per country</label><br>
 		        <c:if test="${fn:length(countries) != 0}">
@@ -92,8 +92,8 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 		        <br><br><br><br> -->
 		       
 		        <!-- BUTTONS -->
-	       		 <input type="submit" value="Save" class="input" />
 	        	<input type="button" value="Back" onClick="history.go(-1);return true;" class="input" />
+	        	 <input type="submit" value="Save" class="input" />
 		    </form>
 	    </div>	        
 		

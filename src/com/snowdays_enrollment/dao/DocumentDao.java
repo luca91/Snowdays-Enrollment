@@ -19,9 +19,9 @@ import com.snowdays_enrollment.model.Badge;
  * @author Luca Bellettati
  *
  */
-public class BadgeDao {
+public class DocumentDao {
 	
-	static Logger log = Logger.getLogger(BadgeDao.class.getName());
+	static Logger log = Logger.getLogger(DocumentDao.class.getName());
 	
 	/**
 	 * @uml.property  name="connection"
@@ -32,14 +32,14 @@ public class BadgeDao {
 	 * It creates a new object with a given connection.
 	 * @param c Connection
 	 */
-	public BadgeDao(Connection c) {
+	public DocumentDao(Connection c) {
 		connection = c;
 	}
 	
 	/**
 	 * It creates a new object setting the context.
 	 */
-	public BadgeDao(){
+	public DocumentDao(){
 		 Context initialContext;
 		try {
 			initialContext = new InitialContext();
