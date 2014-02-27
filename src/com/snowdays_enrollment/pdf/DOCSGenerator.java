@@ -70,6 +70,7 @@ public class DOCSGenerator {
 	
 	private Paragraph bus;
 	
+	private String groupid;
 	/**
 	 * @uml.property  name="aDocument" 
 	 * @uml.associationEnd  
@@ -103,7 +104,7 @@ public class DOCSGenerator {
         record.setPhone("3386228095");
         
 	String outputDir = "/home/ettore/Documenti/";
-	DOCSGenerator g = new DOCSGenerator	(record, outputDir );
+	DOCSGenerator g = new DOCSGenerator	("Unibz", record, outputDir );
 	g.setImagePath("/home/ettore/git/Snowdays-Enrollment/WebContent/private/images/Logo_orizzontale_2014.png");
 	g.setHeaderText("/home/ettore/git/Snowdays-Enrollment/WebContent/private/docsblueprints/header");
 	g.setAgreementBodyText("/home/ettore/git/Snowdays-Enrollment/WebContent/private/docsblueprints/agreement_body");
@@ -122,15 +123,13 @@ public class DOCSGenerator {
 	/**
 	 * This constructor returns the final pdf filepath 
 	 */
-	public DOCSGenerator(Participant record, String path) {
+	public DOCSGenerator(String groupName, Participant record, String path) {
 		super();
 		log.debug("###################################");
 	    log.trace("START");
 	    this.record = record;
 		this.path = path;
-		int id = record.getId_group();
-		GroupDao gd = new GroupDao();
-		Group g = gd.getRecordById(id);
+		this.groupid = groupName;
 				log.debug("Constructor instantiated");
 	}
 	
@@ -153,7 +152,7 @@ public class DOCSGenerator {
         addCentTitle("RESPONSABILITIES FOR BUS DAMAGES");
         document.add(form);
         document.add(bus);
-        log.debug("Output set");
+        log.debug(record.getFname()+" written");
 	} catch (Exception e) {
 	      e.printStackTrace();
 	    }
@@ -213,24 +212,25 @@ public class DOCSGenerator {
 		body.setAlignment(Paragraph.ALIGN_LEFT);
 		Scanner scan = new Scanner(agreementBodyText);
 		String line;
-		String rex = "[0-9].[A-Z]";
+		String rex2 = "^([0-9]?[.]? )?[A-Z\\sa-z]+[:]?$";
 		while (scan.hasNext()){
-			 line = scan.nextLine();
-			 
-			 if (line.matches(rex)) {
-			  Paragraph subtitle =	new Paragraph(line, subtitleFont);
-			  subtitle.setSpacingAfter(12);	
-			  subtitle.setSpacingBefore(8);
-			  body.add(subtitle);			  
-			 }
-			 else {
-	    	  body.add(new Paragraph(line, bodyFont));
-			 }
-		}
+			line = scan.nextLine();
+				if (line.matches(rex2)) {
+					Paragraph subtitle =	new Paragraph(line, subtitleFont);
+					subtitle.setSpacingAfter(12);	
+					subtitle.setSpacingBefore(8);
+					body.add(subtitle);			  
+				}	
+			else {
+				Paragraph p = new Paragraph(line, bodyFont);
+				p.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+				body.add(p);
+			}
+		}		
 		body.add(createSignature());	 
 		scan.close();
 		return body;
-		
+
 	}
 	
 	/**
@@ -239,9 +239,9 @@ public class DOCSGenerator {
 	 * @throws IOException
 	 */
 	public Paragraph createBusParagraph() throws IOException {
-		busBodyText = "participant at the ���Bolzano SNOWDAYS 2014��� from 20th to 22th of March 2014 "
+		busBodyText = "participant at the “Bolzano SNOWDAYS 2014” from 20th to 22th of March 2014 "
 				+ "declares that if he/she causes any damage to the busses, "
-				+ "he/she will pay a fee of 100 ��� as agreed with the bus company."
+				+ "he/she will pay a fee of 100 € as agreed with the bus company."
 				+ "\nFor the accuracy of statement,";
 		
 		Paragraph body = new Paragraph(busBodyText, bodyFont); 
@@ -294,7 +294,7 @@ public class DOCSGenerator {
 		resident.add(res2);
 		
 		Paragraph uni = new Paragraph ("University of    " , bodyFont );
-		Chunk uni2 = new Chunk (record.getGroupName(), formFont);
+		Chunk uni2 = new Chunk (groupid, formFont);
 		uni.add(uni2);
 		
 		Paragraph spec = new Paragraph (" *if you find this form incorrect, please report to snowdays@unibz.it", signFont);
@@ -372,6 +372,14 @@ public class DOCSGenerator {
 		this.agreementBodyText = Paths.get(agreementBodyText);
 	}
 	
+	public String getGroupid() {
+		return groupid;
+	}
+
+	public void setGroupid(String groupid) {
+		this.groupid = groupid;
+	}
+
 	public String getBusBodyText() {
 		return busBodyText;
 	}
@@ -381,7 +389,8 @@ public class DOCSGenerator {
 	}
 
 	public void closePdf(){
-		document.close(); 	
+		document.close(); 
+		log.debug("Pdf closed in "+ getFilePath() );
 	}
 	
 	public void openPdf() {
@@ -437,7 +446,7 @@ public class DOCSGenerator {
 	 * @return String
 	 */
 	public String getAbsoluteFilePath(){
-		return path+"/Agreement"+record.getId_group()+".pdf";
+		return path+"/"+"Agreement"+record.getId_group()+".pdf";
 	}
 	
 	public Participant getRecord() {
