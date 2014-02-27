@@ -50,7 +50,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 						<c:url
 							value="/private/participantList.html?action=listRecord&id_group=${group.id}"
 							var="url" />
-						<option value="${group.name}" onClick="window.location.href='${url}'" 
+						<option value="${group.name}" onClick="location='${url}'" 
 						<c:if test="${group.id == id_group}">selected</c:if>>${group.name}</option>
 					</c:forEach>
 				</select>

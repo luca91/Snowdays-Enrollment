@@ -111,11 +111,11 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 		       		 </c:forEach>
 					</select><br><br><br>
 				<input type="text" name="email" id="email" value="${email}" placeholder="Email" style="width:350px; margin-left: 20px""/> <br><br><br>
-				<textarea name="messages" id="message" style="width:700px; height:200px; margin-left: 20px" readonly></textarea>  <br><br><br>
 				<input type="button" value="Generate" class="input" onClick="javascript:updateEmail();return false;" style="margin-left: 20px"/>
 				<input type="button" value="Message" class="input" onClick="javascript:generateMessage();return false;"/>
 				<input type="submit" value="Add" class="input" />
-				<a class="button-2" href="unibzRegistrations.html">Reset</a>
+				<a class="button-2" href="unibzRegistrations.html">Reset</a><br><br><br>
+				<textarea name="messages" id="message" style="width:700px; height:200px; margin-left: 20px" readonly></textarea>  <br><br><br>
 				<!-- <input type="submit" value="Send" class="input" />  -->
 					</form> 
 					<!-- TABLES -->

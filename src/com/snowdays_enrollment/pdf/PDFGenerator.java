@@ -5,10 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.sql.Connection;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -18,6 +20,9 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.Rectangle;
+import com.snowdays_enrollment.dao.GroupDao;
+import com.snowdays_enrollment.dao.ParticipantDao;
+import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.Participant;
 
 /**
@@ -47,6 +52,9 @@ public class PDFGenerator {
 	private String badgeType;
 	private String groupFolder;
 	private String fileName;
+	private ArrayList<Group> groups;
+	private String output;
+	private Connection c;
 	
 	
 	/**
@@ -82,9 +90,16 @@ public class PDFGenerator {
 		this.groupFolder = groupFolder;
 	}
 	
-	public File createGroupBadges() throws MalformedURLException, IOException, DocumentException{
-		File result = null;
-		Image badgeFront = Image.getInstance(chooseBadgeFront().getAbsolutePath());
+	public PDFGenerator(ArrayList<Group> groups, String outputFolder, Connection c, String badge){
+		this.groups = groups;
+		output = outputFolder;
+		this.c = c;
+		badgeType = badge;
+		fileName = "participants_badges.pdf";
+	}
+	
+	public void createGroupBadges() throws MalformedURLException, IOException, DocumentException{
+		Image badgeFront = Image.getInstance(chooseBadgeFront());
 		for (int i=0; i<participants.size();i++){
 			System.out.println(participants.size()-i);
 
@@ -107,18 +122,15 @@ public class PDFGenerator {
 			photo.setAlignment(Element.ALIGN_CENTER);
 			photo.scaleAbsolute(96,120);
 			photo.setAbsolutePosition(92,145);
-			
 			aDocument.add(photo);
 		}
 		
 		aDocument.close();
 		System.out.println("FINISH!!!");
-		return result;
 	}
 	
-	public File createSingleBadge() throws MalformedURLException, IOException, DocumentException{
-		File result = null;
-		Image badgeFront = Image.getInstance(chooseBadgeFront().getAbsolutePath());
+	public void createSingleBadge() throws MalformedURLException, IOException, DocumentException{
+		Image badgeFront = Image.getInstance(chooseBadgeFront());
 		Paragraph p1 = new Paragraph(capitalizeString(name), new Font(FontFamily.HELVETICA, 10));
 		p1.setAlignment(Element.ALIGN_CENTER); aDocument.add(p1);
 
@@ -139,30 +151,62 @@ public class PDFGenerator {
 		
 		aDocument.add(photo);
 		aDocument.close();
-		return result;
 	}
 	
-	public File chooseBadgeFront(){
-		File result = null;
-		switch(badgeType){
-		case "PARTICIPANT":
-			break;
-		case "STAFF":
-			break;
-		case "PARTY/HOST":
-			break;
+	public void createBadgeByType(String type) throws MalformedURLException, IOException, DocumentException{
+		Image badgeFront = Image.getInstance(chooseBadgeFront());
+		ParticipantDao pDao = new ParticipantDao(c);
+		for(int j = 0; j < groups.size(); j++){
+			participants = new ArrayList<Participant>();
+			Group g = groups.get(j);
+			group = g.getName();
+			participants = (ArrayList<Participant>) pDao.getAllRecordsById_group(g.getId());
+			groupFolder = output + File.separator + g.getName();
+			for (int i=0; i < participants.size(); i++){
+				System.out.println(participants.size()-i);
+	
+				aDocument.newPage();
+	
+				Paragraph p1 = new Paragraph(capitalizeString(participants.get(i).getFname()), new Font(FontFamily.HELVETICA, 10));
+				p1.setAlignment(Element.ALIGN_CENTER); aDocument.add(p1);
+	
+				Paragraph p2 = new Paragraph(capitalizeString(participants.get(i).getLname()), new Font(FontFamily.HELVETICA, 10));
+				p2.setAlignment(Element.ALIGN_CENTER); p2.setSpacingBefore(0); aDocument.add(p2);
+	
+				Paragraph p3 = new Paragraph(participants.get(i).getId()+" - "+group, new Font(FontFamily.HELVETICA, 10));
+				p3.setAlignment(Element.ALIGN_CENTER); p3.setSpacingBefore(-1); aDocument.add(p3);
+	
+				badgeFront.setAbsolutePosition(0,0);
+				badgeFront.scaleAbsolute(281, 367);
+				aDocument.add(badgeFront);
+	
+				Image photo = Image.getInstance(groupFolder+ File.separator + "profile" + File.separator + participants.get(i).getPhoto());
+				photo.setAlignment(Element.ALIGN_CENTER);
+				photo.scaleAbsolute(96,120);
+				photo.setAbsolutePosition(92,145);
+				aDocument.add(photo);
+			}
 		}
-		return result;
+		
+		aDocument.close();
+		System.out.println("FINISH!!!");
 	}
 	
-	public File chooseBadgeBack(){
-		File result = null;
+	public String chooseBadgeFront(){
+		String result = null;
+		String folder = output + "/template" + File.separator;
 		switch(badgeType){
 		case "PARTICIPANT":
+			result = folder + "participant_front.jpg";
 			break;
 		case "STAFF":
+			result = folder + "staff_front.jpg";
 			break;
 		case "PARTY/HOST":
+			result = folder + "host_front.jpg";
+			break;
+		case "SPONSOR":
+			result = folder + "sponsor_front.jpg";
 			break;
 		}
 		return result;
@@ -194,5 +238,9 @@ public class PDFGenerator {
 	
 	public void setFileName(String name){
 		fileName = name;
+	}
+	
+	public String getPathBadgeByType(){
+		return output + fileName;
 	}
 }

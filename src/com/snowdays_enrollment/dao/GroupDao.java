@@ -613,4 +613,35 @@ public class GroupDao {
     	}
     	log.trace("END");
     }
+    
+    public List<Group> getGroupsByBadgeType(String type){
+    	List<Group> result = new ArrayList<Group>();
+    	try {
+    		PreparedStatement stmt = connection
+    				.prepareStatement("select * from groups where group_badge_type=?");
+    		stmt.setString(1, type);
+    		ResultSet rs = stmt.executeQuery();
+    		rs.beforeFirst();
+    		if(rs.next()){
+    			Group aRecord = new Group();
+    			aRecord = new Group();
+                aRecord.setId(rs.getInt("group_id"));
+                aRecord.setName(rs.getString("group_name"));    
+                aRecord.setGroupReferentID(rs.getInt("group_referent_id"));
+                aRecord.setGroupMaxNmber(rs.getInt("group_max_participants"));
+                aRecord.setCountry(rs.getString("group_country"));
+                aRecord.setIsBlocked(rs.getBoolean("group_is_blocked"));
+                aRecord.setActualParticipantNumber(rs.getInt("group_actual_participants_number"));
+                aRecord.setBadgeType(rs.getString("group_badge_type"));
+                aRecord.setSnowvolley(rs.getString("group_saturday"));
+                result.add(aRecord);
+    		}
+    		rs.close();
+    		stmt.close();
+    		}
+        	catch(SQLException e){
+        		e.printStackTrace();
+        	}
+    	return result;
+    }
 }

@@ -39,7 +39,11 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
 	<h3 class="htabs">Badges</h3>
-	<c:if test="${fn:length(groups) != 0}">
+	<a href='downloadAllBadges?type=participant'>Participant</a>
+	<a href='downloadAllBadges?type=staff'>Staff</a>
+	<a href='downloadAllBadges?type=host'>Host</a>
+	<a href='downloadAllBadges?type=sponsor'>Sponsor</a>
+	<!-- <c:if test="${fn:length(groups) != 0}">
 		<c:choose>
 			<c:when test="${systemUser.role == 'admin'}">
 				<c:if test="${groups != null }">
@@ -56,7 +60,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 				</c:if>
 			</c:when>
 		</c:choose>
-	</c:if>
+	</c:if> -->
 		<br><br>
 			
 		<!-- TABLE -->
