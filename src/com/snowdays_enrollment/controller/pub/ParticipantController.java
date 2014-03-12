@@ -3,10 +3,6 @@ package com.snowdays_enrollment.controller.pub;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -17,23 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import com.snowdays_enrollment.dao.GroupDao;
 import com.snowdays_enrollment.dao.ParticipantDao;
-import com.snowdays_enrollment.dao.RegistrationExternalsDao;
 import com.snowdays_enrollment.dao.RegistrationUniBzDao;
-import com.snowdays_enrollment.dao.SettingsDao;
-import com.snowdays_enrollment.dao.UserDao;
-import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.Participant;
-import com.snowdays_enrollment.model.RegistrationExternal;
 import com.snowdays_enrollment.model.RegistrationUniBz;
-import com.snowdays_enrollment.model.User;
-import com.snowdays_enrollment.tools.BackupPhoto;
 import com.snowdays_enrollment.tools.DBConnection;
-import com.snowdays_enrollment.tools.Email;
 
 
 /**
@@ -53,7 +40,6 @@ public class ParticipantController extends HttpServlet {
 	
     private static final int MAX_REQUEST_SIZE = 1024 * 1024;
 
-	private static String form = "/public/jsp/participantInt.jsp";
 	private Connection c;
 	
     /**
@@ -62,9 +48,7 @@ public class ParticipantController extends HttpServlet {
 	 */
     private ParticipantDao dao;   
     private GroupDao gDao;
-    private SettingsDao sDao;
     private HttpSession session;
-    private BackupPhoto backup;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -144,7 +128,6 @@ public class ParticipantController extends HttpServlet {
     	ParticipantDao pDao = new ParticipantDao(c);
     	RegistrationUniBzDao ruDao = new RegistrationUniBzDao(c);
 		gDao = new GroupDao(c);
-    	sDao = new SettingsDao(c);
     	dao = new ParticipantDao(c);
 		String forward = "";
 		boolean image = false;
@@ -305,14 +288,12 @@ public class ParticipantController extends HttpServlet {
 		            //###################################################################################################
 	            	else{
 	            		//the user didn't select any file
-	            		String subfolder = "";
 	            		if(!id.isEmpty()){
 		            		//###############################################################################################
 		            		if(part.getName().equals("photo")){
 		            			//profile photo case
 		            			String url = dao.getRecordById(Integer.parseInt(id)).getPhoto();
 		            			log.debug("url: (no file, photo) "+url);
-		            			subfolder = "profile";
 		            			//###########################################################################################
 		            			if(url != null){
 		            				//DB contains already a file name
@@ -321,18 +302,18 @@ public class ParticipantController extends HttpServlet {
 		            			}
 		            		}
 		            		//###############################################################################################
-		            		else{
-		            			//student ID photo case
-		            			String url = dao.getRecordById(Integer.parseInt(id)).getDocument();
-		            			log.debug("url: (no file, studentid) "+url);
-		            			subfolder = "studentids";
-		            			//###########################################################################################
-		            			if(url != null){
-		            				//DB contains already a file name
-		            				log.debug("case: no file, DB (studentid)");
-		            				record.setDocument(dao.getRecordById(Integer.parseInt(id)).getDocument());
-		            			}
-		            		}
+//		            		else{
+//		            			//student ID photo case
+//		            			String url = dao.getRecordById(Integer.parseInt(id)).getDocument();
+//		            			log.debug("url: (no file, studentid) "+url);
+//		            			subfolder = "studentids";
+//		            			//###########################################################################################
+//		            			if(url != null){
+//		            				//DB contains already a file name
+//		            				log.debug("case: no file, DB (studentid)");
+//		            				record.setDocument(dao.getRecordById(Integer.parseInt(id)).getDocument());
+//		            			}
+//		            		}
 	            		}
 	            		//###############################################################################################
 	            	}
@@ -352,7 +333,7 @@ public class ParticipantController extends HttpServlet {
 		        	log.debug("INSERT");
 		            added = dao.addRecord(id_group, record);
 		            request.setAttribute("id_group", id_group);
-		            if(added == 1)
+		            if(added > 0)
 		            	ruDao.submit(request.getParameter("email"));
 		        }
 		        else{

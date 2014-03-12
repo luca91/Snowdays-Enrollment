@@ -1,2 +1,5 @@
 eclipse.preferences.version=1
+encoding//WebContent/private/docsblueprints/agreement_body=UTF-8
+encoding//WebContent/private/docsblueprints/agreement_body_2=UTF-8
+encoding//WebContent/private/docsblueprints/footer=UTF-8
 encoding//src/com/snowdays_enrollment/pdf/DOCSGenerator.java=UTF-8

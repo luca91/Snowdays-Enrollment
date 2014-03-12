@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,15 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.snowdays_enrollment.dao.DocumentDao;
 import com.snowdays_enrollment.dao.GroupDao;
 import com.snowdays_enrollment.dao.ParticipantDao;
 import com.snowdays_enrollment.dao.UserDao;
-import com.snowdays_enrollment.model.Badge;
-import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.Participant;
 import com.snowdays_enrollment.model.User;
-import com.snowdays_enrollment.pdf.PDFGenerator;
+import com.snowdays_enrollment.pdf.DOCSGenerator;
 import com.itextpdf.text.DocumentException;
 
 /**
@@ -38,7 +36,6 @@ import com.itextpdf.text.DocumentException;
 public class DocumentsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private static String UNAUTHORIZED_PAGE = "/private/jsp/errors/unauthorized.jsp";
 	private HttpSession session;
 	private Connection c;
 	
@@ -46,7 +43,6 @@ public class DocumentsController extends HttpServlet {
 	 * @uml.property  name="dao"
 	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
-	private DocumentDao dao;
 	
 	private int id_group;
        
@@ -55,9 +51,6 @@ public class DocumentsController extends HttpServlet {
      */
     public DocumentsController() {
         super();
-  
-        dao = new DocumentDao();
-        
     }
 
 	/**
@@ -69,7 +62,6 @@ public class DocumentsController extends HttpServlet {
 		UserDao ud = new UserDao(c);
 		User  systemUser = ud.getUserByUsername(request.getUserPrincipal().getName());
 		ParticipantDao pDao = new ParticipantDao(c);
-		GroupDao gDao = new GroupDao(c);
 		session.removeAttribute("systemUser");
 		session.setAttribute("systemUser",systemUser);
     	
@@ -86,10 +78,56 @@ public class DocumentsController extends HttpServlet {
             }
         }
         else if(request.getParameter("id_group") != null){
-        	//to do, only for a group
+        	id_group = Integer.parseInt(request.getParameter("id_group")); 
+        	List<Participant> records  = pDao.getAllRecordsById_group(id_group);
+        	System.out.println("Records size: " + records.size());
+            request.setAttribute("records", pDao.getAllRecordsById_group(id_group));
+            GroupDao gd = new GroupDao(c);
+            request.setAttribute("groups", gd.getAllRecords());
+     
+        	DOCSGenerator docg = null;
+        	try {
+        		File outputFolder = new File(getServletConfig().getServletContext().getRealPath("/")+"/pdf/");
+        		outputFolder.mkdir();
+        		docg = new DOCSGenerator (gd.getRecordById(id_group).getName(), (ArrayList<Participant>) records, outputFolder.getAbsolutePath());
+        		docg.setImagePath(getServletContext().getRealPath("/private/images/Logo_orizzontale_2014.png"));
+        		docg.setHeaderText(getServletContext().getRealPath("/private/docsblueprints/header"));
+        		docg.setFooterText(getServletContext().getRealPath("/private/docsblueprints/footer"));
+        		docg.setAgreementBodyTextFirst(getServletContext().getRealPath("/private/docsblueprints/agreement_body"));
+        		docg.setDocument();
+        		docg.writeDocument();
+        		docg.closePdf();
+				
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (DocumentException e) {
+				e.printStackTrace();
+			}       	
+        	
+        	forward = docg.getFileLocation();
         }
         else if(request.getParameter("id") != null){
-           //to do, only for one participant
+        	GroupDao gd = new GroupDao(c);
+        	DOCSGenerator docg = null;
+        	File outputFolder = new File(getServletConfig().getServletContext().getRealPath("/")+"/private/pdf/");
+    		outputFolder.mkdir();
+    		Participant p = pDao.getRecordById((Integer.parseInt(request.getParameter("id"))));
+        	docg = new DOCSGenerator (gd.getRecordById(id_group).getName(), p, outputFolder.getAbsolutePath());
+    		docg.setImagePath(getServletContext().getRealPath("/private/images/Logo_orizzontale_2014.png"));
+    		docg.setHeaderText(getServletContext().getRealPath("/private/docsblueprints/header"));
+    		docg.setAgreementBodyTextFirst(getServletContext().getRealPath("/private/docsblueprints/agreement_body"));
+    		try {
+				docg.setDocument();
+			} catch (DocumentException e) {
+				e.printStackTrace();
+			}
+    		try {
+				docg.writeDocument();
+			} catch (DocumentException e) {
+				e.printStackTrace();
+			}
+    		docg.closePdf();
+			
         }
         
 		try {

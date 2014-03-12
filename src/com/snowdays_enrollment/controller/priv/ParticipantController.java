@@ -317,7 +317,7 @@ public class ParticipantController extends HttpServlet {
 	    	String id = "";
 	    	
 	    	String intolerances = request.getParameter("intolerances");
-	    	if(gDao.getRecordById(id_group).getName().equals("Host")){
+	    	if(gDao.getRecordById(id_group).getName().equals("Host") || gDao.getRecordById(id_group).getName().equals("Sponsor") || gDao.getRecordById(id_group).getName().equals("STAFF")){
 	    		record.setId_group(id_group);
 		    	record.setFname(request.getParameter("fname"));
 		    	record.setLname(request.getParameter("lname"));
@@ -500,9 +500,11 @@ public class ParticipantController extends HttpServlet {
 		            dao.addRecord(id_group, record);
 		            request.setAttribute("id_group", id_group);
 		            if(!((id == null || id.isEmpty()) 
-		            		&& gDao.getRecordById(id_group).getName().equals("UNIBZ") 
+		            		&& (gDao.getRecordById(id_group).getName().equals("UNIBZ") 
 		            		|| gDao.getRecordById(id_group).getName().equals("Host") 
-		            		|| gDao.getRecordById(id_group).getName().equals("Alumni"))){
+		            		|| gDao.getRecordById(id_group).getName().equals("Alumni") 
+		            		|| gDao.getRecordById(id_group).getName().equals("STAFF")
+		            		|| gDao.getRecordById(id_group).getName().equals("Sponsor")))){
 			            RegistrationExternal r = new RegistrationExternal();
 			            int idPar = dao.getIDByParticipant(record.getFname(), record.getLname(), id_group);
 			            r.setParticipantID(idPar);
@@ -516,15 +518,20 @@ public class ParticipantController extends HttpServlet {
 			            RegistrationExternalsDao reDao = new RegistrationExternalsDao(c);
 			            reDao.addRegistration(r);
 		            }
-		            else{
+		            else if(gDao.getRecordById(id_group).getName().equals("STAFF") || gDao.getRecordById(id_group).getName().equals("Sponsor")){
 			        	RegistrationUniBzDao ruDao = new RegistrationUniBzDao();
 			        	RegistrationUniBz ru = new RegistrationUniBz();
-			        	ru.setName(record.getFname());
-			        	ru.setSurname(record.getLname());
-			        	ru.setEmail(record.getEmail());
-			        	ru.setStatus("submit");
-			        	ru.setGroup(gDao.getRecordById(id_group).getName());
-			        	ruDao.addRecord(ru);
+			        	if(ruDao.getRegistrationByEmail(record.getEmail()) == null){
+				        	ru.setName(record.getFname());
+				        	ru.setSurname(record.getLname());
+				        	ru.setEmail(record.getEmail());
+				        	ru.setStatus("submit");
+				        	ru.setGroup(gDao.getRecordById(id_group).getName());
+				        	ruDao.addRecord(ru);
+			        	}
+			        	else
+			        		ruDao.submit(record.getEmail());
+			        	
 			        }
 		        }
 		        else

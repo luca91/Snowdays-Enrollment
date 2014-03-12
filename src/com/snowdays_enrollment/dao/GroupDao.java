@@ -622,7 +622,7 @@ public class GroupDao {
     		stmt.setString(1, type);
     		ResultSet rs = stmt.executeQuery();
     		rs.beforeFirst();
-    		if(rs.next()){
+    		while(rs.next()){
     			Group aRecord = new Group();
     			aRecord = new Group();
                 aRecord.setId(rs.getInt("group_id"));

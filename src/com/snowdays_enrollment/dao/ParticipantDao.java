@@ -1,4 +1,4 @@
-//Code inspired by http://danielniko.wordpress.com/2012/04/17/simple-crud-using-jsp-servlet-and-mysql/
+ //Code inspired by http://danielniko.wordpress.com/2012/04/17/simple-crud-using-jsp-servlet-and-mysql/
 
 package com.snowdays_enrollment.dao;
 
@@ -245,7 +245,7 @@ public class ParticipantDao {
     	GroupDao gDao = new GroupDao();
         try {
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select * from participants group by participant_group_id order by participant_surname");
+            ResultSet rs = statement.executeQuery("select * from participants order by participant_surname");
             while (rs.next()) {
                 Participant record = new Participant();
                 record.setId(rs.getInt("participant_id"));

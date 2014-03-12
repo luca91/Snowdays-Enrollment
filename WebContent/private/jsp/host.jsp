@@ -44,7 +44,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 		</c:set>
 	<div id="stylized" class="myform">
 	    <form method="POST" action="${act}" name="frmAddParticipan" enctype="multipart/form-data">
-	    	<h3>Participant form - Host</h3>
+	    	<h3>Participant form - Host/Staff/Sponsor</h3>
 	        
 	        <input type="hidden" name="id_group" value="${id_group}"/> 
 	        <input type="hidden" name="id" value="${id}"/> 

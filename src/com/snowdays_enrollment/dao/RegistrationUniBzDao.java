@@ -67,13 +67,14 @@ static Logger log = Logger.getLogger(RegistrationExternalsDao.class.getName());
 	}
 	
 	public RegistrationUniBz getRegistrationByEmail(String email){
-		RegistrationUniBz ru = new RegistrationUniBz();
+		RegistrationUniBz ru = null;
 		try{
 			PreparedStatement stmt = connection
 					.prepareStatement("select * from emails_internals where email=?");
 			stmt.setString(1, email);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
+				ru = new RegistrationUniBz();
 				ru.setEmail(rs.getString("email"));
 				ru.setName(rs.getString("name"));
 				ru.setSurname(rs.getString("surname"));

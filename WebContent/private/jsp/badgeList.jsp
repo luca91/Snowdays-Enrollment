@@ -39,10 +39,10 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/");
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
 	<h3 class="htabs">Badges</h3>
-	<a href='downloadAllBadges?type=participant'>Participant</a>
-	<a href='downloadAllBadges?type=staff'>Staff</a>
-	<a href='downloadAllBadges?type=host'>Host</a>
-	<a href='downloadAllBadges?type=sponsor'>Sponsor</a>
+	<a class="button-2" href='downloadAllBadges?type=participant'>Participant</a>
+	<a class="button-2" href='downloadAllBadges?type=staff'>Staff</a>
+	<a class="button-2" href='downloadAllBadges?type=host'>Host</a>
+	<a class="button-2" href='downloadAllBadges?type=sponsor'>Sponsor</a>
 	<!-- <c:if test="${fn:length(groups) != 0}">
 		<c:choose>
 			<c:when test="${systemUser.role == 'admin'}">

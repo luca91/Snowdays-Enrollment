@@ -27,7 +27,7 @@ public class Documents extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String forward = "/private/jsp/documents.jsp";
+		String forward = "/private/jsp/badgeList.jsp";
 		try{
 			getServletConfig().getServletContext().getRequestDispatcher(forward).forward(request, response);
 		}

@@ -75,7 +75,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}" style="margin-left: 20px">Add Participant</a>
 				</c:if>
 				<c:if test="${((fn:length(groups) != 0) && (id_group != null))}">
-					<a class="button-2" href="downloadAllBadges style="margin-left: 20px">Badges</a>
+					<a class="button-2" href="downloadDocs?id_group=${id_group}" style="margin-left: 20px">Documents</a>
 				</c:if>
 
 			<!-- TABLES -->
@@ -125,13 +125,13 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 			</c:choose>
 				
 		<c:if test="${!blocked}">	
-			<!-- 	<c:if test="${((nrEnrolledParticipant < groupMaxNumber) && (id_group > 0))}">
+			 	<!--<c:if test="${((nrEnrolledParticipant < groupMaxNumber) && (id_group > 0))}">
 					<a class="button-2" href="participant.jsp?action=insert&id_group=${id_group}">Add Participant</a>
 				</c:if> 
 				 <c:if test="${systemUser.role == 'group_manager' && !blocked}">
 					<a class="button-2" href="participant.jsp?action=conclude&id_group=${id_group}">Conclude</a>
 				</c:if> --> 
-				<a class="button-2" href="downloadDocs?id_group=${id_group}">Download all docs</a>
+				<a class="button-2" href="downloadDocs?id_group=${id_group}">Documents</a>
 		</c:if>
 
 			<!-- TABLES -->

@@ -30,7 +30,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 	<div class="main">
 	<!-- TOPHEAD --><c:import url="inc/tophead.jsp"/>
 	<!-- CONTENT -->
-	<h3 class="htabs"><a href='documents.html' id="documents" style="margin-left: 20px">Documents</a></h3>
+	<!-- <h3 class="htabs"><a href='documents.html' id="documents" style="margin-left: 20px">Documents</a></h3>  -->
 	<h3 class="htabs"><a href='badges.html' id="badges" style="margin-left: 20px">Badges</a></h3> 
 		<br></br>
 	<!-- BOTTOM --><c:import url="inc/bottom.jsp"/>

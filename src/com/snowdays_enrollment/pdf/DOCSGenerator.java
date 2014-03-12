@@ -1,5 +1,6 @@
 package com.snowdays_enrollment.pdf;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -7,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -24,8 +26,6 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.snowdays_enrollment.dao.GroupDao;
-import com.snowdays_enrollment.model.Group;
 import com.snowdays_enrollment.model.Participant;
 
 /**
@@ -45,20 +45,24 @@ public class DOCSGenerator {
 	
 	private Path headerText;
 	private String imagePath;
-	private Path agreementBodyText;
+	private Path agreementBodyTextFirst;
+	private Path agreementBodyTextSecond;
+	private Path agreementBodyTextThird;
 	private String busBodyText;
 	private Document document;
+	private Path footerText;
 	private static Font bodyFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
 	private static Font titleFont = new Font(Font.FontFamily.HELVETICA, 22,Font.BOLD);
 	private static Font subtitleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
 	private static Font headerFont = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
 	private static Font signFont = new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC);
 	private static Font formFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLDITALIC);
-	
+	private static Font footerFont = new Font(Font.FontFamily.HELVETICA, 8, Font.NORMAL);
+	private static String fileLocation;
 	/**
 	 * @uml.property  name="record"
 	 */
-	private Participant record;
+//	private Participant record;
 	/**
 	 * @uml.property  name="path"
 	 */
@@ -66,18 +70,22 @@ public class DOCSGenerator {
 
 	private Paragraph head;
 
-	private Paragraph body;
+	private Paragraph bodyFirst;
+	
+	private Paragraph bodySecond;
+	
+	private Paragraph bodyThird;
 	
 	private Paragraph bus;
 	
 	private String groupid;
-	/**
-	 * @uml.property  name="aDocument" 
-	 * @uml.associationEnd  
-	 */
+	
+	private ArrayList<Participant> p;
+	
+	private Paragraph foot;
 	
 	//FOR TESTING
-	/*
+	
 	public static void main(String [ ] args) throws MalformedURLException, DocumentException, IOException
 	{
 		String fname = "Ettore";
@@ -100,20 +108,23 @@ public class DOCSGenerator {
         record.setBirthPlace("Madrid");
         record.setCity("Lana");
         record.setCountry("Italy");
-        record.setZip(39011);
+        record.setZip("39011");
         record.setPhone("3386228095");
         
-	String outputDir = "/home/ettore/Documenti/";
+	String outputDir = "/home/luca/Documents/";
 	DOCSGenerator g = new DOCSGenerator	("Unibz", record, outputDir );
-	g.setImagePath("/home/ettore/git/Snowdays-Enrollment/WebContent/private/images/Logo_orizzontale_2014.png");
-	g.setHeaderText("/home/ettore/git/Snowdays-Enrollment/WebContent/private/docsblueprints/header");
-	g.setAgreementBodyText("/home/ettore/git/Snowdays-Enrollment/WebContent/private/docsblueprints/agreement_body");
+	g.setImagePath("/home/luca/git/snowdays-enrollment/WebContent/private/images/Logo_orizzontale_2014.png");
+	g.setHeaderText("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/header");
+	g.setAgreementBodyTextFirst("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/agreement_body");
+	g.setAgreementBodyTextSecond("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/agreement_body_2");
+	g.setAgreementBodyTextThird("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/agreement_body_3");
+	g.setFooterText("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/footer");
 	g.setDocument();
 	g.writeDocument();
 	g.closePdf();
 
 	}
-	*/
+	
 	
 	/**
 	 * Empty constructor.
@@ -127,12 +138,18 @@ public class DOCSGenerator {
 		super();
 		log.debug("###################################");
 	    log.trace("START");
-	    this.record = record;
+	    p = new ArrayList<Participant>();
+	    p.add(record);
 		this.path = path;
 		this.groupid = groupName;
-				log.debug("Constructor instantiated");
+		log.debug("Constructor instantiated");
 	}
 	
+	public DOCSGenerator(String groupName, ArrayList<Participant> p, String path){
+		groupid = groupName;
+		this.path = path;
+		this.p = p;
+	}
 	
 	/**
 	 * Construct the document for one participant 
@@ -142,17 +159,58 @@ public class DOCSGenerator {
 	 */
 	public void writeDocument() throws DocumentException, MalformedURLException, IOException{ 
 	try {
-        document.add(head);
-        addCentTitle("LETTER OF AGREEMENT"); 
-        Paragraph form = createCompiledForm();
-        document.add(form);
-        document.add(body); 
-        document.newPage();
-        document.add(head);
-        addCentTitle("RESPONSABILITIES FOR BUS DAMAGES");
-        document.add(form);
-        document.add(bus);
-        log.debug(record.getFname()+" written");
+		if(p.size() == 1){
+	        document.add(head);
+	        addCentTitle("LETTER OF AGREEMENT"); 
+	        Paragraph form = createCompiledForm(p.get(0));
+	        document.add(form);
+	        document.add(bodyFirst); 
+	        document.add(foot);
+	        document.newPage();
+	        document.add(head);
+	        document.add(bodySecond);
+	        document.add(foot);
+	        document.newPage();
+	        document.add(head);
+	        document.add(bodyThird);
+	        document.add(foot);
+	        document.newPage();
+	        document.add(head);
+	        addCentTitle("RESPONSABILITIES FOR BUS DAMAGES");
+	        document.add(form);
+	        document.add(bus);
+	        document.add(foot);
+	        document.newPage();
+	        log.debug(p.get(0).getFname()+" written");
+        }
+		else{
+			for(Participant par: this.p.toArray(new Participant[] {})){
+				if(document.getPageNumber() >= 2){
+					System.out.println("Page number :" + document.getPageNumber());
+					document.newPage();
+				}
+				document.add(head);
+			    addCentTitle("LETTER OF AGREEMENT"); 
+			    Paragraph form = createCompiledForm(par);
+			    document.add(form);
+			    document.add(bodyFirst); 
+		        document.add(foot);
+		        document.newPage();
+		        document.add(bodySecond);
+		        document.add(foot);
+			    document.newPage();
+			    document.add(head);
+			    document.add(bodyThird);
+		        document.add(foot);
+		        document.newPage();
+		        document.add(head);
+			    addCentTitle("RESPONSABILITIES FOR BUS DAMAGES");
+			    document.add(form);
+			    document.add(bus);
+			    document.add(foot);
+			    log.debug(p.get(0).getFname()+" written");
+			}
+		}
 	} catch (Exception e) {
 	      e.printStackTrace();
 	    }
@@ -207,10 +265,36 @@ public class DOCSGenerator {
 	 * @return
 	 * @throws IOException 
 	 */
-	public Paragraph createAgreementBody() throws IOException {
+	public Paragraph createAgreementBodyFirst() throws IOException {
 		Paragraph body = new Paragraph();
 		body.setAlignment(Paragraph.ALIGN_LEFT);
-		Scanner scan = new Scanner(agreementBodyText);
+		Scanner scan = new Scanner(agreementBodyTextFirst);
+		String line;
+		String rex2 = "^([0-9]?[.]? )?[A-Z\\sa-z]+[:]?$";
+		while (scan.hasNext()){
+			line = scan.nextLine();
+			if (line.matches(rex2)) {
+				Paragraph subtitle =	new Paragraph(line, subtitleFont);
+				subtitle.setSpacingAfter(12);	
+				subtitle.setSpacingBefore(8);
+				body.add(subtitle);			  
+			}	
+			else {
+				Paragraph p = new Paragraph(line, bodyFont);
+				p.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+				body.add(p);
+			}
+		}		
+//		body.add(createSignature());	 
+		scan.close();
+		return body;
+
+	}
+	
+	public Paragraph createAgreementBodySecond() throws IOException {
+		Paragraph body = new Paragraph();
+		body.setAlignment(Paragraph.ALIGN_LEFT);
+		Scanner scan = new Scanner(agreementBodyTextSecond);
 		String line;
 		String rex2 = "^([0-9]?[.]? )?[A-Z\\sa-z]+[:]?$";
 		while (scan.hasNext()){
@@ -227,10 +311,36 @@ public class DOCSGenerator {
 				body.add(p);
 			}
 		}		
-		body.add(createSignature());	 
+//		body.add(createSignature());	 
 		scan.close();
 		return body;
-
+	}
+	
+	public Paragraph createAgreementBodyThird() throws IOException {
+		Paragraph body = new Paragraph();
+		body.setAlignment(Paragraph.ALIGN_LEFT);
+		Scanner scan = new Scanner(agreementBodyTextThird);
+		String line;
+		String rex2 = "^([0-9]?[.]? )?[A-Z\\sa-z]+[:]?$";
+		while (scan.hasNext()){
+			line = scan.nextLine();
+				if (line.matches(rex2)) {
+					Paragraph subtitle =	new Paragraph(line, subtitleFont);
+					subtitle.setSpacingAfter(12);	
+					subtitle.setSpacingBefore(8);
+					body.add(subtitle);			  
+				}	
+			else {
+				Paragraph p = new Paragraph(line, bodyFont);
+				p.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+				body.add(p);
+			}
+		}		
+		body.add(createSignature());
+		for(int i = 0; i < 26; i++)
+			body.add(new Paragraph("\n", signFont));
+		scan.close();
+		return body;
 	}
 	
 	/**
@@ -246,6 +356,8 @@ public class DOCSGenerator {
 		
 		Paragraph body = new Paragraph(busBodyText, bodyFont); 
 		body.add(createSignature());
+		for(int i = 0; i < 16; i++)
+			body.add(new Paragraph("\n", signFont));
 		return body;
 	}
 	
@@ -253,7 +365,7 @@ public class DOCSGenerator {
 	 * Creates the compiled paragraph with the participant data
 	 * @return Paragraph
 	 */
-	public Paragraph createCompiledForm(){
+	public Paragraph createCompiledForm(Participant record){
 		Paragraph form = new Paragraph();
 		
 		if (record != null) {
@@ -314,6 +426,24 @@ public class DOCSGenerator {
 		
 	}
 	
+	public Paragraph createFooter() throws IOException{
+		Paragraph footer = new Paragraph();
+		  
+	    Scanner scan = new Scanner(footerText);
+	    String line;
+	    Paragraph p = new Paragraph("\n", footerFont);
+	    footer.add(p);
+	    footer.add(p);
+	     while (scan.hasNext()){
+	    	  line = scan.nextLine();
+	    	  Paragraph ft = new Paragraph(line, footerFont);
+	    	  ft.setAlignment(Paragraph.ALIGN_CENTER);
+	    	  footer.add(ft);
+	     }
+	     scan.close();
+	     return footer;
+	}
+	
 
 	/**
 	 * Add a single title centered
@@ -364,12 +494,28 @@ public class DOCSGenerator {
 		this.headerText = Paths.get(headerText);
 	}
 
-	public Path getAgreementBodyText() {
-		return agreementBodyText;
+	public Path getAgreementBodyTextFirst() {
+		return agreementBodyTextFirst;
 	}
 
-	public void setAgreementBodyText(String agreementBodyText) {
-		this.agreementBodyText = Paths.get(agreementBodyText);
+	public void setAgreementBodyTextFirst(String agreementBodyText) {
+		this.agreementBodyTextFirst = Paths.get(agreementBodyText);
+	}
+	
+	public Path getAgreementBodyTextSecond() {
+		return agreementBodyTextFirst;
+	}
+
+	public void setAgreementBodyTextSecond(String agreementBodyText) {
+		this.agreementBodyTextSecond = Paths.get(agreementBodyText);
+	}
+	
+	public Path getAgreementBodyTextThird() {
+		return agreementBodyTextThird;
+	}
+
+	public void setAgreementBodyTextThird(String agreementBodyText) {
+		this.agreementBodyTextThird = Paths.get(agreementBodyText);
 	}
 	
 	public String getGroupid() {
@@ -396,6 +542,23 @@ public class DOCSGenerator {
 	public void openPdf() {
 		document.open();
 	}
+	
+	public void setFooterText(String footer){
+		this.footerText = Paths.get(footer);
+	}
+	
+	public Path getFooterText(){
+		return footerText;
+	}
+	
+	public String getFileLocation(){
+		if(p.size() == 1)
+			return "/private/pdf/Agreement_Bus_" + p.get(0).getFname() + "_" + p.get(0).getLname() + ".pdf";
+		else
+			return "/private/pdf/Agreement_Bus_" + groupid + ".pdf";
+	}
+	
+	
 
 	/**
 	 * Create the actual file in in the correct folder and instantiate the necessary paragraphs
@@ -405,12 +568,21 @@ public class DOCSGenerator {
 	 */
 	public void setDocument() throws DocumentException, MalformedURLException, IOException{
 		document = new Document(PageSize.A4);
-		PdfWriter.getInstance(document, new FileOutputStream(getAbsoluteFilePath()));
+		if(checkFile(getFilePath())){
+			File delete = new File(getFilePath());
+			delete.delete();
+		}
+		PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(getFilePath()));
+		writer.setPageEmpty(false);
 		openPdf();
 	    addMetaData();
 	    head = createHeader();
-		body = createAgreementBody();
+		bodyFirst = createAgreementBodyFirst();
+		bodySecond = createAgreementBodySecond();
+		bodyThird = createAgreementBodyThird();
 		bus = createBusParagraph();
+		foot = createFooter();
+		foot.setAlignment(Paragraph.ALIGN_BOTTOM);
 	}
 	
 	
@@ -418,12 +590,22 @@ public class DOCSGenerator {
 	 * Add Metadata info to file
 	 */
 	 private void addMetaData() {
-		    document.addTitle("License Agreement - Bus guidelines " +record.getGroupName());
-		    document.addSubject("License Agreement and Bus guidelines for group: "+record.getGroupName());
+		 if(p.size() > 1){
+		    document.addTitle("License Agreement - Bus Guidelines " +groupid);
+		    document.addSubject("License Agreement and Bus guidelines for group: "+groupid);
 		    document.addAuthor("Snowdays 2014");
 		    document.addCreator("Snowdays 2014");
 		    document.addCreationDate();
-		  }
+		 }
+		 else{
+			 document.addTitle("License Agreement - Bus Guidelines " + p.get(0).getFname() + " " + p.get(0).getLname());
+			 document.addSubject("License Agreement and Bus guidelines for participant: " + p.get(0).getFname() + " " + p.get(0).getLname());
+			 document.addAuthor("Snowdays 2014");
+			 document.addCreator("Snowdays 2014");
+			 document.addCreationDate();
+		 }
+			 
+	}
 	 
 	 /**
 	  * It sets the path of the image.
@@ -445,17 +627,17 @@ public class DOCSGenerator {
 	 * It returns the absolute path of the final file.
 	 * @return String
 	 */
-	public String getAbsoluteFilePath(){
-		return path+"/"+"Agreement"+record.getId_group()+".pdf";
-	}
-	
-	public Participant getRecord() {
-		return record;
-	}
-
-	public void setRecord(Participant record) {
-		this.record = record;
-	}
+//	public String getAbsoluteFilePath(){
+//		return path+"/"+"Agreement"+record.getId_group()+".pdf";
+//	}
+//	
+//	public Participant getRecord() {
+//		return record;
+//	}
+//
+//	public void setRecord(Participant record) {
+//		this.record = record;
+//	}
 
 	public String getPath() {
 		return path;
@@ -465,13 +647,17 @@ public class DOCSGenerator {
 		this.path = path;
 	}
 
-	/**
-	 * It returns the path of the file in the server.
-	 * @return String
-	 */
 	public String getFilePath(){
-		return "/private/pdf/Agreement"+record.getId_group()+".pdf";
+		if(p.size() == 1)
+			return path +"/Agreement_Bus_" + p.get(0).getFname() + "_" + p.get(0).getLname() + ".pdf";
+		else
+			return path +"/Agreement_Bus_" + groupid + ".pdf";
 	}
 	
-
+	public boolean checkFile(String file){
+		File toCheck = new File(file);
+		if(toCheck.exists())
+			return true;
+		return false;
+	}
 }
