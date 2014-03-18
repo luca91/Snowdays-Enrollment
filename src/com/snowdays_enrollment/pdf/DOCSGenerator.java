@@ -52,8 +52,8 @@ public class DOCSGenerator {
 	private Document document;
 	private Path footerText;
 	private static Font bodyFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
-	private static Font titleFont = new Font(Font.FontFamily.HELVETICA, 22,Font.BOLD);
-	private static Font subtitleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
+	private static Font titleFont = new Font(Font.FontFamily.HELVETICA, 20,Font.BOLD);
+	private static Font subtitleFont = new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD);
 	private static Font headerFont = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
 	private static Font signFont = new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC);
 	private static Font formFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLDITALIC);
@@ -86,44 +86,44 @@ public class DOCSGenerator {
 	
 	//FOR TESTING
 	
-	public static void main(String [ ] args) throws MalformedURLException, DocumentException, IOException
-	{
-		String fname = "Ettore";
-		String lname = "El Burrito";
-		String email = "fakeEmail@morefake.com";
-		String date_of_birth = "03/11/1993";	
-		
-		Participant record = new Participant();
-        record.setId(105);
-        record.setId_group(56);
-        record.setGroupName("Unibz");
-        record.setFname(fname);
-        record.setLname(lname);
-        record.setEmail(email);
-        record.setDate_of_birth(date_of_birth);
-        record.setApproved(false);
-        record.setGender("M");
-        record.setAddress("via Sotto il Monte 34");
-        record.setBirthCountry("Spain");
-        record.setBirthPlace("Madrid");
-        record.setCity("Lana");
-        record.setCountry("Italy");
-        record.setZip("39011");
-        record.setPhone("3386228095");
-        
-	String outputDir = "/home/luca/Documents/";
-	DOCSGenerator g = new DOCSGenerator	("Unibz", record, outputDir );
-	g.setImagePath("/home/luca/git/snowdays-enrollment/WebContent/private/images/Logo_orizzontale_2014.png");
-	g.setHeaderText("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/header");
-	g.setAgreementBodyTextFirst("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/agreement_body");
-	g.setAgreementBodyTextSecond("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/agreement_body_2");
-	g.setAgreementBodyTextThird("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/agreement_body_3");
-	g.setFooterText("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/footer");
-	g.setDocument();
-	g.writeDocument();
-	g.closePdf();
+//	public static void main(String [ ] args) throws MalformedURLException, DocumentException, IOException
+//	{
+//		String fname = "Ettore";
+//		String lname = "El Burrito";
+//		String email = "fakeEmail@morefake.com";
+//		String date_of_birth = "03/11/1993";	
+//		
+//		Participant record = new Participant();
+//        record.setId(105);
+//        record.setId_group(56);
+//        record.setGroupName("Unibz");
+//        record.setFname(fname);
+//        record.setLname(lname);
+//        record.setEmail(email);
+//        record.setDate_of_birth(date_of_birth);
+//        record.setApproved(false);
+//        record.setGender("M");
+//        record.setAddress("via Sotto il Monte 34");
+//        record.setBirthCountry("Spain");
+//        record.setBirthPlace("Madrid");
+//        record.setCity("Lana");
+//        record.setCountry("Italy");
+//        record.setZip("39011");
+//        record.setPhone("3386228095");
+//        
+//	String outputDir = "/home/luca/Documents/";
+//	DOCSGenerator g = new DOCSGenerator	("Unibz", record, outputDir );
+//	g.setImagePath("/home/luca/git/snowdays-enrollment/WebContent/private/images/Logo_orizzontale_2014.png");
+//	g.setHeaderText("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/header");
+//	g.setAgreementBodyTextFirst("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/agreement_body");
+//	g.setAgreementBodyTextSecond("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/agreement_body_2");
+//	g.setAgreementBodyTextThird("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/agreement_body_3");
+//	g.setFooterText("/home/luca/git/snowdays-enrollment/WebContent/private/docsblueprints/footer");
+//	g.setDocument();
+//	g.writeDocument();
+//	g.closePdf();
 
-	}
+//	}
 	
 	
 	/**
@@ -170,10 +170,10 @@ public class DOCSGenerator {
 	        document.add(head);
 	        document.add(bodySecond);
 	        document.add(foot);
-	        document.newPage();
-	        document.add(head);
-	        document.add(bodyThird);
-	        document.add(foot);
+//	        document.newPage();
+//	        document.add(head);
+//	        document.add(bodyThird);
+//	        document.add(foot);
 	        document.newPage();
 	        document.add(head);
 	        addCentTitle("RESPONSABILITIES FOR BUS DAMAGES");
@@ -196,12 +196,13 @@ public class DOCSGenerator {
 			    document.add(bodyFirst); 
 		        document.add(foot);
 		        document.newPage();
+		        document.add(head);
 		        document.add(bodySecond);
 		        document.add(foot);
-			    document.newPage();
-			    document.add(head);
-			    document.add(bodyThird);
-		        document.add(foot);
+//			    document.newPage();
+//			    document.add(head);
+//			    document.add(bodyThird);
+//		        document.add(foot);
 		        document.newPage();
 		        document.add(head);
 			    addCentTitle("RESPONSABILITIES FOR BUS DAMAGES");
@@ -255,7 +256,7 @@ public class DOCSGenerator {
 		     table.addCell(right);
 		     
 		    header.add(table);
-		    header.setSpacingAfter(16);
+		    header.setSpacingAfter(12);
 		    scan.close();
 		    return header;
 	  }
@@ -275,8 +276,8 @@ public class DOCSGenerator {
 			line = scan.nextLine();
 			if (line.matches(rex2)) {
 				Paragraph subtitle =	new Paragraph(line, subtitleFont);
-				subtitle.setSpacingAfter(12);	
-				subtitle.setSpacingBefore(8);
+				subtitle.setSpacingAfter(0);	
+				subtitle.setSpacingBefore(2);
 				body.add(subtitle);			  
 			}	
 			else {
@@ -301,8 +302,8 @@ public class DOCSGenerator {
 			line = scan.nextLine();
 				if (line.matches(rex2)) {
 					Paragraph subtitle =	new Paragraph(line, subtitleFont);
-					subtitle.setSpacingAfter(12);	
-					subtitle.setSpacingBefore(8);
+					subtitle.setSpacingAfter(0);	
+					subtitle.setSpacingBefore(2);
 					body.add(subtitle);			  
 				}	
 			else {
@@ -311,7 +312,7 @@ public class DOCSGenerator {
 				body.add(p);
 			}
 		}		
-//		body.add(createSignature());	 
+		body.add(createSignature());	 
 		scan.close();
 		return body;
 	}
@@ -326,8 +327,8 @@ public class DOCSGenerator {
 			line = scan.nextLine();
 				if (line.matches(rex2)) {
 					Paragraph subtitle =	new Paragraph(line, subtitleFont);
-					subtitle.setSpacingAfter(12);	
-					subtitle.setSpacingBefore(8);
+					subtitle.setSpacingAfter(4);	
+					subtitle.setSpacingBefore(4);
 					body.add(subtitle);			  
 				}	
 			else {
@@ -356,7 +357,7 @@ public class DOCSGenerator {
 		
 		Paragraph body = new Paragraph(busBodyText, bodyFont); 
 		body.add(createSignature());
-		for(int i = 0; i < 16; i++)
+		for(int i = 0; i < 19; i++)
 			body.add(new Paragraph("\n", signFont));
 		return body;
 	}
@@ -370,11 +371,12 @@ public class DOCSGenerator {
 		
 		if (record != null) {
 		
+			System.out.println(record.getBirthPlace());
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		Paragraph loc = new Paragraph("Bolzano, " + dateFormat.format(new Date()), bodyFont);
 		loc.setAlignment(Paragraph.ALIGN_RIGHT);
-		loc.setSpacingAfter(20);
+		loc.setSpacingAfter(10);
 			
 		Paragraph name = new Paragraph ();
 		Chunk name2 = new Chunk ("The undersigned    ", bodyFont );
@@ -390,35 +392,47 @@ public class DOCSGenerator {
 		Chunk born4 = new Chunk ("   on the    ", bodyFont );
 		born.add(born2);
 		
-		if (record.getBirthPlace() != null && record.getBirthCountry() != null) {
+		if (!record.getBirthPlace().equals("n") && record.getBirthCountry().equals("n")) {
 			Chunk born3 = new Chunk (record.getBirthPlace()+ ", "+record.getBirthCountry(), formFont );
 			born.add(born3);
 			Chunk born5 = new Chunk (record.getDate_of_birth(), formFont );
 			born.add(born4);
 			born.add(born5);
 		}
-	
-		
+		else{
+			Chunk born3 = new Chunk ("                                                                 ", formFont );
+			born.add(born3);
+			Chunk born5 = new Chunk ("                              ", formFont );
+			born.add(born4);
+			born.add(born5);
+		}
+			
 		Paragraph resident = new Paragraph();
-		Chunk res1 = new Chunk ("resident in    ", bodyFont );
-		Chunk res2 = new Chunk (record.getAddress() + ", "+ record.getCity() +" \n" +record.getZip()+"   "+record.getCountry() , formFont);
-		resident.add(res1);
-		resident.add(res2);
+		if(!record.getAddress().equals("n")){
+			Chunk res1 = new Chunk ("resident in    ", bodyFont );
+			Chunk res2 = new Chunk (record.getAddress() + ", "+ record.getCity() +" \n" +record.getZip()+"   "+record.getCountry() , formFont);
+			resident.add(res1);
+			resident.add(res2);
+		}
+		else{
+			Chunk res1 = new Chunk ("resident in", bodyFont );
+			resident.add(res1);
+		}
 		
 		Paragraph uni = new Paragraph ("University of    " , bodyFont );
 		Chunk uni2 = new Chunk (groupid, formFont);
 		uni.add(uni2);
 		
-		Paragraph spec = new Paragraph (" *if you find this form incorrect, please report to snowdays@unibz.it", signFont);
-		spec.setAlignment(Paragraph.ALIGN_RIGHT);
+//		Paragraph spec = new Paragraph (" *if you find this form incorrect, please report to snowdays@unibz.it", signFont);
+//		spec.setAlignment(Paragraph.ALIGN_RIGHT);
 		
 		form.add(loc);
 		form.add(name);
 		form.add(born); 
 		form.add(resident);
-		form.setSpacingAfter(20);
+		form.setSpacingAfter(10);
 		form.add(uni);
-		form.add(spec);
+//		form.add(spec);
 		}		
 			
 		return form;
@@ -579,7 +593,7 @@ public class DOCSGenerator {
 	    head = createHeader();
 		bodyFirst = createAgreementBodyFirst();
 		bodySecond = createAgreementBodySecond();
-		bodyThird = createAgreementBodyThird();
+//		bodyThird = createAgreementBodyThird();
 		bus = createBusParagraph();
 		foot = createFooter();
 		foot.setAlignment(Paragraph.ALIGN_BOTTOM);

@@ -94,6 +94,8 @@ public class DocumentsController extends HttpServlet {
         		docg.setHeaderText(getServletContext().getRealPath("/private/docsblueprints/header"));
         		docg.setFooterText(getServletContext().getRealPath("/private/docsblueprints/footer"));
         		docg.setAgreementBodyTextFirst(getServletContext().getRealPath("/private/docsblueprints/agreement_body"));
+        		docg.setAgreementBodyTextSecond(getServletContext().getRealPath("/private/docsblueprints/agreement_body_2"));
+        		docg.setFooterText(getServletContext().getRealPath("/private/docsblueprints/footer"));
         		docg.setDocument();
         		docg.writeDocument();
         		docg.closePdf();
@@ -109,8 +111,8 @@ public class DocumentsController extends HttpServlet {
         else if(request.getParameter("id") != null){
         	GroupDao gd = new GroupDao(c);
         	DOCSGenerator docg = null;
-        	File outputFolder = new File(getServletConfig().getServletContext().getRealPath("/")+"/private/pdf/");
-    		outputFolder.mkdir();
+        	File outputFolder = new File(getServletConfig().getServletContext().getRealPath("/")+"/pdf/");
+//    		outputFolder.mkdir();
     		Participant p = pDao.getRecordById((Integer.parseInt(request.getParameter("id"))));
         	docg = new DOCSGenerator (gd.getRecordById(id_group).getName(), p, outputFolder.getAbsolutePath());
     		docg.setImagePath(getServletContext().getRealPath("/private/images/Logo_orizzontale_2014.png"));
