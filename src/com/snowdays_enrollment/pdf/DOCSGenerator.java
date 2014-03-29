@@ -86,6 +86,7 @@ public class DOCSGenerator {
 	
 	//FOR TESTING
 	
+
 //	public static void main(String [ ] args) throws MalformedURLException, DocumentException, IOException
 //	{
 //		String fname = "Ettore";
@@ -122,7 +123,6 @@ public class DOCSGenerator {
 //	g.setDocument();
 //	g.writeDocument();
 //	g.closePdf();
-
 //	}
 	
 	
@@ -385,24 +385,27 @@ public class DOCSGenerator {
 		Chunk name3 = new Chunk (record.getFname()+" "+record.getLname(), formFont );
 		  name.add(name3);
 		}
+		else{
+			name.add("___________________________  _______________________");
+		}
 		
 		
 		Paragraph born = new Paragraph ();
 		Chunk born2 = new Chunk ("born in    ", bodyFont );
 		Chunk born4 = new Chunk ("   on the    ", bodyFont );
 		born.add(born2);
-		
-		if (!record.getBirthPlace().equals("n") && record.getBirthCountry().equals("n")) {
+
+		if (!record.getBirthPlace().equals("n") || !record.getBirthCountry().equals("n")) {
 			Chunk born3 = new Chunk (record.getBirthPlace()+ ", "+record.getBirthCountry(), formFont );
 			born.add(born3);
-			Chunk born5 = new Chunk (record.getDate_of_birth(), formFont );
 			born.add(born4);
+			Chunk born5 = new Chunk (record.getDate_of_birth(), formFont );			
 			born.add(born5);
 		}
 		else{
-			Chunk born3 = new Chunk ("                                                                 ", formFont );
+			Chunk born3 = new Chunk ("______________________________", formFont );
 			born.add(born3);
-			Chunk born5 = new Chunk ("                              ", formFont );
+			Chunk born5 = new Chunk ("______________________________", formFont );
 			born.add(born4);
 			born.add(born5);
 		}
@@ -415,13 +418,44 @@ public class DOCSGenerator {
 			resident.add(res2);
 		}
 		else{
-			Chunk res1 = new Chunk ("resident in", bodyFont );
+			Chunk res1 = new Chunk ("resident in ___________________________________________________________", bodyFont );
 			resident.add(res1);
 		}
-		
+
+//		else
+//		{
+//			born.add("___________________________________ on the ______________________");
+//		}
+//	
+//		
+//		Paragraph resident = new Paragraph();
+//		Chunk res1 = new Chunk ("resident in    ", bodyFont );	
+//		resident.add(res1);
+//		if (record.getAddress() != null && record.getCity() != null){
+//			Chunk res2 = new Chunk (record.getAddress() + ", "+ record.getCity() + "," , formFont);	
+//			resident.add(res2);
+//		}
+//		else
+//		{
+//			resident.add("___________________________________, ______________________");
+//		}
+//		
+//		if (record.getZip() != null && record.getCountry() != null){ 
+//		Chunk res3 = new Chunk (" \n" +record.getZip()+"   "+record.getCountry()  , formFont);
+//		resident.add(res3);
+//		}
+//		else {
+//			resident.add("__________________________________________");
+//		}
+//		
 		Paragraph uni = new Paragraph ("University of    " , bodyFont );
+		if (groupid != null){ 
 		Chunk uni2 = new Chunk (groupid, formFont);
 		uni.add(uni2);
+		}
+		else {
+			uni.add("__________________________________________");
+		}
 		
 //		Paragraph spec = new Paragraph (" *if you find this form incorrect, please report to snowdays@unibz.it", signFont);
 //		spec.setAlignment(Paragraph.ALIGN_RIGHT);
