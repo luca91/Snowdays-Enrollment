@@ -1,0 +1,3 @@
+In order to enable the https, a certificate is needed. Here the command to generate it (Windows + Linux):
+
+JAVA_HOME/bin/keytool -genkeypair -alias <certificate_name> -keystore <my_keystore> -storepass <my_pwd> -keyalg RSA -storetype pkc12
