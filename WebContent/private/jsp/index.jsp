@@ -58,10 +58,7 @@ response.setHeader("Refresh", timeout + "; URL = /snowdays-enrollment/logout.htm
 				<h3 class="htabs">
 						<br> Welcome to the internal page
 					</h3>
-					<img
-						src="${pageContext.request.contextPath}/private/images/mascotte2.png"
-						class="img-indent-r" alt="" height="280" width="200">
-					
+					<img src="${pageContext.request.contextPath}/private/images/mascotte2.png" class="img-indent-r" alt="" height="280" width="200">
 				</div>
 				<br><br>
 				<div class="block-news">
