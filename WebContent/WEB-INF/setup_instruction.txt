@@ -1,0 +1,37 @@
+Here some instructions for setting up the development environment for Snowdays Enrollment System.
+
+1. Download and install Eclipse IDE for Java EE Developers:
+	Mac OS X 64bit: http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/SR1/eclipse-jee-luna-SR1-macosx-cocoa-x86_64.tar.gz
+
+1.1 Install EGit plugin (included in Luna)
+	EGit: http://eclipse.org/egit/download/
+
+
+2.Download and install MySQL (Server + Workbench)
+	Server (Mac OS 10.9 64bit): http://dev.mysql.com/downloads/file.php?id=454852
+	Server (Mac OS 10.8 64bit): http://dev.mysql.com/downloads/file.php?id=454854
+	Workbench (Mac OS X 32bit only available--> it works): http://dev.mysql.com/downloads/file.php?id=454523
+	N.B.: during the installation you will be asked to set pwd of the root: set it to "root"
+
+3.Open MySQL Workbench 
+	-set a new connection (name: localhost, user:root, pwd:root)
+	-open the queries in docs/database directory of the project and perform them (snowdays_enrollment.sql first)
+
+
+4.Import the project from Git repository
+	In Eclipse: File->Import->Git->Projects from Git->Clone URI->paste this https://github.com/luca91/Snowdays-Enrollment.git in the URI field and enter your Github credentials in the corresponding->Next3x->select "Import existing project"->Next->Finish
+
+5.Download Apache Tomcat v8.0
+	-http://mirror.nohup.it/apache/tomcat/tomcat-8/v8.0.15/bin/apache-tomcat-8.0.15.zip
+	-Then go to the directory docs of the project, copy the server.xml that you find there, go to the directory of Tomcat that you just downloaded and replace paste the file inside conf directory. 
+	-Now open the file, go at line 85 and chenge the path of the keystore file to the git folder in you PC, that is delete "C:\Users\Luca\git" and replace with the path in you laptop (I don't know where OSX has git directory)
+	-Go to WebContent/WEB-INF/lib, copy the file mysql-connector-java-5.1.18-bin.jar and paste to the lib/ directory of Tomcat
+
+6.Launch the project
+	-right click on the project directory in Eclipse project explorer (on the left)-> Run->Run on server->Choose existing server->(from here not sure how it looks like)->Browse->search the Tomcat directory and click on Open-> go until the end and the system will be launched
+
+7.Open a browser and write the following link: localhost:8080/snowdays-enrollment/
+
+
+
+
